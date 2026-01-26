@@ -5,16 +5,16 @@ public class Player : Entity, IAffectable
 {
     public void Die()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Player has died.");
     }
 
     public void Knockback(Vector2 sourcePosition, float force)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Player knocked back.");
     }
 
     public void TakeDamage(int damage)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"Player took {damage} damage.");
     }
 }
