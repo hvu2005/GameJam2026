@@ -4,6 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public struct PoolItem
 {
+    public string name;
     public GameObject prefab;
     public int initialSize;
 }
@@ -11,7 +12,7 @@ public struct PoolItem
 public sealed class PoolController : MonoBehaviour
 {
     // Dùng prefab (GameObject reference) làm key thay vì Type
-    private Dictionary<GameObject, ObjectPool> _pools = new();
+    private Dictionary<string, ObjectPool> _pools = new();
 
     [SerializeField] private List<PoolItem> poolItems = new();
 
@@ -19,29 +20,24 @@ public sealed class PoolController : MonoBehaviour
     {
         foreach (var item in poolItems)
         {
-            if (item.prefab == null) continue;
-            
-            var pool = new ObjectPool(item.prefab, item.initialSize);
-            _pools[item.prefab] = pool;
+            CreatePool(item);
         }
     }
 
-    public void CreatePool(GameObject prefab, int initialSize = 2)
+    public void CreatePool(PoolItem item)
     {
-        if (prefab == null || _pools.ContainsKey(prefab)) return;
-        _pools[prefab] = new ObjectPool(prefab, initialSize);
+        if (item.prefab == null || _pools.ContainsKey(item.name)) return;
+        var pool = new ObjectPool(item.prefab, item.initialSize);
+        _pools[item.name] = pool;
     }
 
-    public ObjectPool GetPool(GameObject prefab)
+    public ObjectPool GetPool(string name)
     {
-        if (prefab == null) return null;
-        
-        if (_pools.TryGetValue(prefab, out ObjectPool pool))
+        if (_pools.TryGetValue(name, out ObjectPool pool))
         {
             return pool;
         }
-        
-        CreatePool(prefab, 2);
-        return _pools[prefab];
+
+        throw new KeyNotFoundException($"Pool with name {name} not found.");
     }
 }
