@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,35 +10,38 @@ public struct PoolItem
 
 public sealed class PoolController : MonoBehaviour
 {
-    private Dictionary<Type, ObjectPool> _pools = new();
+    // Dùng prefab (GameObject reference) làm key thay vì Type
+    private Dictionary<GameObject, ObjectPool> _pools = new();
 
     [SerializeField] private List<PoolItem> poolItems = new();
 
-
-    // Start is called before the first frame update
     void Awake()
     {
         foreach (var item in poolItems)
         {
+            if (item.prefab == null) continue;
+            
             var pool = new ObjectPool(item.prefab, item.initialSize);
-            _pools.Add(item.prefab.GetType(), pool);
+            _pools[item.prefab] = pool;
         }
-
     }
 
     public void CreatePool(GameObject prefab, int initialSize = 2)
     {
-        _pools.Add(prefab.GetType(), new ObjectPool(prefab, initialSize));
+        if (prefab == null || _pools.ContainsKey(prefab)) return;
+        _pools[prefab] = new ObjectPool(prefab, initialSize);
     }
 
     public ObjectPool GetPool(GameObject prefab)
     {
-        if (_pools.TryGetValue(prefab.GetType(), out ObjectPool pool))
+        if (prefab == null) return null;
+        
+        if (_pools.TryGetValue(prefab, out ObjectPool pool))
         {
             return pool;
         }
         
-        this.CreatePool(prefab, 2);
-        return _pools[prefab.GetType()];
+        CreatePool(prefab, 2);
+        return _pools[prefab];
     }
 }
