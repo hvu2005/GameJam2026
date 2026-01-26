@@ -15,40 +15,20 @@ public enum GameState
 
 public class GameStateManager : EventTarget
 {
-    private static GameStateManager instance;
-    public static GameStateManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                GameObject go = new GameObject("GameStateManager");
-                instance = go.AddComponent<GameStateManager>();
-                DontDestroyOnLoad(go);
-            }
-            return instance;
-        }
-    }
+    // Sử dụng SingleBehaviour thay vì tự implement singleton
+    public static GameStateManager Instance => SingleBehaviour.Of<GameStateManager>();
 
     private StateMachine<GameState> stateMachine;
     
-    [Header("Level Settings")]
+    // Config - có thể điều chỉnh trong code hoặc tạo ScriptableObject sau
     [SerializeField] private int currentLevel = 1;
-    [SerializeField] private float levelTransitionDelay = 2f; // Thời gian chờ trước khi chuyển level
+    [SerializeField] private float levelTransitionDelay = 2f;
 
     public GameState CurrentState => stateMachine?.CurrentState ?? GameState.MainMenu;
     public int CurrentLevel => currentLevel;
 
     private void Awake()
     {
-        if (instance != null && instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        instance = this;
-        DontDestroyOnLoad(gameObject);
-
         InitializeStateMachine();
     }
 
@@ -173,8 +153,8 @@ public class GameStateManager : EventTarget
         stateMachine.ChangeState(newState);
         Debug.Log($"[GameStateManager] Changed to state: {newState}");
         
-        // Trigger event cho các systems khác
-        Trigger("OnStateChanged", newState);
+        // Emit event cho các systems khác lắng nghe
+        Emit(GameEvent.OnStateChanged, newState);
     }
 
     #endregion
