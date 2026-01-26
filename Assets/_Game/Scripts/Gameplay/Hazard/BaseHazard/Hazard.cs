@@ -14,6 +14,6 @@ public abstract class Hazard : EventTarget
 
     protected virtual void OnActivate(PlayerEntity target)
     {
-
+        
     }
 }
