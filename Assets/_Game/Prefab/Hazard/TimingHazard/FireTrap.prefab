@@ -208,11 +208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe69dbdb4f26d4e4e934e7f9bab3ab4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
   isInstantDeath: 1
-  damage: 10
-  knockbackForce: 5
-  hitVFX: {fileID: 0}
   damageCollider: {fileID: 0}
   activeTime: 0.1
   warningTime: 1
@@ -239,6 +235,7 @@ MonoBehaviour:
   OnDeactivate:
     m_PersistentCalls:
       m_Calls: []
+  hitVFX: {fileID: 0}
 --- !u!114 &2794568195882538441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,5 +248,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00ef994a4c8253d4a9268bfe8af3a5ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 3840443800968221460, guid: 57f83d28867a7e1449d813950d574714, type: 3}
+  poolName: FireBall
   spawnPoint: {fileID: 8826018576805514475}

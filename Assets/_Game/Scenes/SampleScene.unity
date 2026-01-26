@@ -167,7 +167,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolItems:
-  - prefab: {fileID: 3840443800968221460, guid: 57f83d28867a7e1449d813950d574714, type: 3}
+  - name: FireBall
+    prefab: {fileID: 3840443800968221460, guid: 57f83d28867a7e1449d813950d574714, type: 3}
     initialSize: 5
 --- !u!1 &168538273
 GameObject:
@@ -693,9 +694,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7567e1f239f23194697f11361280919a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
   isInstantDeath: 0
   damageCollider: {fileID: 0}
+  hitVFX: {fileID: 0}
 --- !u!1 &1273845407
 GameObject:
   m_ObjectHideFlags: 0
