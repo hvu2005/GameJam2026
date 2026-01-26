@@ -695,9 +695,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   isInstantDeath: 0
-  damage: 10
-  knockbackForce: 5
-  hitVFX: {fileID: 0}
   damageCollider: {fileID: 0}
 --- !u!1 &1273845407
 GameObject:

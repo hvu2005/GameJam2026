@@ -15,6 +15,9 @@ public class TimingHazard : Hazard
     public UnityEvent OnActivate;  // Trigger khi bật sát thương (VD: Laser to ra, Gai nhô lên)
     public UnityEvent OnDeactivate; // Trigger khi tắt (VD: Ẩn đi)
 
+    [Header("VFX")]
+    [SerializeField] protected ParticleSystem hitVFX;
+
     private void Start()
     {
         StartCoroutine(TimingRoutine());
@@ -42,5 +45,11 @@ public class TimingHazard : Hazard
             OnActivate?.Invoke();
             yield return new WaitForSeconds(activeTime);
         }
+    }
+
+    protected override void ApplyEffect(IAffectable target)
+    {
+        base.ApplyEffect(target);
+        hitVFX?.Play();
     }
 }
