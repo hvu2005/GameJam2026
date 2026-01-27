@@ -11,17 +11,17 @@ public class ChasingHazard : Hazard
     [SerializeField] private float detectRange = 8f;
     
     [Tooltip("Tốc độ di chuyển")]
-    [SerializeField] private float moveSpeed = 4f;
+    [SerializeField] protected float moveSpeed = 4f;
     
     [Tooltip("Layer của player để detect")]
-    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] protected LayerMask playerLayer;
     
     [Tooltip("Xoay theo hướng di chuyển")]
     [SerializeField] private bool rotateTowardsPlayer = true;
 
-    private Transform playerTransform;
+    protected Transform playerTransform;
 
-    private void Update() 
+    protected virtual void Update() 
     {
         // Tìm player nếu chưa có
         if (playerTransform == null)
@@ -37,7 +37,7 @@ public class ChasingHazard : Hazard
     /// <summary>
     /// Tìm player trong phạm vi detect
     /// </summary>
-    private void FindPlayer() 
+    protected void FindPlayer() 
     {
         Collider2D hit = Physics2D.OverlapCircle(transform.position, detectRange, playerLayer);
         if (hit != null && hit.TryGetComponent<PlayerEntity>(out _))
@@ -49,7 +49,7 @@ public class ChasingHazard : Hazard
     /// <summary>
     /// Truy đuổi player
     /// </summary>
-    private void ChasePlayer()
+    protected virtual void ChasePlayer()
     {
         if (playerTransform == null) return;
 
