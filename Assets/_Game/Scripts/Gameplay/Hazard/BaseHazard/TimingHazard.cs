@@ -12,13 +12,28 @@ public class TimingHazard : Hazard
 
     [Header("Events for Visuals (Animation/Scale/Particles)")]
     public UnityEvent OnWarning;   // Trigger khi bắt đầu cảnh báo (VD: Laser hiện mờ)
-    public UnityEvent OnActivate;  // Trigger khi bật sát thương (VD: Laser to ra, Gai nhô lên)
+    public UnityEvent OnActivateTrigger;  // Trigger khi bật sát thương (VD: Laser to ra, Gai nhô lên)
     public UnityEvent OnDeactivate; // Trigger khi tắt (VD: Ẩn đi)
 
-    [Header("VFX")]
-    [SerializeField] protected ParticleSystem hitVFX;
+    [Header("Damage Config")]
+    [SerializeField] private Collider2D damageCollider;
 
-    private void Start()
+    private void Awake()
+    {
+        if (damageCollider == null)
+        {
+            damageCollider = GetComponent<Collider2D>();
+            if (damageCollider == null)
+            {
+                Debug.LogError("⚠️ TimingHazard requires a Collider2D to function as damage collider.");
+            }
+        }
+
+        // Vô hiệu hóa collider lúc đầu
+        damageCollider.enabled = false;
+    }
+
+    protected virtual void Start()
     {
         StartCoroutine(TimingRoutine());
     }
@@ -30,7 +45,7 @@ public class TimingHazard : Hazard
         while (true)
         {
             // 1. Trạng thái nghỉ (Cooldown)
-            // damageCollider.enabled = false;
+            damageCollider.enabled = false;
             OnDeactivate?.Invoke();
             yield return new WaitForSeconds(cooldownTime);
 
@@ -41,17 +56,15 @@ public class TimingHazard : Hazard
 
             // 3. Trạng thái kích hoạt (Active)
             // Laser: Phình to, Bật collider
-            // damageCollider.enabled = true;
-            OnActivate?.Invoke();
+            damageCollider.enabled = true;
+            OnActivateTrigger?.Invoke();
             yield return new WaitForSeconds(activeTime);
         }
     }
 
-    // protected override void ApplyEffect(IAffectable target)
-    // {
-    //     base.ApplyEffect(target);
-    //     hitVFX?.Play();
-    // }
-
-    
+    protected override void OnActivate(PlayerEntity target)
+    {
+        base.OnActivate(target);
+        target.Die();
+    }
 }
