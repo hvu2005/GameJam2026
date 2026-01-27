@@ -5,30 +5,139 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(PlayerInput))]
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private PlayerConfig config;
+    [SerializeField] private Transform visualTransform;
+    
     private PlayerInput _input;
     private Rigidbody2D _rb;
-    [SerializeField] private float speed;
+    private PlayerDash _dash;
+    private float _currentSpeed;
+    private float _targetSpeed;
+    private int _facingDirection = 1;
+    private bool _isGrounded;
+
+    public int FacingDirection => _facingDirection;
+    public bool IsGrounded => _isGrounded;
 
     void Awake()
     {
-        _input = this.GetComponent<PlayerInput>();
-        _rb = this.GetComponent<Rigidbody2D>();
+        _input = GetComponent<PlayerInput>();
+        _rb = GetComponent<Rigidbody2D>();
+        _dash = GetComponent<PlayerDash>();
+        
+        if (config == null)
+        {
+            Debug.LogError("PlayerConfig is not assigned to PlayerMovement2D!", this);
+        }
     }
 
     void OnEnable()
     {
-        _input.On<Vector2>(PlayerInputType.Move, Move);
+        _input.On<Vector2>(PlayerInputType.Move, OnMove);
     }
 
     void OnDisable()
     {
-        _input.Off<Vector2>(PlayerInputType.Move, Move);
+        _input.Off<Vector2>(PlayerInputType.Move, OnMove);
     }
 
-    private void Move(Vector2 direction)
+    void FixedUpdate()
     {
-        _rb.velocity = new Vector2(direction.x * speed, _rb.velocity.y);
+        UpdateGroundDetection();
+        
+        // Don't update movement during dash to prevent velocity override
+        if (_dash != null && _dash.IsDashing)
+        {
+            return;
+        }
+        
+        UpdateMovement();
     }
 
-    
+    private void OnMove(Vector2 direction)
+    {
+        _targetSpeed = direction.x * config.MoveSpeed;
+        
+        if (direction.x > 0.1f)
+        {
+            SetFacingDirection(1);
+        }
+        else if (direction.x < -0.1f)
+        {
+            SetFacingDirection(-1);
+        }
+    }
+
+    private void UpdateMovement()
+    {
+        if (config == null) return;
+
+        float accelerationRate;
+        if (Mathf.Abs(_targetSpeed) > 0.01f)
+        {
+            accelerationRate = config.Acceleration;
+        }
+        else
+        {
+            accelerationRate = config.Deceleration;
+        }
+
+        if (!_isGrounded)
+        {
+            accelerationRate *= config.AirControlMultiplier;
+        }
+
+        _currentSpeed = Mathf.MoveTowards(_currentSpeed, _targetSpeed, accelerationRate * Time.fixedDeltaTime);
+
+        _rb.velocity = new Vector2(_currentSpeed, _rb.velocity.y);
+    }
+
+    private void UpdateGroundDetection()
+    {
+        if (config == null) return;
+
+        Vector2 boxOrigin = (Vector2)transform.position + config.GroundCheckOffset;
+        Vector2 boxSize = new Vector2(0.8f, 0.8f);
+        
+        RaycastHit2D hit = Physics2D.BoxCast(
+            boxOrigin, 
+            boxSize, 
+            0f, 
+            Vector2.down, 
+            config.GroundCheckDistance, 
+            config.GroundLayer
+        );
+        
+        _isGrounded = hit.collider != null;
+    }
+
+    private void SetFacingDirection(int direction)
+    {
+        if (_facingDirection == direction) return;
+
+        _facingDirection = direction;
+        
+        if (visualTransform != null)
+        {
+            Vector3 scale = visualTransform.localScale;
+            scale.x = Mathf.Abs(scale.x) * _facingDirection;
+            visualTransform.localScale = scale;
+        }
+        else
+        {
+            Vector3 scale = transform.localScale;
+            scale.x = Mathf.Abs(scale.x) * _facingDirection;
+            transform.localScale = scale;
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (config == null) return;
+
+        Gizmos.color = Color.red;
+        Vector2 origin = (Vector2)transform.position + config.GroundCheckOffset;
+        Gizmos.DrawLine(origin, origin + Vector2.down * config.GroundCheckDistance);
+    }
 }
