@@ -10,6 +10,7 @@ public class PlayerJump : MonoBehaviour
     private PlayerInput _input;
     private Rigidbody2D _rb;
     private PlayerMovement _movement;
+    private PlayerDash _dash;
 
     private int _jumpCount;
     private float _lastGroundedTime = -999f;
@@ -26,6 +27,7 @@ public class PlayerJump : MonoBehaviour
         _input = GetComponent<PlayerInput>();
         _rb = GetComponent<Rigidbody2D>();
         _movement = GetComponent<PlayerMovement>();
+        _dash = GetComponent<PlayerDash>();
         
         if (config == null)
         {
@@ -54,6 +56,12 @@ public class PlayerJump : MonoBehaviour
     private void OnJumpInput(bool pressed)
     {
         if (!pressed) return;
+        
+        // Cancel dash if currently dashing
+        if (_dash != null && _dash.IsDashing)
+        {
+            _dash.CancelDash();
+        }
         
         if (CanJump())
         {

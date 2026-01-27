@@ -16,13 +16,11 @@ MonoBehaviour:
   acceleration: 100
   deceleration: 100
   airControlMultiplier: 1
-  jumpForce: 15
-  doubleJumpForce: 15
+  jumpForce: 10
+  doubleJumpForce: 10
   maxJumps: 2
   coyoteTime: 0.15
-  jumpBufferTime: 0.15
   fallGravityMultiplier: 1
-  lowJumpMultiplier: 2
   dashSpeed: 25
   dashDuration: 0.2
   dashCooldown: 0.3
