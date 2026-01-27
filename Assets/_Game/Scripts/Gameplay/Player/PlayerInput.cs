@@ -1,22 +1,71 @@
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public enum PlayerInputType
-{
-    Move,
-    Jump,
-}
 
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerInput : EventTarget
 {
-    public void Update()
-    {
-        float moveX = Input.GetAxis("Horizontal");
-        Vector2 moveDirection = new(moveX, 0);
+    private Input _inputActions;
+    private Vector2 _moveInput;
 
-        if (moveDirection != Vector2.zero)
+    private void Awake()
+    {
+        _inputActions = new Input();
+    }
+
+    private void OnEnable()
+    {
+        _inputActions.GamePlay.Enable();
+        
+        _inputActions.GamePlay.Move.performed += OnMovePerformed;
+        _inputActions.GamePlay.Move.canceled += OnMoveCanceled;
+        _inputActions.GamePlay.Jump.performed += OnJumpPerformed;
+        _inputActions.GamePlay.Dash.performed += OnDashPerformed;
+    }
+
+    private void OnDisable()
+    {
+        _inputActions.GamePlay.Move.performed -= OnMovePerformed;
+        _inputActions.GamePlay.Move.canceled -= OnMoveCanceled;
+        _inputActions.GamePlay.Jump.performed -= OnJumpPerformed;
+        _inputActions.GamePlay.Dash.performed -= OnDashPerformed;
+        
+        _inputActions.GamePlay.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        _inputActions?.Dispose();
+    }
+
+    private void Update()
+    {
+        if (_moveInput.x != 0)
         {
-            this.Emit<Vector2>(PlayerInputType.Move, moveDirection);
+            Vector2 horizontalMove = new Vector2(_moveInput.x, 0f);
+            this.Emit<Vector2>(PlayerInputType.Move, horizontalMove);
         }
+    }
+
+    private void OnMovePerformed(InputAction.CallbackContext context)
+    {
+        _moveInput = context.ReadValue<Vector2>();
+    }
+
+    private void OnMoveCanceled(InputAction.CallbackContext context)
+    {
+        _moveInput = Vector2.zero;
+        this.Emit<Vector2>(PlayerInputType.Move, Vector2.zero);
+    }
+
+    private void OnJumpPerformed(InputAction.CallbackContext context)
+    {
+        this.Emit<bool>(PlayerInputType.Jump, true);
+    }
+
+    private void OnDashPerformed(InputAction.CallbackContext context)
+    {
+        this.Emit<bool>(PlayerInputType.Dash, true);
     }
 }
