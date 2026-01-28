@@ -63,7 +63,7 @@ public class MovingHazard : Hazard
         transform.Rotate(0, 0, rotateSpeed * Time.fixedDeltaTime);
     }
 
-    private void OnDrawGizmos() {
+    protected virtual void OnDrawGizmos() {
         if (moveType == MoveType.Waypoints) 
         {
             if (waypoints == null || waypoints.Count == 0) return;

@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(MovingHazard))]
+[CustomEditor(typeof(MovingHazard), true)]
 public class MovingHazardEditor : Editor
 {
     // Hàm này chuyên dùng để vẽ giao diện tương tác trong Scene View

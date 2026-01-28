@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5568225915647317689}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.1617687, y: 2.4891713, z: -0.047328573}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -83,8 +83,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   fallGravity: 3
-  shakeTime: 0.5
   respawnTime: 2
+  shakeDuration: 0.5
+  shakeStrength: 0.4
+  shakeVibrato: 10
+  shakeRandomness: 90
 --- !u!61 &6872170778601640600
 BoxCollider2D:
   m_ObjectHideFlags: 0

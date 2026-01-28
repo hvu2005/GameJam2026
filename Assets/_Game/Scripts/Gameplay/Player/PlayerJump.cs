@@ -11,6 +11,7 @@ public class PlayerJump : MonoBehaviour
     private Rigidbody2D _rb;
     private PlayerMovement _movement;
     private PlayerDash _dash;
+    private PlayerStatusEffects _statusEffects;
 
     private int _jumpCount;
     private float _lastGroundedTime = -999f;
@@ -28,6 +29,7 @@ public class PlayerJump : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _movement = GetComponent<PlayerMovement>();
         _dash = GetComponent<PlayerDash>();
+        _statusEffects = GetComponent<PlayerStatusEffects>();
         
         if (config == null)
         {
@@ -119,6 +121,9 @@ public class PlayerJump : MonoBehaviour
         _rb.velocity = new Vector2(_rb.velocity.x, 0f);
         
         float jumpForce = _jumpCount == 0 ? config.JumpForce : config.DoubleJumpForce;
+        // Áp dụng status effects multiplier vào lực nhảy
+        float multiplier = _statusEffects != null ? _statusEffects.JumpForceMultiplier : 1f;
+        jumpForce *= multiplier;
         _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
 
         _jumpCount++;

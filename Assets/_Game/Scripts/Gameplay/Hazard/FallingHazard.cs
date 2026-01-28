@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using DG.Tweening;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class FallingHazard : Hazard
@@ -18,12 +19,18 @@ public class FallingHazard : Hazard
     [Header("Physics")]
     [Tooltip("Tốc độ rơi")]
     [SerializeField] private float fallGravity = 3f;
-    [Tooltip("Thời gian rung lắc trước khi rơi")]
-    [SerializeField] private float shakeTime = 0.5f;
 
     [Header("Respawn Config")]
     [Tooltip("Thời gian chờ để hồi phục sau khi vỡ")]
     [SerializeField] private float respawnTime = 3f;
+    [Tooltip("Thời gian rung lắc trước khi rơi")]
+    [SerializeField] private float shakeDuration = 0.5f;
+    [Tooltip("Độ mạnh của cú rung (Biên độ)")]
+    [SerializeField] private float shakeStrength = 0.5f;
+    [Tooltip("Độ rung (Số lần rung/giây)")]
+    [SerializeField] private int shakeVibrato = 20;
+    [Tooltip("Độ ngẫu nhiên (0-90)")]
+    [SerializeField] private float shakeRandomness = 90f;
 
     private Rigidbody2D rb;
     private Vector3 initialPos;
@@ -76,14 +83,10 @@ public class FallingHazard : Hazard
         isFalling = true;
 
         // 1. Rung lắc cảnh báo (Game Feel)
-        float timer = 0;
-        while (timer < shakeTime)
-        {
-            transform.position = initialPos + (Vector3)(Random.insideUnitCircle * 0.05f);
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        transform.position = initialPos; // Trả về vị trí chuẩn
+        yield return transform.DOShakePosition(shakeDuration, shakeStrength, shakeVibrato, shakeRandomness, false, true)
+                              .WaitForCompletion();
+
+        transform.position = initialPos; // Đảm bảo vị trí trở lại chính xác
 
         // 2. Rơi tự do
         rb.bodyType = RigidbodyType2D.Dynamic;
@@ -165,7 +168,7 @@ public class FallingHazard : Hazard
         // Bắn thử 1 cái BoxCast ngay trong Editor để xem có trúng Player không
         // (Giúp bạn debug xem layer/khoảng cách đúng chưa mà không cần Play game)
         RaycastHit2D hit = Physics2D.BoxCast(startPos, detectionSize, 0f, Vector2.down, detectionLength, playerLayer);
-        
+
         if (hit.collider != null)
         {
             // Nếu trúng Player -> Đổi màu ĐỎ & Rút ngắn độ dài vẽ đến chỗ trúng
@@ -174,7 +177,7 @@ public class FallingHazard : Hazard
         }
 
         // --- VẼ HÌNH HỘP QUÉT (SWEEP) ---
-        
+
         // 2. Vẽ Hộp tại vị trí Bắt đầu (Trên trần)
         Gizmos.DrawWireCube(startPos, new Vector3(detectionSize.x, detectionSize.y, 0));
 
@@ -187,16 +190,16 @@ public class FallingHazard : Hazard
 
         // Đường bên trái
         Gizmos.DrawLine(
-            startPos + new Vector3(-halfWidth, 0, 0), 
+            startPos + new Vector3(-halfWidth, 0, 0),
             endPos + new Vector3(-halfWidth, 0, 0)
         );
 
         // Đường bên phải
         Gizmos.DrawLine(
-            startPos + new Vector3(halfWidth, 0, 0), 
+            startPos + new Vector3(halfWidth, 0, 0),
             endPos + new Vector3(halfWidth, 0, 0)
         );
-        
+
         // Vẽ thêm 1 tia ở giữa cho dễ căn tâm
         Gizmos.color = new Color(1, 1, 1, 0.2f); // Màu trắng mờ
         Gizmos.DrawLine(startPos, endPos);

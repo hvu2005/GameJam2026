@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 4605483158387168568}
   - component: {fileID: 383089646550949796}
   - component: {fileID: 3319380752106607333}
+  - component: {fileID: 6296357470747024922}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -173,7 +174,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 3
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 394d5456e56ae1f4886e49a36cabdd4f, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -299,6 +300,18 @@ CapsuleCollider2D:
   m_Offset: {x: 0.004887104, y: 0.012217581}
   m_Size: {x: 0.9984751, y: 1.0244352}
   m_Direction: 0
+--- !u!114 &6296357470747024922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4117575920740194630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eecad695f40bfb24c871ab59f94b6f90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7086808504287390455
 GameObject:
   m_ObjectHideFlags: 0

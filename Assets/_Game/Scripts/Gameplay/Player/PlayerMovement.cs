@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerInput _input;
     private Rigidbody2D _rb;
     private PlayerDash _dash;
+    private PlayerStatusEffects _statusEffects;
     private float _currentSpeed;
     private float _targetSpeed;
     private int _facingDirection = 1;
@@ -25,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
         _input = GetComponent<PlayerInput>();
         _rb = GetComponent<Rigidbody2D>();
         _dash = GetComponent<PlayerDash>();
+        _statusEffects = GetComponent<PlayerStatusEffects>();
         
         if (config == null)
         {
@@ -57,7 +59,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnMove(Vector2 direction)
     {
-        _targetSpeed = direction.x * config.MoveSpeed;
+        // Áp dụng status effects multiplier vào tốc độ
+        float multiplier = _statusEffects != null ? _statusEffects.MoveSpeedMultiplier : 1f;
+        _targetSpeed = direction.x * config.MoveSpeed * multiplier;
         
         if (direction.x > 0.1f)
         {
