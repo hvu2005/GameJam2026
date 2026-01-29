@@ -17,6 +17,8 @@ public class PlayerMovement : MonoBehaviour
     private float _targetSpeed;
     private int _facingDirection = 1;
     private bool _isGrounded;
+    private bool _wasGrounded;
+    private bool _wasOnIce;
 
     public int FacingDirection => _facingDirection;
     public bool IsGrounded => _isGrounded;
@@ -46,9 +48,10 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        _wasGrounded = _isGrounded;
+        
         UpdateGroundDetection();
         
-        // Don't update movement during dash to prevent velocity override
         if (_dash != null && _dash.IsDashing)
         {
             return;
@@ -78,18 +81,32 @@ public class PlayerMovement : MonoBehaviour
         if (config == null) return;
 
         float accelerationRate;
+        
         if (Mathf.Abs(_targetSpeed) > 0.01f)
         {
-            accelerationRate = config.Acceleration;
+            float accelMultiplier = _statusEffects != null 
+                ? _statusEffects.GetCurrentAccelerationMultiplier() 
+                : 1f;
+            accelerationRate = config.Acceleration * accelMultiplier;
         }
         else
         {
-            accelerationRate = config.Deceleration;
+            float decelMultiplier = _statusEffects != null 
+                ? _statusEffects.GetCurrentDecelerationMultiplier(_currentSpeed, config.MoveSpeed) 
+                : 1f;
+            accelerationRate = config.Deceleration * decelMultiplier;
         }
 
         if (!_isGrounded)
         {
-            accelerationRate *= config.AirControlMultiplier;
+            float airControlMult = config.AirControlMultiplier;
+            
+            if (_wasOnIce)
+            {
+                airControlMult *= config.IceAirControlPenalty;
+            }
+            
+            accelerationRate *= airControlMult;
         }
 
         _currentSpeed = Mathf.MoveTowards(_currentSpeed, _targetSpeed, accelerationRate * Time.fixedDeltaTime);
@@ -114,6 +131,34 @@ public class PlayerMovement : MonoBehaviour
         );
         
         _isGrounded = hit.collider != null;
+
+        if (_statusEffects != null)
+        {
+            if (_isGrounded && hit.collider != null)
+            {
+                if (hit.collider.CompareTag("Ice"))
+                {
+                    _statusEffects.IsOnIce = true;
+                }
+                else
+                {
+                    _statusEffects.IsOnIce = false;
+                }
+            }
+            else
+            {
+                _statusEffects.IsOnIce = false;
+            }
+        }
+        
+        if (!_wasGrounded && _isGrounded)
+        {
+            _wasOnIce = false;
+        }
+        else if (_wasGrounded && !_isGrounded)
+        {
+            _wasOnIce = _statusEffects != null && _statusEffects.IsOnIce;
+        }
     }
 
     private void SetFacingDirection(int direction)

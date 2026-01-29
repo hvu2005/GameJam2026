@@ -87,6 +87,25 @@ public class PlayerConfig : ScriptableObject
     [Tooltip("Max attempts to find valid teleport position")]
     [SerializeField] private int teleportMaxAttempts = 5;
 
+    [Header("Ice Physics Settings")]
+    [Tooltip("Hệ số gia tốc khi ở trên băng (0-1). Thấp = khó lấy đà")]
+    [Range(0.1f, 1f)]
+    [SerializeField] private float iceAccelerationMultiplier = 0.4f;
+
+    [Tooltip("Hệ số giảm tốc khi ở trên băng (0-1). Cực thấp = trượt rất xa")]
+    [Range(0.01f, 1f)]
+    [SerializeField] private float iceDecelerationMultiplier = 0.05f;
+
+    [Tooltip("Enable velocity-based momentum (trượt xa hơn khi chạy nhanh)")]
+    [SerializeField] private bool useVelocityBasedMomentum = true;
+
+    [Tooltip("Curve điều chỉnh deceleration theo vận tốc")]
+    [SerializeField] private AnimationCurve iceDecelerationCurve = AnimationCurve.Linear(0f, 1f, 1f, 0.3f);
+
+    [Tooltip("Hệ số giảm air control khi vừa nhảy từ băng (0-1)")]
+    [Range(0f, 1f)]
+    [SerializeField] private float iceAirControlPenalty = 0.8f;
+
     [Header("Physics Settings")]
     [Tooltip("Distance to check for ground below player")]
     [SerializeField] private float groundCheckDistance = 0.1f;
@@ -129,4 +148,10 @@ public class PlayerConfig : ScriptableObject
     public float GroundCheckDistance => groundCheckDistance;
     public Vector2 GroundCheckOffset => groundCheckOffset;
     public LayerMask GroundLayer => groundLayer;
+    
+    public float IceAccelerationMultiplier => iceAccelerationMultiplier;
+    public float IceDecelerationMultiplier => iceDecelerationMultiplier;
+    public bool UseVelocityBasedMomentum => useVelocityBasedMomentum;
+    public AnimationCurve IceDecelerationCurve => iceDecelerationCurve;
+    public float IceAirControlPenalty => iceAirControlPenalty;
 }

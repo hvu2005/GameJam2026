@@ -12,12 +12,26 @@ public class PlayerStatusEffects : MonoBehaviour
     // Jump modifiers
     private float _jumpForceMultiplier = 1f;
     
-    // State tracking
+    
     private bool _isInMud;
+    
+    private bool _isOnIce;
+    private PlayerConfig _config;
     
     public float MoveSpeedMultiplier => _moveSpeedMultiplier;
     public float JumpForceMultiplier => _jumpForceMultiplier;
     public bool IsInMud => _isInMud;
+    
+    public bool IsOnIce 
+    { 
+        get => _isOnIce; 
+        set => _isOnIce = value;
+    }
+
+    void Awake()
+    {
+        _config = GetComponent<Player>().Config;
+    }
 
     void OnEnable()
     {
@@ -67,4 +81,45 @@ public class PlayerStatusEffects : MonoBehaviour
         _moveSpeedMultiplier *= moveMultiplier;
         _jumpForceMultiplier *= jumpMultiplier;
     }
+    
+    #region Ice Effects
+    
+    public float GetCurrentAccelerationMultiplier()
+    {
+        if (_config == null) return 1f;
+        
+        float multiplier = 1f;
+        
+        if (_isOnIce)
+        {
+            multiplier *= _config.IceAccelerationMultiplier;
+        }
+        
+        multiplier *= _moveSpeedMultiplier;
+        
+        return multiplier;
+    }
+
+    public float GetCurrentDecelerationMultiplier(float currentSpeed, float maxSpeed)
+    {
+        if (_config == null) return 1f;
+        
+        float multiplier = 1f;
+        
+        if (_isOnIce)
+        {
+            multiplier *= _config.IceDecelerationMultiplier;
+            
+            if (_config.UseVelocityBasedMomentum && maxSpeed > 0f)
+            {
+                float speedRatio = Mathf.Abs(currentSpeed) / maxSpeed;
+                float curveValue = _config.IceDecelerationCurve.Evaluate(speedRatio);
+                multiplier *= curveValue;
+            }
+        }
+        
+        return multiplier;
+    }
+    
+    #endregion
 }
