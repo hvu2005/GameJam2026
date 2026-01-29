@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91d68b0eeb7f1224496ab22b4e6fd604, type: 3}
+  m_Name: DucanhDialog
+  m_EditorClassIdentifier: 
+  speakerName: Ducanh
+  paragraphs:
+  - "TAo l\xE0 \u0110anh ch\xF3 \u0111i\xEAn 1 m\xECnh tao ch"
+  - "Hay l\u1EAFm HAHAHAHAH\n"
+  - "N\xF3i th\u1EBF th\xF4i t\xF4i y\xEAu em ng\xE2n"
