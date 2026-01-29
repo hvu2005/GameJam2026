@@ -106,7 +106,7 @@ public class PlayerJump : MonoBehaviour
             return true;
         }
         
-        if (_jumpCount > 0 && _jumpCount < config.MaxJumps)
+        if (!_movement.IsGrounded && _jumpCount < config.MaxJumps)
         {
             return true;
         }
@@ -121,7 +121,6 @@ public class PlayerJump : MonoBehaviour
         _rb.velocity = new Vector2(_rb.velocity.x, 0f);
         
         float jumpForce = _jumpCount == 0 ? config.JumpForce : config.DoubleJumpForce;
-        // Áp dụng status effects multiplier vào lực nhảy
         float multiplier = _statusEffects != null ? _statusEffects.JumpForceMultiplier : 1f;
         jumpForce *= multiplier;
         _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
@@ -152,6 +151,12 @@ public class PlayerJump : MonoBehaviour
         {
             _rb.velocity = new Vector2(_rb.velocity.x, 0f);
         }
+        _isJumping = false;
+    }
+
+    public void ResetJumpCount()
+    {
+        _jumpCount = 0;
         _isJumping = false;
     }
 }

@@ -10,6 +10,7 @@ public class PlayerDash : MonoBehaviour
     private PlayerInput _input;
     private Rigidbody2D _rb;
     private PlayerMovement _movement;
+    private PlayerJump _jump;
     
     private bool _isDashing;
     private float _dashTimer;
@@ -27,6 +28,7 @@ public class PlayerDash : MonoBehaviour
         _input = GetComponent<PlayerInput>();
         _rb = GetComponent<Rigidbody2D>();
         _movement = GetComponent<PlayerMovement>();
+        _jump = GetComponent<PlayerJump>();
         _originalGravityScale = _rb.gravityScale;
         
         if (config == null)
@@ -89,7 +91,7 @@ public class PlayerDash : MonoBehaviour
         _dashCooldownTimer = config.DashCooldown;
         _hasLandedSinceDash = false;
         
-        _dashDirection = new Vector2(_movement.FacingDirection, 0f).normalized;
+        _dashDirection = new Vector2(_movement.FacingDirection, 0f);
         
         _rb.gravityScale = 0f;
         _rb.velocity = _dashDirection * config.DashSpeed;
@@ -115,8 +117,10 @@ public class PlayerDash : MonoBehaviour
         _isDashing = false;
         
         _rb.gravityScale = _originalGravityScale;
-        
-        _rb.velocity = new Vector2(_rb.velocity.x * 0.5f, _rb.velocity.y);
+
+        float newVelocityX = _rb.velocity.x * 0.5f;
+        float newVelocityY = _dashDirection.y >= 0 ? 0f : _rb.velocity.y;
+        _rb.velocity = new Vector2(newVelocityX, newVelocityY);
     }
 
     private void UpdateCooldown()
