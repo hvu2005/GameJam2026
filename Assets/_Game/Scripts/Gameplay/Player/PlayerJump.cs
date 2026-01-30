@@ -57,7 +57,6 @@ public class PlayerJump : MonoBehaviour
     {
         if (!pressed) return;
         
-        // Cancel dash if currently dashing
         if (_dash != null && _dash.IsDashing)
         {
             _dash.CancelDash();

@@ -49,8 +49,7 @@ public class PlayerDash : MonoBehaviour
     {
         UpdateDashState();
         UpdateCooldown();
-        
-        // Track landing after dash
+
         if (_movement.IsGrounded && !_isDashing)
         {
             _hasLandedSinceDash = true;
