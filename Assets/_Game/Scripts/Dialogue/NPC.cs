@@ -3,7 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public abstract class NPC : DialogueBase, IInteractable, ITalkable
 {
-    [SerializeField] protected DialogueText dialogueText;
+    [SerializeField] protected DialogueData dialogueData;
+    [SerializeField] protected DialogueText legacyDialogueText;
     
     void Awake()
     {
@@ -16,7 +17,19 @@ public abstract class NPC : DialogueBase, IInteractable, ITalkable
     
     public virtual void Interact()
     {
-        Talk(dialogueText);
+        if (dialogueData != null)
+        {
+            Talk(dialogueData);
+        }
+        else if (legacyDialogueText != null)
+        {
+            Talk(legacyDialogueText);
+        }
+    }
+    
+    public void Talk(DialogueData data)
+    {
+        ShowDialogue(data);
     }
     
     public void Talk(DialogueText text)
