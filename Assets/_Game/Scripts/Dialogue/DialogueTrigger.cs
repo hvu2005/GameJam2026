@@ -4,7 +4,8 @@ using UnityEngine;
 public class DialogueTrigger : DialogueBase
 {
     [Header("Dialogue Settings")]
-    [SerializeField] private DialogueText dialogueText;
+    [SerializeField] private DialogueData dialogueData;
+    [SerializeField] private DialogueText legacyDialogueText;
     
     [Header("Trigger Settings")]
     [SerializeField] private bool triggerOnce = true;
@@ -37,7 +38,9 @@ public class DialogueTrigger : DialogueBase
     private void TriggerDialogue(GameObject player)
     {
         var controller = GetDialogueController();
-        if (controller == null || dialogueText == null)
+        if (controller == null) return;
+        
+        if (dialogueData == null && legacyDialogueText == null)
         {
             return;
         }
@@ -47,7 +50,14 @@ public class DialogueTrigger : DialogueBase
             PlayerMovementController.Disable(player);
         }
         
-        ShowDialogue(dialogueText);
+        if (dialogueData != null)
+        {
+            ShowDialogue(dialogueData);
+        }
+        else
+        {
+            ShowDialogue(legacyDialogueText);
+        }
         
         hasTriggered = true;
         
