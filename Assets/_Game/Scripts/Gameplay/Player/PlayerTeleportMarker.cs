@@ -4,25 +4,23 @@ using UnityEngine;
 public class PlayerTeleportMarker : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PlayerConfig config;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private GameObject markerPrefab;
     
+    private VoidFormConfigSO _config;
     private PlayerInput _input;
     private PlayerMovement _movement;
     private PlayerJump _jump;
     private PlayerDash _dash;
     private Rigidbody2D _rb;
-    private PlayerTeleportTrail _teleportTrail;
     
     private TeleportMarker _activeMarker;
     private float _teleportWindowTimer;
     private float _cooldownTimer;
     private bool _canTeleport;
     
-    public bool CanUseSkill => _cooldownTimer <= 0f && _activeMarker == null;
+    public bool CanUseSkill => _config != null && _cooldownTimer <= 0f && _activeMarker == null;
     public bool CanTeleport => _canTeleport && _activeMarker != null;
-    public float CooldownPercent => Mathf.Clamp01(1f - (_cooldownTimer / config.TeleportCooldown));
+    public float CooldownPercent => _config != null ? Mathf.Clamp01(1f - (_cooldownTimer / _config.teleportCooldown)) : 0f;
     
     void Awake()
     {
@@ -31,17 +29,6 @@ public class PlayerTeleportMarker : MonoBehaviour
         _jump = GetComponent<PlayerJump>();
         _dash = GetComponent<PlayerDash>();
         _rb = GetComponent<Rigidbody2D>();
-        _teleportTrail = GetComponent<PlayerTeleportTrail>();
-        
-        if (config == null)
-        {
-            Debug.LogError("PlayerConfig not assigned to PlayerTeleportMarker!", this);
-        }
-        
-        if (markerPrefab == null)
-        {
-            Debug.LogError("Marker prefab not assigned to PlayerTeleportMarker!", this);
-        }
     }
     
     void OnEnable()
@@ -59,36 +46,45 @@ public class PlayerTeleportMarker : MonoBehaviour
         UpdateCooldown();
         UpdateTeleportWindow();
     }
+
+    public void SetVoidConfig(VoidFormConfigSO config)
+    {
+        _config = config;
+        Debug.Log($"[PlayerTeleportMarker] Config set: {config.formName}");
+    }
     
     private void OnSkillInput(bool pressed)
     {
         if (!pressed) return;
+        if (_config == null) return;
         
         if (_activeMarker == null && CanUseSkill)
         {
+            Debug.Log("[PlayerTeleportMarker] Throwing marker");
             ThrowMarker();
             _canTeleport = true;
-            _teleportWindowTimer = config.TeleportWindowTime;
+            _teleportWindowTimer = _config.teleportWindowTime;
         }
         else if (CanTeleport)
         {
+            Debug.Log("[PlayerTeleportMarker] Teleporting to marker");
             TeleportToMarker();
         }
     }
     
     private void ThrowMarker()
     {
-        if (config == null || markerPrefab == null) return;
+        if (_config == null || _config.markerPrefab == null) return;
         
         Vector2 direction = CalculateThrowDirection();
         
         Vector3 spawnPos = firePoint != null ? firePoint.position : transform.position;
-        GameObject markerObj = Instantiate(markerPrefab, spawnPos, Quaternion.identity);
+        GameObject markerObj = Instantiate(_config.markerPrefab, spawnPos, Quaternion.identity);
         
         _activeMarker = markerObj.GetComponent<TeleportMarker>();
         if (_activeMarker != null)
         {
-            _activeMarker.Initialize(config, direction, transform);
+            _activeMarker.InitializeWithVoidConfig(_config, direction, transform);
             
             _activeMarker.OnLanded += OnMarkerLanded;
             _activeMarker.OnPickedUp += OnMarkerPickedUp;
@@ -111,7 +107,7 @@ public class PlayerTeleportMarker : MonoBehaviour
         }
         
         float facingAngle = _movement.FacingDirection > 0 ? 0f : 180f;
-        float totalAngle = facingAngle + config.MarkerThrowAngle;
+        float totalAngle = facingAngle + _config.markerThrowAngle;
         
         float radians = totalAngle * Mathf.Deg2Rad;
         return new Vector2(Mathf.Cos(radians), Mathf.Sin(radians)).normalized;
@@ -120,7 +116,7 @@ public class PlayerTeleportMarker : MonoBehaviour
     private void OnMarkerLanded(TeleportMarker marker)
     {
         _canTeleport = true;
-        _teleportWindowTimer = config.TeleportWindowTime;
+        _teleportWindowTimer = _config.teleportWindowTime;
     }
     
     private void OnMarkerPickedUp(TeleportMarker marker)
@@ -138,13 +134,10 @@ public class PlayerTeleportMarker : MonoBehaviour
     
     private void TeleportToMarker()
     {
-        if (_activeMarker == null) return;
+        if (_activeMarker == null || _config == null) return;
         
         Vector2 targetPos = _activeMarker.Position;
         Vector2 validPos = FindValidTeleportPosition(targetPos);
-        
-        // Lưu vị trí cũ để tạo trail
-        Vector3 oldPosition = transform.position;
         
         _rb.velocity = Vector2.zero;
         
@@ -153,20 +146,13 @@ public class PlayerTeleportMarker : MonoBehaviour
             _dash.CancelDash();
         }
         
-        // Dịch chuyển player
         transform.position = validPos;
-        
-        // Kích hoạt trail effect từ vị trí cũ đến vị trí mới
-        if (_teleportTrail != null)
-        {
-            _teleportTrail.ActivateTrail(oldPosition, validPos);
-        }
         
         Destroy(_activeMarker.gameObject);
         _activeMarker = null;
         _canTeleport = false;
         
-        _cooldownTimer = config.TeleportCooldown;
+        _cooldownTimer = _config.teleportCooldown;
     }
     
     private Vector2 FindValidTeleportPosition(Vector2 targetPos)
@@ -186,18 +172,16 @@ public class PlayerTeleportMarker : MonoBehaviour
             playerCollider.bounds.extents.y
         );
         
-        // Strategy 1: Raycast from player to marker to find obstruction
         RaycastHit2D hit = Physics2D.CircleCast(
             currentPos,
             playerRadius * 0.9f,
             direction,
             distance,
-            config.GroundLayer
+            _config.groundLayer
         );
         
         if (hit.collider != null)
         {
-            // Hit obstruction - teleport just before it
             Vector2 positionBeforeWall = hit.point - direction * (playerRadius + 0.1f);
             
             if (!IsPositionBlocked(positionBeforeWall, playerCollider))
@@ -206,26 +190,24 @@ public class PlayerTeleportMarker : MonoBehaviour
             }
         }
         
-        // Strategy 2: Try exact marker position
         if (!IsPositionBlocked(targetPos, playerCollider))
         {
             return targetPos;
         }
         
-        // Strategy 3: Try positions around marker (spiral search)
         Vector2[] offsets = new Vector2[]
         {
-            Vector2.up * config.TeleportOffsetY,
-            Vector2.right * config.TeleportOffsetY,
-            Vector2.left * config.TeleportOffsetY,
-            Vector2.down * config.TeleportOffsetY * 0.5f,
-            new Vector2(1, 1).normalized * config.TeleportOffsetY,
-            new Vector2(-1, 1).normalized * config.TeleportOffsetY,
-            new Vector2(1, -1).normalized * config.TeleportOffsetY,
-            new Vector2(-1, -1).normalized * config.TeleportOffsetY
+            Vector2.up * _config.teleportOffsetY,
+            Vector2.right * _config.teleportOffsetY,
+            Vector2.left * _config.teleportOffsetY,
+            Vector2.down * _config.teleportOffsetY * 0.5f,
+            new Vector2(1, 1).normalized * _config.teleportOffsetY,
+            new Vector2(-1, 1).normalized * _config.teleportOffsetY,
+            new Vector2(1, -1).normalized * _config.teleportOffsetY,
+            new Vector2(-1, -1).normalized * _config.teleportOffsetY
         };
         
-        for (int mult = 1; mult <= config.TeleportMaxAttempts; mult++)
+        for (int mult = 1; mult <= _config.teleportMaxAttempts; mult++)
         {
             foreach (Vector2 offset in offsets)
             {
@@ -238,7 +220,6 @@ public class PlayerTeleportMarker : MonoBehaviour
             }
         }
         
-        // Strategy 4: Fallback - stay at current position
         Debug.LogWarning("Cannot find valid teleport position, staying in place!");
         return currentPos;
     }
@@ -285,7 +266,7 @@ public class PlayerTeleportMarker : MonoBehaviour
     
     void OnDrawGizmos()
     {
-        if (firePoint != null && config != null)
+        if (firePoint != null && _config != null)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(firePoint.position, 0.1f);

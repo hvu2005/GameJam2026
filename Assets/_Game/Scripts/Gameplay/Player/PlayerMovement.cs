@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D _rb;
     private PlayerDash _dash;
     private PlayerStatusEffects _statusEffects;
+    private PlayerGravityController _gravityController;
     private float _currentSpeed;
     private float _targetSpeed;
     private int _facingDirection = 1;
@@ -29,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _dash = GetComponent<PlayerDash>();
         _statusEffects = GetComponent<PlayerStatusEffects>();
+        _gravityController = GetComponent<PlayerGravityController>();
         
         if (config == null)
         {
@@ -118,14 +120,18 @@ public class PlayerMovement : MonoBehaviour
     {
         if (config == null) return;
 
-        Vector2 boxOrigin = (Vector2)transform.position + config.GroundCheckOffset;
+        Vector2 boxOrigin = transform.position;
         Vector2 boxSize = new Vector2(0.8f, 0.8f);
+        
+        Vector2 castDirection = _gravityController != null && _gravityController.IsGravityFlipped
+            ? Vector2.up
+            : Vector2.down;
         
         RaycastHit2D hit = Physics2D.BoxCast(
             boxOrigin, 
             boxSize, 
             0f, 
-            Vector2.down, 
+            castDirection, 
             config.GroundCheckDistance, 
             config.GroundLayer
         );
@@ -185,8 +191,12 @@ public class PlayerMovement : MonoBehaviour
     {
         if (config == null) return;
 
-        Gizmos.color = Color.red;
-        Vector2 origin = (Vector2)transform.position + config.GroundCheckOffset;
-        Gizmos.DrawLine(origin, origin + Vector2.down * config.GroundCheckDistance);
+        Vector2 castDirection = _gravityController != null && _gravityController.IsGravityFlipped
+            ? Vector2.up
+            : Vector2.down;
+
+        Gizmos.color = _isGrounded ? Color.green : Color.red;
+        Vector2 origin = transform.position;
+        Gizmos.DrawLine(origin, origin + castDirection * config.GroundCheckDistance);
     }
 }

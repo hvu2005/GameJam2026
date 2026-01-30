@@ -134,8 +134,11 @@ GameObject:
   - component: {fileID: 383089646550949796}
   - component: {fileID: 3319380752106607333}
   - component: {fileID: 6296357470747024922}
-  - component: {fileID: 880941827931437856}
   - component: {fileID: 5704779169668346030}
+  - component: {fileID: 5586178588101374169}
+  - component: {fileID: 6912572225571050555}
+  - component: {fileID: 7883146255976085822}
+  - component: {fileID: 5854782616982365292}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -264,9 +267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49beb8dc9bdac364d87eba02569b6a78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config: {fileID: 11400000, guid: 8f24c3bbea9523243af0c10761255e45, type: 2}
   firePoint: {fileID: 4933629344613387297}
-  markerPrefab: {fileID: 775718591928921582, guid: 021be6a6e27a8f447bf142c79a50eec3, type: 3}
 --- !u!70 &3319380752106607333
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -314,7 +315,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eecad695f40bfb24c871ab59f94b6f90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!120 &880941827931437856
+--- !u!114 &5704779169668346030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4117575920740194630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb28ef7d9b2451429177c19adc90418, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeDuration: 0.7
+  trailWidth: 0.1
+  trailColor: {r: 0, g: 1, b: 1, a: 1}
+  lineSegments: 30
+--- !u!114 &5586178588101374169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4117575920740194630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99d5a633200970b42af3e3a7db219c1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultFormConfig: {fileID: 11400000, guid: 9c55e0d0104b53844b94cc69b3081244, type: 2}
+  agilityFormConfig: {fileID: 11400000, guid: 5bd79114fb98bbc4584f78934284c7f2, type: 2}
+  voidFormConfig: {fileID: 11400000, guid: f6e08237e9cc6f943b86684be28502b7, type: 2}
+  gravityFormConfig: {fileID: 11400000, guid: 4eb0769f995f9ba4bb443c7327924f20, type: 2}
+--- !u!114 &6912572225571050555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4117575920740194630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bbf277ae9da50844aa26e46961f76bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualTransform: {fileID: 3910491287912468267}
+--- !u!120 &7883146255976085822
 LineRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
@@ -418,14 +464,14 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &5704779169668346030
+--- !u!114 &5854782616982365292
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4117575920740194630}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4fb28ef7d9b2451429177c19adc90418, type: 3}
   m_Name: 

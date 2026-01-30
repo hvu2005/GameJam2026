@@ -12,6 +12,8 @@ public class PlayerJump : MonoBehaviour
     private PlayerMovement _movement;
     private PlayerDash _dash;
     private PlayerStatusEffects _statusEffects;
+    private PlayerFormController _formController;
+    private PlayerGravityController _gravityController;
 
     private int _jumpCount;
     private float _lastGroundedTime = -999f;
@@ -30,6 +32,8 @@ public class PlayerJump : MonoBehaviour
         _movement = GetComponent<PlayerMovement>();
         _dash = GetComponent<PlayerDash>();
         _statusEffects = GetComponent<PlayerStatusEffects>();
+        _formController = GetComponent<PlayerFormController>();
+        _gravityController = GetComponent<PlayerGravityController>();
         
         if (config == null)
         {
@@ -98,6 +102,10 @@ public class PlayerJump : MonoBehaviour
     {
         if (config == null) return false;
 
+        int maxJumps = _formController != null && _formController.CurrentForm != null 
+            ? _formController.CurrentForm.GetMaxJumps() 
+            : 1;
+
         bool withinCoyoteTime = Time.time - _lastGroundedTime < config.CoyoteTime;
         bool hasGroundJump = (_movement.IsGrounded || withinCoyoteTime) && _jumpCount == 0;
 
@@ -106,7 +114,7 @@ public class PlayerJump : MonoBehaviour
             return true;
         }
         
-        if (!_movement.IsGrounded && _jumpCount < config.MaxJumps)
+        if (!_movement.IsGrounded && _jumpCount < maxJumps)
         {
             return true;
         }
@@ -123,7 +131,12 @@ public class PlayerJump : MonoBehaviour
         float jumpForce = _jumpCount == 0 ? config.JumpForce : config.DoubleJumpForce;
         float multiplier = _statusEffects != null ? _statusEffects.JumpForceMultiplier : 1f;
         jumpForce *= multiplier;
-        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
+        
+        int jumpDirection = _gravityController != null && _gravityController.IsGravityFlipped
+            ? -1
+            : 1;
+        
+        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * jumpDirection);
 
         _jumpCount++;
         _isJumping = true;
@@ -133,10 +146,15 @@ public class PlayerJump : MonoBehaviour
     private void ApplyGravityModifiers()
     {
         if (config == null) return;
+        
+        bool isFalling = _gravityController != null && _gravityController.IsGravityFlipped
+            ? _rb.velocity.y > 0
+            : _rb.velocity.y < 0;
 
-        if (_rb.velocity.y < 0)
+        if (isFalling)
         {
-            _rb.velocity += Vector2.up * Physics2D.gravity.y * (config.FallGravityMultiplier - 1) * Time.deltaTime;
+            int gravityDir = _gravityController != null ? _gravityController.GravityDirection : 1;
+            _rb.velocity += Vector2.up * Physics2D.gravity.y * gravityDir * (config.FallGravityMultiplier - 1) * Time.deltaTime;
         }
     }
 

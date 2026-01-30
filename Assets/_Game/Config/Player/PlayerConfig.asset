@@ -65,8 +65,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   iceAirControlPenalty: 0.6
-  groundCheckDistance: 0.1
-  groundCheckOffset: {x: 0, y: -0.5}
+  groundCheckDistance: 0.7
+  groundCheckOffset: {x: 0, y: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64

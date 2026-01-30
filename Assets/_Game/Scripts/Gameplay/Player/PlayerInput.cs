@@ -25,6 +25,9 @@ public class PlayerInput : EventTarget
         _inputActions.GamePlay.Jump.performed += OnJumpPerformed;
         _inputActions.GamePlay.Dash.performed += OnDashPerformed;
         _inputActions.GamePlay.Skill.started += OnSkillPerformed;
+        _inputActions.GamePlay.Form1.performed += OnForm1Performed;
+        _inputActions.GamePlay.Form2.performed += OnForm2Performed;
+        _inputActions.GamePlay.Form3.performed += OnForm3Performed;
     }
 
     private void OnDisable()
@@ -34,6 +37,9 @@ public class PlayerInput : EventTarget
         _inputActions.GamePlay.Jump.performed -= OnJumpPerformed;
         _inputActions.GamePlay.Dash.performed -= OnDashPerformed;
         _inputActions.GamePlay.Skill.started -= OnSkillPerformed;
+        _inputActions.GamePlay.Form1.performed -= OnForm1Performed;
+        _inputActions.GamePlay.Form2.performed -= OnForm2Performed;
+        _inputActions.GamePlay.Form3.performed -= OnForm3Performed;
         
         _inputActions.GamePlay.Disable();
     }
@@ -76,5 +82,20 @@ public class PlayerInput : EventTarget
     private void OnSkillPerformed(InputAction.CallbackContext context)
     {
         this.Emit<bool>(PlayerInputType.Skill, true);
+    }
+
+    private void OnForm1Performed(InputAction.CallbackContext context)
+    {
+        this.Emit<int>(PlayerInputType.FormSelect, 1);
+    }
+
+    private void OnForm2Performed(InputAction.CallbackContext context)
+    {
+        this.Emit<int>(PlayerInputType.FormSelect, 2);
+    }
+
+    private void OnForm3Performed(InputAction.CallbackContext context)
+    {
+        this.Emit<int>(PlayerInputType.FormSelect, 3);
     }
 }

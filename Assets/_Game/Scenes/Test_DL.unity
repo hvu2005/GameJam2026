@@ -375,7 +375,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.52, y: 8.7699995, z: -10}
+  m_LocalPosition: {x: 5, y: 27.09, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -816,7 +816,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 507625323}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4fb28ef7d9b2451429177c19adc90418, type: 3}
   m_Name: 
@@ -955,7 +955,7 @@ Transform:
   m_GameObject: {fileID: 1519762637}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.52, y: 8.7699995, z: -10}
+  m_LocalPosition: {x: 5, y: 27.09, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1158,7 +1158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapDatabase: {fileID: 11400000, guid: bcad80cb9da6d004dbfddd5263e7876d, type: 2}
-  mapID: abc
+  mapID: 1.1
   spawnPoint: {fileID: 1775732951}
   autoLoadOnStart: 1
   showDebugInfo: 1
@@ -1202,7 +1202,7 @@ Transform:
   m_GameObject: {fileID: 1775732950}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 14.6, z: 0}
+  m_LocalPosition: {x: 10, y: 22, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1259,11 +1259,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3910491287912468267, guid: 108ef3e7da47f0846a46db1040467720, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.52
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3910491287912468267, guid: 108ef3e7da47f0846a46db1040467720, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.68
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 3910491287912468267, guid: 108ef3e7da47f0846a46db1040467720, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1305,6 +1305,26 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5586178588101374169, guid: 108ef3e7da47f0846a46db1040467720, type: 3}
+      propertyPath: voidFormConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: f6e08237e9cc6f943b86684be28502b7, type: 2}
+    - target: {fileID: 5586178588101374169, guid: 108ef3e7da47f0846a46db1040467720, type: 3}
+      propertyPath: agilityFormConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: 5bd79114fb98bbc4584f78934284c7f2, type: 2}
+    - target: {fileID: 5586178588101374169, guid: 108ef3e7da47f0846a46db1040467720, type: 3}
+      propertyPath: defaultFormConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: 9c55e0d0104b53844b94cc69b3081244, type: 2}
+    - target: {fileID: 5586178588101374169, guid: 108ef3e7da47f0846a46db1040467720, type: 3}
+      propertyPath: gravityFormConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: 4eb0769f995f9ba4bb443c7327924f20, type: 2}
+    - target: {fileID: 6912572225571050555, guid: 108ef3e7da47f0846a46db1040467720, type: 3}
+      propertyPath: visualTransform
+      value: 
+      objectReference: {fileID: 1490341458}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
