@@ -11,8 +11,14 @@ public class TeleportMarker : MonoBehaviour
         Expired
     }
 
-    [Header("References")]
-    [SerializeField] private PlayerConfig config;
+    private float _markerThrowSpeed;
+    private float _markerThrowAngle;
+    private float _markerFlightForce;
+    private float _markerMaxDistance;
+    private float _markerAcceleration;
+    private float _markerMaxSpeed;
+    private float _markerLifetime;
+    private float _markerPickupRadius;
     
     private Rigidbody2D _rb;
     private CircleCollider2D _physicsCollider;
@@ -35,7 +41,34 @@ public class TeleportMarker : MonoBehaviour
     
     public void Initialize(PlayerConfig cfg, Vector2 direction, Transform player)
     {
-        config = cfg;
+        _markerThrowSpeed = cfg.MarkerThrowSpeed;
+        _markerThrowAngle = cfg.MarkerThrowAngle;
+        _markerFlightForce = cfg.MarkerFlightForce;
+        _markerMaxDistance = cfg.MarkerMaxDistance;
+        _markerAcceleration = cfg.MarkerAcceleration;
+        _markerMaxSpeed = cfg.MarkerMaxSpeed;
+        _markerLifetime = cfg.MarkerLifetime;
+        _markerPickupRadius = cfg.MarkerPickupRadius;
+        
+        InitializeInternal(direction, player);
+    }
+
+    public void InitializeWithVoidConfig(VoidFormConfigSO cfg, Vector2 direction, Transform player)
+    {
+        _markerThrowSpeed = cfg.markerThrowSpeed;
+        _markerThrowAngle = cfg.markerThrowAngle;
+        _markerFlightForce = cfg.markerFlightForce;
+        _markerMaxDistance = cfg.markerMaxDistance;
+        _markerAcceleration = cfg.markerAcceleration;
+        _markerMaxSpeed = cfg.markerMaxSpeed;
+        _markerLifetime = cfg.markerLifetime;
+        _markerPickupRadius = cfg.markerPickupRadius;
+        
+        InitializeInternal(direction, player);
+    }
+
+    private void InitializeInternal(Vector2 direction, Transform player)
+    {
         _throwDirection = direction.normalized;
         _playerTransform = player;
         _startTime = Time.time;
@@ -55,7 +88,7 @@ public class TeleportMarker : MonoBehaviour
         }
         
         _pickupTrigger = gameObject.AddComponent<CircleCollider2D>();
-        _pickupTrigger.radius = config.MarkerPickupRadius;
+        _pickupTrigger.radius = _markerPickupRadius;
         _pickupTrigger.isTrigger = true;
         
         Collider2D playerCollider = _playerTransform.GetComponent<Collider2D>();
@@ -93,15 +126,15 @@ public class TeleportMarker : MonoBehaviour
         _state = MarkerState.Flying;
         _distanceTraveled = 0f;
         
-        if (config.MarkerFlightForce == -1f)
+        if (_markerFlightForce == -1f)
         {
-            _currentSpeed = config.MarkerThrowSpeed;
+            _currentSpeed = _markerThrowSpeed;
             _rb.velocity = _throwDirection * _currentSpeed;
             _rb.gravityScale = 0f;
         }
         else
         {
-            float initialSpeed = config.MarkerFlightForce * config.MarkerThrowSpeed;
+            float initialSpeed = _markerFlightForce * _markerThrowSpeed;
             _rb.velocity = _throwDirection * initialSpeed;
             _currentSpeed = initialSpeed;
             _rb.gravityScale = 1f;
@@ -110,19 +143,19 @@ public class TeleportMarker : MonoBehaviour
     
     private void UpdateFlight()
     {
-        if (config.MarkerFlightForce == -1f)
+        if (_markerFlightForce == -1f)
         {
             _distanceTraveled += _rb.velocity.magnitude * Time.deltaTime;
             
-            if (_distanceTraveled < config.MarkerMaxDistance)
+            if (_distanceTraveled < _markerMaxDistance)
             {
-                float progress = _distanceTraveled / config.MarkerMaxDistance;
+                float progress = _distanceTraveled / _markerMaxDistance;
                 float targetSpeed = CalculateEasedSpeed(progress);
                 
                 _currentSpeed = Mathf.MoveTowards(
                     _currentSpeed, 
                     targetSpeed, 
-                    config.MarkerAcceleration * Time.deltaTime
+                    _markerAcceleration * Time.deltaTime
                 );
                 
                 _rb.velocity = _throwDirection * _currentSpeed;
@@ -159,8 +192,8 @@ public class TeleportMarker : MonoBehaviour
             eased = 1f - 2f * (1f - t2) * (1f - t2);
         }
         
-        float minSpeed = config.MarkerThrowSpeed;
-        float maxSpeed = config.MarkerMaxSpeed;
+        float minSpeed = _markerThrowSpeed;
+        float maxSpeed = _markerMaxSpeed;
         
         return Mathf.Lerp(minSpeed, maxSpeed, eased);
     }
@@ -170,7 +203,7 @@ public class TeleportMarker : MonoBehaviour
         if (_state != MarkerState.Flying) return;
         
         _state = MarkerState.Landed;
-        _lifetimeTimer = config.MarkerLifetime;
+        _lifetimeTimer = _markerLifetime;
         
         _rb.gravityScale = 1f;
         
@@ -202,12 +235,13 @@ public class TeleportMarker : MonoBehaviour
     
     void OnDrawGizmos()
     {
-        if (!Application.isPlaying || config == null) return;
+        if (!Application.isPlaying) return;
         
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, config.MarkerPickupRadius);
+        Gizmos.DrawWireSphere(transform.position, _markerPickupRadius);
         
         Gizmos.color = _state == MarkerState.Flying ? Color.yellow : Color.green;
         Gizmos.DrawWireSphere(transform.position, 0.2f);
     }
 }
+
