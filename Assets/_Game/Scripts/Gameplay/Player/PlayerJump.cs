@@ -12,10 +12,14 @@ public class PlayerJump : MonoBehaviour
     private PlayerMovement _movement;
     private PlayerDash _dash;
     private PlayerStatusEffects _statusEffects;
+    private PlayerFormController _formController;
+    private PlayerGravityController _gravityController;
+    private PlayerStateMachine _stateMachine;
 
     private int _jumpCount;
     private float _lastGroundedTime = -999f;
     private float _lastJumpTime = -999f;
+    private float _previousVelocityY;
 
     private bool _isJumping;
     private bool _wasGrounded;
@@ -30,6 +34,9 @@ public class PlayerJump : MonoBehaviour
         _movement = GetComponent<PlayerMovement>();
         _dash = GetComponent<PlayerDash>();
         _statusEffects = GetComponent<PlayerStatusEffects>();
+        _formController = GetComponent<PlayerFormController>();
+        _gravityController = GetComponent<PlayerGravityController>();
+        _stateMachine = GetComponent<PlayerStateMachine>();
         
         if (config == null)
         {
@@ -53,11 +60,17 @@ public class PlayerJump : MonoBehaviour
         
         UpdateJumpTimers();
         ApplyGravityModifiers();
+        CheckJumpPeak();
     }
 
     private void OnJumpInput(bool pressed)
     {
         if (!pressed) return;
+        
+        if (_stateMachine != null && !_stateMachine.CanJump)
+        {
+            return;
+        }
         
         if (_dash != null && _dash.IsDashing)
         {
@@ -97,6 +110,10 @@ public class PlayerJump : MonoBehaviour
     {
         if (config == null) return false;
 
+        int maxJumps = _formController != null && _formController.CurrentForm != null 
+            ? _formController.CurrentForm.GetMaxJumps() 
+            : 1;
+
         bool withinCoyoteTime = Time.time - _lastGroundedTime < config.CoyoteTime;
         bool hasGroundJump = (_movement.IsGrounded || withinCoyoteTime) && _jumpCount == 0;
 
@@ -105,7 +122,7 @@ public class PlayerJump : MonoBehaviour
             return true;
         }
         
-        if (!_movement.IsGrounded && _jumpCount < config.MaxJumps)
+        if (!_movement.IsGrounded && _jumpCount < maxJumps)
         {
             return true;
         }
@@ -117,31 +134,125 @@ public class PlayerJump : MonoBehaviour
     {
         if (config == null) return;
 
+        bool withinCoyoteTime = Time.time - _lastGroundedTime < config.CoyoteTime;
+        bool usedCoyoteTime = withinCoyoteTime && !_movement.IsGrounded;
+        bool isDoubleJump = _jumpCount > 0;
+
         _rb.velocity = new Vector2(_rb.velocity.x, 0f);
         
         float jumpForce = _jumpCount == 0 ? config.JumpForce : config.DoubleJumpForce;
         float multiplier = _statusEffects != null ? _statusEffects.JumpForceMultiplier : 1f;
         jumpForce *= multiplier;
-        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
+        
+        int jumpDirection = _gravityController != null && _gravityController.IsGravityFlipped
+            ? -1
+            : 1;
+        
+        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * jumpDirection);
+
+        EventBus.Emit(PlayerActionEventType.OnJumpStarted,
+            new JumpEventData
+            {
+                JumpCount = _jumpCount + 1,
+                IsDoubleJump = isDoubleJump,
+                JumpForce = jumpForce,
+                UsedCoyoteTime = usedCoyoteTime,
+                Position = transform.position
+            });
+        Debug.Log($"[Jump] [Emit Event] Jump Started: Count={_jumpCount + 1}, Force={jumpForce:F1}");
+        
+        if (isDoubleJump)
+        {
+            EventBus.Emit(PlayerActionEventType.OnDoubleJump,
+                new JumpEventData
+                {
+                    JumpCount = _jumpCount + 1,
+                    IsDoubleJump = true,
+                    JumpForce = jumpForce,
+                    UsedCoyoteTime = false,
+                    Position = transform.position
+                });
+            Debug.Log($"[Jump] [Emit Event] Double Jump! Count={_jumpCount + 1}");
+        }
+        
+        if (usedCoyoteTime)
+        {
+            EventBus.Emit(PlayerActionEventType.OnCoyoteTimeUsed,
+                new JumpEventData
+                {
+                    JumpCount = 1,
+                    IsDoubleJump = false,
+                    JumpForce = jumpForce,
+                    UsedCoyoteTime = true,
+                    Position = transform.position
+                });
+            Debug.Log("[Jump] [Emit Event] Coyote Time Used!");
+        }
 
         _jumpCount++;
         _isJumping = true;
         _lastJumpTime = Time.time;
+        
+        if (_stateMachine != null)
+        {
+            _stateMachine.ChangeState(PlayerState.Jumping);
+        }
     }
 
     private void ApplyGravityModifiers()
     {
         if (config == null) return;
+        
+        bool isFalling = _gravityController != null && _gravityController.IsGravityFlipped
+            ? _rb.velocity.y > 0
+            : _rb.velocity.y < 0;
 
-        if (_rb.velocity.y < 0)
+        if (isFalling)
         {
-            _rb.velocity += Vector2.up * Physics2D.gravity.y * (config.FallGravityMultiplier - 1) * Time.deltaTime;
+            int gravityDir = _gravityController != null ? _gravityController.GravityDirection : 1;
+            _rb.velocity += Vector2.up * Physics2D.gravity.y * gravityDir * (config.FallGravityMultiplier - 1) * Time.deltaTime;
         }
     }
 
     private void OnLanded()
     {
+        EventBus.Emit(PlayerActionEventType.OnLanded,
+            new JumpEventData
+            {
+                JumpCount = _jumpCount,
+                IsDoubleJump = _jumpCount > 1,
+                JumpForce = 0f,
+                UsedCoyoteTime = false,
+                Position = transform.position
+            });
+        Debug.Log($"[Jump] [Emit Event] Landed! JumpCount was: {_jumpCount}");
+        
         _isJumping = false;
+    }
+    
+    private void CheckJumpPeak()
+    {
+        if (_isJumping)
+        {
+            bool wasGoingUp = _previousVelocityY > 0.1f;
+            bool nowGoingDown = _rb.velocity.y < 0.1f;
+            
+            if (wasGoingUp && nowGoingDown)
+            {
+                EventBus.Emit(PlayerActionEventType.OnJumpPeak,
+                    new JumpEventData
+                    {
+                        JumpCount = _jumpCount,
+                        IsDoubleJump = _jumpCount > 1,
+                        JumpForce = 0f,
+                        UsedCoyoteTime = false,
+                        Position = transform.position
+                    });
+                Debug.Log("[Jump] [Emit Event] Peak Reached!");
+            }
+        }
+        
+        _previousVelocityY = _rb.velocity.y;
     }
 
     public void CancelJump()

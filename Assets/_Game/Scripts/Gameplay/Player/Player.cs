@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(PlayerMovement), typeof(PlayerJump), typeof(PlayerDash))]
+[RequireComponent(typeof(PlayerFormController), typeof(PlayerGravityController), typeof(PlayerStateMachine))]
 public class Player : PlayerEntity
 {
     [Header("Player Configuration")]
@@ -12,10 +13,14 @@ public class Player : PlayerEntity
     private PlayerMovement _movement;
     private PlayerJump _jump;
     private PlayerDash _dash;
+    private PlayerFormController _formController;
+    private PlayerStateMachine _stateMachine;
     
     public PlayerMovement Movement => _movement;
     public PlayerJump Jump => _jump;
     public PlayerDash Dash => _dash;
+    public PlayerFormController FormController => _formController;
+    public PlayerStateMachine StateMachine => _stateMachine;
     public PlayerConfig Config => config;
     
     public bool IsGrounded => _movement != null && _movement.IsGrounded;
@@ -26,11 +31,18 @@ public class Player : PlayerEntity
         InitializeComponents();
     }
 
+    public void Start()
+    {
+        FormUnlockManager.UnlockAll();
+    }
+    
     private void InitializeComponents()
     {
         _movement = GetComponent<PlayerMovement>();
         _jump = GetComponent<PlayerJump>();
         _dash = GetComponent<PlayerDash>();
+        _formController = GetComponent<PlayerFormController>();
+        _stateMachine = GetComponent<PlayerStateMachine>();
         
         if (config == null)
         {
@@ -44,7 +56,6 @@ public class Player : PlayerEntity
         
         ResetPlayerState();
         
-        // todo: play death animation, emit death event, etc.
         SceneManager.LoadScene(this.gameObject.scene.name);
     }
 
