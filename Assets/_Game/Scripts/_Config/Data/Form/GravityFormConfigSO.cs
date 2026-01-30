@@ -10,6 +10,12 @@ public class GravityFormConfigSO : BaseFormConfigSO
     [Tooltip("Gravity scale when flipped (-1 = inverted)")]
     public float flippedGravityScale = -1f;
     
+    [Tooltip("Hệ số nhân gravity tạm thời khi đảo (>1 = bay/rơi nhanh hơn)")]
+    public float reverseGravityMultiplier = 2f;
+    
+    [Tooltip("Thời gian tăng gravity tạm thời (giây)")]
+    public float reverseGravityBoostDuration = 0.3f;
+    
     [Tooltip("Cooldown for gravity skill")]
     public float gravityCooldown = 0.5f;
 

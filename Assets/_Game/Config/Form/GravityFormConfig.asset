@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   formID: 3
   formName: Gravity
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: eb0c2befb1fa20a4586f29f2feeb5636, type: 3}
   formSwitchCooldown: 2
   gravityFlipDuration: 2
   flippedGravityScale: -1
-  gravityCooldown: 0.5
+  reverseGravityMultiplier: 2
+  reverseGravityBoostDuration: 0.4
+  gravityCooldown: 1

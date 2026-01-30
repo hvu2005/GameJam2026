@@ -19,6 +19,14 @@ public class GravityForm : PlayerFormBase
         gravityController = player.GetComponent<PlayerGravityController>();
         skillCooldownTimer = 0f;
         
+        if (gravityController != null)
+        {
+            gravityController.SetReverseGravityConfig(
+                gravityConfig.reverseGravityMultiplier, 
+                gravityConfig.reverseGravityBoostDuration
+            );
+        }
+        
         Debug.Log("[GravityForm] Entered - Gravity skill ready");
     }
 
