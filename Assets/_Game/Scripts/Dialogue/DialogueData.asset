@@ -12,6 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccd20d71d9b8f8143a8b853e4aff3db6, type: 3}
   m_Name: DialogueData
   m_EditorClassIdentifier: 
-  lines: []
+  lines:
+  - speakerName: '"Sarah"'
+    portrait: {fileID: 0}
+    position: 0
+    text: 
+  - speakerName: 
+    portrait: {fileID: 0}
+    position: 0
+    text: 
   autoClose: 1
   autoCloseDelay: 0.5
