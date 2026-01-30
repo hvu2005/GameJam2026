@@ -18,4 +18,6 @@ MonoBehaviour:
   formSwitchCooldown: 2
   gravityFlipDuration: 2
   flippedGravityScale: -1
-  gravityCooldown: 0.5
+  reverseGravityMultiplier: 2
+  reverseGravityBoostDuration: 0.4
+  gravityCooldown: 1
