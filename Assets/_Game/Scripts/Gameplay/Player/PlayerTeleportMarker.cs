@@ -13,6 +13,7 @@ public class PlayerTeleportMarker : MonoBehaviour
     private PlayerJump _jump;
     private PlayerDash _dash;
     private Rigidbody2D _rb;
+    private PlayerTeleportTrail _teleportTrail;
     
     private TeleportMarker _activeMarker;
     private float _teleportWindowTimer;
@@ -30,6 +31,7 @@ public class PlayerTeleportMarker : MonoBehaviour
         _jump = GetComponent<PlayerJump>();
         _dash = GetComponent<PlayerDash>();
         _rb = GetComponent<Rigidbody2D>();
+        _teleportTrail = GetComponent<PlayerTeleportTrail>();
         
         if (config == null)
         {
@@ -141,6 +143,9 @@ public class PlayerTeleportMarker : MonoBehaviour
         Vector2 targetPos = _activeMarker.Position;
         Vector2 validPos = FindValidTeleportPosition(targetPos);
         
+        // Lưu vị trí cũ để tạo trail
+        Vector3 oldPosition = transform.position;
+        
         _rb.velocity = Vector2.zero;
         
         if (_dash != null && _dash.IsDashing)
@@ -148,7 +153,14 @@ public class PlayerTeleportMarker : MonoBehaviour
             _dash.CancelDash();
         }
         
+        // Dịch chuyển player
         transform.position = validPos;
+        
+        // Kích hoạt trail effect từ vị trí cũ đến vị trí mới
+        if (_teleportTrail != null)
+        {
+            _teleportTrail.ActivateTrail(oldPosition, validPos);
+        }
         
         Destroy(_activeMarker.gameObject);
         _activeMarker = null;
