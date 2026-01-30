@@ -12,6 +12,7 @@ public class PlayerDash : MonoBehaviour
     private PlayerMovement _movement;
     private PlayerJump _jump;
     private PlayerStateMachine _stateMachine;
+    private PlayerGravityController _gravityController;
     
     private bool _isDashing;
     private float _dashTimer;
@@ -33,7 +34,8 @@ public class PlayerDash : MonoBehaviour
         _movement = GetComponent<PlayerMovement>();
         _jump = GetComponent<PlayerJump>();
         _stateMachine = GetComponent<PlayerStateMachine>();
-        _originalGravityScale = _rb.gravityScale;
+        _gravityController = GetComponent<PlayerGravityController>();
+        _originalGravityScale = Mathf.Abs(_rb.gravityScale);
         
         if (config == null)
         {
@@ -144,7 +146,15 @@ public class PlayerDash : MonoBehaviour
     {
         _isDashing = false;
         
-        _rb.gravityScale = _originalGravityScale;
+        // Restore gravity with correct direction if gravity was flipped during dash
+        if (_gravityController != null)
+        {
+            _rb.gravityScale = _gravityController.GetCurrentGravityScale(_originalGravityScale);
+        }
+        else
+        {
+            _rb.gravityScale = _originalGravityScale;
+        }
 
         float newVelocityX = _rb.velocity.x * 0.5f;
         float newVelocityY = _dashDirection.y >= 0 ? 0f : _rb.velocity.y;
