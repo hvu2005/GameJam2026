@@ -325,7 +325,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.21293165, g: 0.39962816, b: 0.5188679, a: 0}
+  m_BackGroundColor: {r: 0.09433961, g: 0.09433961, b: 0.09433961, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1057,7 +1057,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapDatabase: {fileID: 11400000, guid: bcad80cb9da6d004dbfddd5263e7876d, type: 2}
-  mapID: 1.1
+  mapID: abc 1
   spawnPoint: {fileID: 1775732951}
   autoLoadOnStart: 1
   showDebugInfo: 1
