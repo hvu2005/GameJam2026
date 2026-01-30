@@ -13,6 +13,16 @@ public abstract class DialogueBase : MonoBehaviour
         return dialogueController;
     }
     
+    protected void ShowDialogue(DialogueData dialogueData)
+    {
+        var controller = GetDialogueController();
+        if (controller != null && dialogueData != null)
+        {
+            controller.StartDialogue(dialogueData);
+        }
+    }
+    
+    // Backwards compatibility
     protected void ShowDialogue(DialogueText dialogueText)
     {
         var controller = GetDialogueController();

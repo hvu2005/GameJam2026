@@ -14,6 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speakerName: Ducanh
   paragraphs:
-  - "TAo l\xE0 \u0110anh ch\xF3 \u0111i\xEAn 1 m\xECnh tao ch"
+  - "TAo l\xE0 \u0110anh ch\xF3 \u0111i\xEAn 1 m\xECnh tao ch TAo l\xE0 \u0110anh
+    ch\xF3 \u0111i\xEAn 1 m\xECnh tao chTAo l\xE0 \u0110anh ch\xF3 \u0111i\xEAn 1
+    m\xECnh tao chTAo l\xE0 \u0110anh ch\xF3 \u0111i\xEAn 1 m\xECnh tao chTAo l\xE0
+    \u0110anh ch\xF3 \u0111i\xEAn 1 m\xECnh tao chTAo l\xE0 \u0110anh ch\xF3 \u0111i\xEAn
+    1 m\xECnh tao chTAo l\xE0 \u0110anh ch\xF3 \u0111i\xEAn 1 m\xECnh tao chTAo l\xE0
+    \u0110anh ch\xF3 \u0111i\xEAn 1 m\xECnh tao chTAo l\xE0 \u0110anh ch\xF3 \u0111i\xEAn
+    1 m\xECnh tao ch"
   - "Hay l\u1EAFm HAHAHAHAH\n"
   - "N\xF3i th\u1EBF th\xF4i t\xF4i y\xEAu em ng\xE2n"
+  - "Alo V\u0169 \xE0 V\u0169"
