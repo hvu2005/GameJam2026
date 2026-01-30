@@ -9,23 +9,18 @@ namespace _Game.Scripts._Config.Data
         [Tooltip("Kéo map prefabs vào theo thứ tự: Element 0 = Map ID 1, Element 1 = Map ID 2...")]
         public GameObject[] mapPrefabs;
         
-        public GameObject GetMapPrefab(int mapId)
+        public GameObject GetMapPrefab(string mapId)
         {
-            int index = mapId - 1;
-            
-            if (index < 0 || index >= mapPrefabs.Length)
+
+            foreach(GameObject i in mapPrefabs)
             {
-                Debug.LogError($"Map ID {mapId} không tồn tại! (Có {mapPrefabs.Length} maps)");
-                return null;
+                if(i.name == mapId)
+                {
+                    return i;
+                }
             }
             
-            if (mapPrefabs[index] == null)
-            {
-                Debug.LogError($"Map ID {mapId} chưa gán prefab!");
-                return null;
-            }
-            
-            return mapPrefabs[index];
+            return null;
         }
         
         public int GetTotalMaps() => mapPrefabs.Length;

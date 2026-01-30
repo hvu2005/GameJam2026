@@ -10,7 +10,7 @@ namespace _Game.Scripts.Tool
         [SerializeField] private MapDatabase mapDatabase;
         
         [Header("Map ID to Load")]
-        [SerializeField] private int mapID = 1;
+        [SerializeField] private string mapID = "1";
         
         [Header("Settings")]
         [SerializeField] private Transform spawnPoint;
@@ -18,7 +18,7 @@ namespace _Game.Scripts.Tool
         [SerializeField] private bool showDebugInfo = true;
         
         private GameObject currentMapInstance;
-        private int currentLoadedMapID = -1;
+        private string currentLoadedMapID = "";
         
         private void Start()
         {
@@ -89,16 +89,16 @@ namespace _Game.Scripts.Tool
                     
                 Destroy(currentMapInstance);
                 currentMapInstance = null;
-                currentLoadedMapID = -1;
+                currentLoadedMapID = "";
             }
         }
         
-        public void SetMapID(int id)
+        public void SetMapID(string id)
         {
             mapID = id;
         }
         
-        public void SetAndLoadMap(int id)
+        public void SetAndLoadMap(string id)
         {
             mapID = id;
             LoadMap();
@@ -114,8 +114,7 @@ namespace _Game.Scripts.Tool
             style.padding = new RectOffset(10, 10, 10, 10);
             
             string info = $"Map ID: {mapID}";
-            if (currentLoadedMapID >= 0)
-                info += $" (Loaded: {currentLoadedMapID})";
+            info += $" (Loaded: {currentLoadedMapID})";
             info += "\nPress R to load";
             
             GUI.Label(new Rect(10, 10, 300, 60), info, style);
