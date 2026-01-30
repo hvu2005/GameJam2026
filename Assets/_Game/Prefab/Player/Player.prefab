@@ -134,11 +134,11 @@ GameObject:
   - component: {fileID: 383089646550949796}
   - component: {fileID: 3319380752106607333}
   - component: {fileID: 6296357470747024922}
-  - component: {fileID: 5704779169668346030}
   - component: {fileID: 5586178588101374169}
   - component: {fileID: 6912572225571050555}
+  - component: {fileID: 5704779169668346030}
   - component: {fileID: 7883146255976085822}
-  - component: {fileID: 5854782616982365292}
+  - component: {fileID: 8401885428856138456}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -315,22 +315,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eecad695f40bfb24c871ab59f94b6f90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5704779169668346030
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4117575920740194630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fb28ef7d9b2451429177c19adc90418, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fadeDuration: 0.7
-  trailWidth: 0.1
-  trailColor: {r: 0, g: 1, b: 1, a: 1}
-  lineSegments: 30
 --- !u!114 &5586178588101374169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,6 +344,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visualTransform: {fileID: 3910491287912468267}
+--- !u!114 &5704779169668346030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4117575920740194630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb28ef7d9b2451429177c19adc90418, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeDuration: 0.7
+  trailWidth: 0.1
+  trailColor: {r: 0, g: 1, b: 1, a: 1}
+  lineSegments: 30
 --- !u!120 &7883146255976085822
 LineRenderer:
   serializedVersion: 2
@@ -464,22 +464,18 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &5854782616982365292
+--- !u!114 &8401885428856138456
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4117575920740194630}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fb28ef7d9b2451429177c19adc90418, type: 3}
+  m_Script: {fileID: 11500000, guid: b2b62af943bbe834ba7ac86d7f71812b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeDuration: 0.7
-  trailWidth: 0.1
-  trailColor: {r: 0, g: 1, b: 1, a: 1}
-  lineSegments: 30
 --- !u!1 &7086808504287390455
 GameObject:
   m_ObjectHideFlags: 0
