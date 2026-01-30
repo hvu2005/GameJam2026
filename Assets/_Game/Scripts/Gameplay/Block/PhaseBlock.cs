@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PhaseBlock : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class PhaseBlock : MonoBehaviour
 
     [Header("🎨 Visuals")]
     [SerializeField] private Sprite activeSprite;   // Hình nền đá sáng (Đặc)
-    [SerializeField] private Sprite inactiveSprite; // Hình nền đá sọc (Rỗng/Mờ)
+    [SerializeField] private Tilemap tilemap;
     
     [Range(0f, 1f)]
     [SerializeField] private float activeAlpha = 1f;
@@ -32,6 +33,7 @@ public class PhaseBlock : MonoBehaviour
     {
         col = GetComponent<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
+        tilemap = GetComponent<Tilemap>();
         
         // Tự động lấy sprite hiện tại làm active sprite nếu chưa gán
         if (activeSprite == null && sr != null) activeSprite = sr.sprite;
@@ -77,18 +79,12 @@ public class PhaseBlock : MonoBehaviour
         if (col != null) col.enabled = active;
 
         // 2. Xử lý hình ảnh (Visual)
-        if (sr != null)
+        if (tilemap != null)
         {
             // Đổi màu/Alpha
-            Color c = sr.color;
+            Color c = tilemap.color;
             c.a = active ? activeAlpha : inactiveAlpha;
-            sr.color = c;
-
-            // Đổi Sprite (Sọc vs Đặc) nếu có gán
-            if (activeSprite != null && inactiveSprite != null)
-            {
-                sr.sprite = active ? activeSprite : inactiveSprite;
-            }
+            tilemap.color = c;
         }
     }
 }

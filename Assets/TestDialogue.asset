@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91d68b0eeb7f1224496ab22b4e6fd604, type: 3}
+  m_Name: TestDialogue
+  m_EditorClassIdentifier: 
+  speakerName: Tonny
+  paragraphs:
+  - "Hay lMWSS \xE1diokahjnwdoiashndoiansdioansiodnsoandioasndioaniosda"
+  - "Hay con c\u1EB7c \xE1opdjaopsjdopajwopjdopasjdiopajwdopajsdopjawopdjaopsjdopajwdopajsopdjawd"
+  - "Hay c\xE1i \u0111\u1ECBt m\u1EB9 m\xE0y\n"

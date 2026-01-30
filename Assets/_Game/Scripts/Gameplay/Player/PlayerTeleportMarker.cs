@@ -101,6 +101,13 @@ public class PlayerTeleportMarker : MonoBehaviour
     
     private Vector2 CalculateThrowDirection()
     {
+        Vector2 inputDirection = _input.MoveInput;
+        
+        if (inputDirection.sqrMagnitude > 0.01f)
+        {
+            return inputDirection.normalized;
+        }
+        
         float facingAngle = _movement.FacingDirection > 0 ? 0f : 180f;
         float totalAngle = facingAngle + config.MarkerThrowAngle;
         

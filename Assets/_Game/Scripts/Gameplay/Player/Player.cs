@@ -1,5 +1,7 @@
 
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(PlayerMovement), typeof(PlayerJump), typeof(PlayerDash))]
 public class Player : PlayerEntity
@@ -43,6 +45,7 @@ public class Player : PlayerEntity
         ResetPlayerState();
         
         // todo: play death animation, emit death event, etc.
+        SceneManager.LoadScene(this.gameObject.scene.name);
     }
 
     private void ResetPlayerState()

@@ -21,7 +21,7 @@ MonoBehaviour:
   maxJumps: 2
   coyoteTime: 0.15
   fallGravityMultiplier: 1
-  dashSpeed: 25
+  dashSpeed: 20
   dashDuration: 0.2
   dashCooldown: 0.3
   canDashInAir: 1

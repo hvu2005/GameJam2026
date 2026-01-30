@@ -9,6 +9,7 @@ public class LavaLake : StaticHazard
     protected override void OnActivate(PlayerEntity target)
     {
         base.OnActivate(target);
-        hitVFX?.Play();
+        if (hitVFX == null) return;
+        hitVFX.Play();
     }
 }
