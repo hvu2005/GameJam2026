@@ -16,7 +16,7 @@ public class PlayerStateMachine : MonoBehaviour
     public PlayerState CurrentState => _stateMachine.CurrentState;
     public bool CanMove => CurrentState != PlayerState.Dashing;
     public bool CanJump => CurrentState != PlayerState.Dashing;
-    public bool CanDash => CurrentState is PlayerState.Idle or PlayerState.Moving or PlayerState.Falling;
+    public bool CanDash => CurrentState is PlayerState.Idle or PlayerState.Moving or PlayerState.Jumping or PlayerState.Falling;
 
     void Awake()
     {
