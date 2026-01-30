@@ -160,6 +160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1338930412042492215}
   - component: {fileID: 301648321253163005}
+  - component: {fileID: 42256059588342943}
   m_Layer: 5
   m_Name: SkillController
   m_TagString: Untagged
@@ -215,6 +216,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &42256059588342943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1807961364455231459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5922e956fb9939a41a4b29c3b6cc1d0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2504696994028786331
 GameObject:
   m_ObjectHideFlags: 0
@@ -435,7 +448,7 @@ Canvas:
   m_GameObject: {fileID: 2713215808567599529}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
