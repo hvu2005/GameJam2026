@@ -33,6 +33,11 @@ public class PlayerGravityController : MonoBehaviour
         Debug.Log($"[GravityController] Gravity {state} - scale: {_rb.gravityScale}");
     }
     
+    public float GetCurrentGravityScale(float baseGravityScale)
+    {
+        return Mathf.Abs(baseGravityScale) * _gravityDirection;
+    }
+    
     private void FlipVisual()
     {
         if (visualTransform == null)
