@@ -8,4 +8,10 @@ public interface IPlayerForm
     void OnUpdate();
     void OnExit();
     void OnSkillPressed();
+    
+    void OnPlayerStateChanged(PlayerState oldState, PlayerState newState);
+    
+    float GetMoveSpeedMultiplier();
+    float GetJumpForceMultiplier();
+    float GetDashSpeedMultiplier();
 }

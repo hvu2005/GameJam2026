@@ -34,12 +34,14 @@ public class PlayerFormController : MonoBehaviour
     {
         _input.On<int>(PlayerInputType.FormSelect, OnFormSelectInput);
         _input.On<bool>(PlayerInputType.Skill, OnSkillInput);
+        EventBus.On<StateChangeEventData>(PlayerActionEventType.OnStateChanged, OnPlayerStateChanged);
     }
 
     void OnDisable()
     {
         _input.Off<int>(PlayerInputType.FormSelect, OnFormSelectInput);
         _input.Off<bool>(PlayerInputType.Skill, OnSkillInput);
+        EventBus.Off<StateChangeEventData>(PlayerActionEventType.OnStateChanged, OnPlayerStateChanged);
     }
 
     void Update()
@@ -93,6 +95,11 @@ public class PlayerFormController : MonoBehaviour
         if (_currentForm == null || !_currentForm.HasActiveSkill) return;
         
         _currentForm.OnSkillPressed();
+    }
+    
+    private void OnPlayerStateChanged(StateChangeEventData data)
+    {
+        _currentForm?.OnPlayerStateChanged(data.FromState, data.ToState);
     }
 
     public void TryChangeForm(int targetFormID)

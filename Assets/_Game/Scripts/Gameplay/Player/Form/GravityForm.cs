@@ -50,7 +50,17 @@ public class GravityForm : PlayerFormBase
         skillCooldownTimer = gravityConfig.gravityCooldown;
         
         string state = gravityController.IsGravityFlipped ? "flipped" : "reset";
-        Debug.Log($"[GravityForm] Gravity {state}! Cooldown: {gravityConfig.gravityCooldown}s");
+        
+        EventBus.Emit(FormEventType.OnFormSkillActivated,
+            new SkillActivatedData
+            {
+                FormID = FormID,
+                SkillName = "GravityFlip"
+            });
+        Debug.Log($"[GravityForm] [Emit Event] Skill Activated: GravityFlip (Gravity {state})");
+        
+        EventBus.Emit(FormEventType.OnFormSkillCooldownStart, gravityConfig.gravityCooldown);
+        Debug.Log($"[GravityForm] [Emit Event] Skill Cooldown Started: {gravityConfig.gravityCooldown}s");
     }
 
     private void UpdateCooldown()
