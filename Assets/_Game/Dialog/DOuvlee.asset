@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccd20d71d9b8f8143a8b853e4aff3db6, type: 3}
+  m_Name: DOuvlee
+  m_EditorClassIdentifier: 
+  lines:
+  - speakerName: Ducanh
+    portrait: {fileID: -5029444825341207066, guid: ecc32f9ddc44ec34eaf6260470772e2d, type: 3}
+    position: 0
+    text: "Xin ch\xE0o nh\xE9 \u0111\u1ECBt m\u1EB9 n\xE0y\n"
+  - speakerName: "Ho\xE0ng v\u0169"
+    portrait: {fileID: -5029444825341207066, guid: ecc32f9ddc44ec34eaf6260470772e2d, type: 3}
+    position: 1
+    text: "Ch\xE0o c\xE1i con cack"
+  - speakerName: Ducanh
+    portrait: {fileID: -5029444825341207066, guid: ecc32f9ddc44ec34eaf6260470772e2d, type: 3}
+    position: 0
+    text: "\u0110\u1ECBt m\u1EB9 m\xE0y b\u1ED1 m\xE0y c\xF3 l\xE0m c\xE1i c\xE1i
+      con c\u1EB7c g\xEC \u0111\xE2u"
+  - speakerName: Ducanh
+    portrait: {fileID: -5029444825341207066, guid: ecc32f9ddc44ec34eaf6260470772e2d, type: 3}
+    position: 0
+    text: COn Cack
+  autoClose: 1
+  autoCloseDelay: 2

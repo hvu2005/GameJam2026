@@ -3,7 +3,8 @@ using UnityEngine;
 public class DialogueTester : MonoBehaviour
 {
     [SerializeField] private DialogueController dialogueController;
-    [SerializeField] private DialogueText testDialogue;
+    [SerializeField] private DialogueData testDialogueData;
+    [SerializeField] private DialogueText legacyTestDialogue;
     
     void Update()
     {
@@ -42,9 +43,16 @@ public class DialogueTester : MonoBehaviour
     
     private void TriggerDialogue()
     {
-        if (dialogueController != null && testDialogue != null)
+        if (dialogueController != null)
         {
-            dialogueController.DisplayNextParagraph(testDialogue);
+            if (testDialogueData != null)
+            {
+                dialogueController.StartDialogue(testDialogueData);
+            }
+            else if (legacyTestDialogue != null)
+            {
+                dialogueController.DisplayNextParagraph(legacyTestDialogue);
+            }
         }
     }
     

@@ -2,163 +2,302 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class DialogueController : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI NPCNameText;
-    [SerializeField] private TextMeshProUGUI NPCDialogueText;
+    [Header("Left Speaker Panel")]
+    [SerializeField] private GameObject leftSpeakerPanel;
+    [SerializeField] private Image leftPortrait;
+    [SerializeField] private TextMeshProUGUI leftNameText;
+    [SerializeField] private TextMeshProUGUI leftDialogueText;
+
+    [Header("Right Speaker Panel")]
+    [SerializeField] private GameObject rightSpeakerPanel;
+    [SerializeField] private Image rightPortrait;
+    [SerializeField] private TextMeshProUGUI rightNameText;
+    [SerializeField] private TextMeshProUGUI rightDialogueText;
+
+    [Header("Center Panel (Optional)")]
+    [SerializeField] private GameObject centerPanel;
+    [SerializeField] private TextMeshProUGUI centerNameText;
+    [SerializeField] private TextMeshProUGUI centerDialogueText;
+
+    [Header("Settings")]
     [SerializeField] private float typeSpeed = 10f;
-    
-    private Queue<string> paragraphs = new Queue<string>();
+    [SerializeField] private Color activeColor = Color.white;
+    [SerializeField] private Color inactiveColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+
+    private Queue<DialogueLine> dialogueLines = new Queue<DialogueLine>();
     private bool conversationEnded;
-    private string p;
+    private DialogueLine currentLine;
     private bool isTyping;
-    private Coroutine typingDialogueCoroutine;
-    
+    private Coroutine typingCoroutine;
+
     private const string HTML_ALPHA = "<color=#00000000>";
     private const float MAX_TYPE_SPEED = 0.1f;
-    
-    private DialogueText currentDialogueText;
+
+    private DialogueData currentDialogueData;
     private GameObject dialoguePanel;
-    
+
     void Awake()
     {
-        // Tìm DialoguePanel - có thể là parent hoặc chính object này
+        // Tìm DialoguePanel
+        // DialogueController PHẢI nằm trên object active, không phải DialoguePanel
         if (transform.parent != null && transform.parent.name.Contains("Panel"))
         {
             dialoguePanel = transform.parent.gameObject;
         }
         else
         {
-            dialoguePanel = gameObject;
+            // Tìm DialoguePanel trong children hoặc parent
+            Transform panelTransform = transform.Find("DialoguePanel");
+            if (panelTransform == null)
+            {
+                panelTransform = transform.parent?.Find("DialoguePanel");
+            }
+
+            if (panelTransform != null)
+            {
+                dialoguePanel = panelTransform.gameObject;
+            }
+            else
+            {
+                dialoguePanel = gameObject;
+            }
         }
-        
+
         // Đảm bảo panel inactive lúc start
         if (dialoguePanel != null)
         {
             dialoguePanel.SetActive(false);
         }
     }
-    
     void Update()
     {
-        // Chỉ check input khi panel đang active
         if (dialoguePanel == null || !dialoguePanel.activeSelf) return;
-        
+
         if (UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space))
         {
-            DisplayNextParagraph(currentDialogueText);
+            DisplayNextLine();
         }
     }
-    
-    public void DisplayNextParagraph(DialogueText dialogueText)
+
+    public void StartDialogue(DialogueData dialogueData)
     {
-        if (dialogueText != null)
+        if (dialogueData == null || dialogueData.lines.Length == 0) return;
+
+        currentDialogueData = dialogueData;
+        dialogueLines.Clear();
+        conversationEnded = false;
+
+        foreach (var line in dialogueData.lines)
         {
-            currentDialogueText = dialogueText;
+            dialogueLines.Enqueue(line);
         }
-        
-        // Bật panel nếu chưa active
+
         if (dialoguePanel != null && !dialoguePanel.activeSelf)
         {
             dialoguePanel.SetActive(true);
         }
-        
-        if (paragraphs.Count == 0)
+
+        DisplayNextLine();
+    }
+
+    private void DisplayNextLine()
+    {
+        if (isTyping)
+        {
+            FinishLineEarly();
+            return;
+        }
+
+        if (dialogueLines.Count == 0)
         {
             if (!conversationEnded)
             {
-                StartConversation(dialogueText);
+                conversationEnded = true;
+                if (currentDialogueData != null && currentDialogueData.autoClose)
+                {
+                    StartCoroutine(AutoCloseDialogue());
+                }
             }
-            else if (conversationEnded && !isTyping)
+            else
             {
                 EndConversation();
-                return;
+            }
+            return;
+        }
+
+        currentLine = dialogueLines.Dequeue();
+        ShowLine(currentLine);
+    }
+
+    private void ShowLine(DialogueLine line)
+    {
+        DeactivateAllPanels();
+
+        switch (line.position)
+        {
+            case SpeakerPosition.Left:
+                SetupSpeakerPanel(leftSpeakerPanel, leftPortrait, leftNameText, leftDialogueText, line, true);
+                SetSpeakerActive(rightSpeakerPanel, rightPortrait, false);
+                break;
+
+            case SpeakerPosition.Right:
+                SetupSpeakerPanel(rightSpeakerPanel, rightPortrait, rightNameText, rightDialogueText, line, true);
+                SetSpeakerActive(leftSpeakerPanel, leftPortrait, false);
+                break;
+
+            case SpeakerPosition.Center:
+                if (centerPanel != null)
+                {
+                    centerPanel.SetActive(true);
+                    centerNameText.text = line.speakerName;
+                    typingCoroutine = StartCoroutine(TypeText(centerDialogueText, line.text));
+                }
+                else
+                {
+                    SetupSpeakerPanel(leftSpeakerPanel, leftPortrait, leftNameText, leftDialogueText, line, true);
+                }
+                break;
+        }
+    }
+
+    private void SetupSpeakerPanel(GameObject panel, Image portrait, TextMeshProUGUI nameText, TextMeshProUGUI dialogueText, DialogueLine line, bool isActive)
+    {
+        if (panel == null) return;
+
+        panel.SetActive(true);
+        nameText.text = line.speakerName;
+
+        if (portrait != null && line.portrait != null)
+        {
+            portrait.sprite = line.portrait;
+            portrait.gameObject.SetActive(true);
+            portrait.color = isActive ? activeColor : inactiveColor;
+        }
+        else if (portrait != null)
+        {
+            portrait.gameObject.SetActive(false);
+        }
+
+        typingCoroutine = StartCoroutine(TypeText(dialogueText, line.text));
+    }
+
+    private void SetSpeakerActive(GameObject panel, Image portrait, bool isActive)
+    {
+        if (panel != null && panel.activeSelf && portrait != null)
+        {
+            portrait.color = isActive ? activeColor : inactiveColor;
+        }
+    }
+
+    private void DeactivateAllPanels()
+    {
+        if (leftSpeakerPanel != null) leftSpeakerPanel.SetActive(false);
+        if (rightSpeakerPanel != null) rightSpeakerPanel.SetActive(false);
+        if (centerPanel != null) centerPanel.SetActive(false);
+    }
+
+    private IEnumerator TypeText(TextMeshProUGUI textComponent, string text)
+    {
+        isTyping = true;
+        textComponent.text = "";
+
+        string originalText = text;
+        string displayedText = "";
+        int alphaIndex = 0;
+
+        foreach (char c in text.ToCharArray())
+        {
+            alphaIndex++;
+            textComponent.text = originalText;
+            displayedText = textComponent.text.Insert(alphaIndex, HTML_ALPHA);
+            textComponent.text = displayedText;
+
+            yield return new WaitForSeconds(MAX_TYPE_SPEED / typeSpeed);
+        }
+
+        isTyping = false;
+    }
+
+    private void FinishLineEarly()
+    {
+        if (typingCoroutine != null)
+        {
+            StopCoroutine(typingCoroutine);
+        }
+
+        if (currentLine != null)
+        {
+            switch (currentLine.position)
+            {
+                case SpeakerPosition.Left:
+                    if (leftDialogueText != null) leftDialogueText.text = currentLine.text;
+                    break;
+                case SpeakerPosition.Right:
+                    if (rightDialogueText != null) rightDialogueText.text = currentLine.text;
+                    break;
+                case SpeakerPosition.Center:
+                    if (centerDialogueText != null) centerDialogueText.text = currentLine.text;
+                    break;
             }
         }
-        
-        if (!isTyping)
-        {
-            p = paragraphs.Dequeue();
-            typingDialogueCoroutine = StartCoroutine(TypeDialogueText(p));
-        }
-        else
-        {
-            FinishParagraphEarly();
-        }
-        
-        if (paragraphs.Count == 0)
-        {
-            conversationEnded = true;
-        }
+
+        isTyping = false;
     }
-    
-    private void StartConversation(DialogueText dialogueText)
+
+    private IEnumerator AutoCloseDialogue()
     {
-        RectTransform rectTransform = GetComponent<RectTransform>();
-        if (rectTransform != null)
-        {
-            rectTransform.anchoredPosition = new Vector2(0, 0);
-        }
-        
-        NPCNameText.text = dialogueText.speakerName;
-        
-        for (int i = 0; i < dialogueText.paragraphs.Length; i++)
-        {
-            paragraphs.Enqueue(dialogueText.paragraphs[i]);
-        }
+        yield return new WaitForSeconds(currentDialogueData.autoCloseDelay);
+        EndConversation();
     }
-    
+
     private void EndConversation()
     {
-        paragraphs.Clear();
+        dialogueLines.Clear();
         conversationEnded = false;
-        
-        // Tắt panel
+        currentDialogueData = null;
+
+        DeactivateAllPanels();
+
         if (dialoguePanel != null)
         {
             dialoguePanel.SetActive(false);
         }
-        
+
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
             PlayerMovementController.Enable(player);
         }
-        
+
         PlayerInteraction playerInteraction = FindObjectOfType<PlayerInteraction>();
         if (playerInteraction != null)
         {
             playerInteraction.OnDialogueEnd();
         }
     }
-    
-    private IEnumerator TypeDialogueText(string p)
+
+    // Backwards compatibility - convert old DialogueText to new DialogueData
+    public void DisplayNextParagraph(DialogueText oldDialogueText)
     {
-        isTyping = true;
-        NPCDialogueText.text = "";
-        
-        string originalText = p;
-        string displayedText = "";
-        int alphaIndex = 0;
-        
-        foreach (char c in p.ToCharArray())
+        if (oldDialogueText == null) return;
+
+        DialogueData tempData = ScriptableObject.CreateInstance<DialogueData>();
+        tempData.lines = new DialogueLine[oldDialogueText.paragraphs.Length];
+
+        for (int i = 0; i < oldDialogueText.paragraphs.Length; i++)
         {
-            alphaIndex++;
-            NPCDialogueText.text = originalText;
-            displayedText = NPCDialogueText.text.Insert(alphaIndex, HTML_ALPHA);
-            NPCDialogueText.text = displayedText;
-            
-            yield return new WaitForSeconds(MAX_TYPE_SPEED / typeSpeed);
+            tempData.lines[i] = new DialogueLine
+            {
+                speakerName = oldDialogueText.speakerName,
+                text = oldDialogueText.paragraphs[i],
+                position = SpeakerPosition.Left
+            };
         }
-        
-        isTyping = false;
-    }
-    
-    private void FinishParagraphEarly()
-    {
-        StopCoroutine(typingDialogueCoroutine);
-        NPCDialogueText.text = p;
-        isTyping = false;
+
+        StartDialogue(tempData);
     }
 }
