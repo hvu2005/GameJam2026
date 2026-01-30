@@ -14,12 +14,16 @@ public class PlayerMovement : MonoBehaviour
     private PlayerDash _dash;
     private PlayerStatusEffects _statusEffects;
     private PlayerGravityController _gravityController;
+    private PlayerStateMachine _stateMachine;
     private float _currentSpeed;
     private float _targetSpeed;
+    private float _previousSpeed;
     private int _facingDirection = 1;
+    private int _previousDirection = 1;
     private bool _isGrounded;
     private bool _wasGrounded;
     private bool _wasOnIce;
+    private bool _wasMoving;
 
     public int FacingDirection => _facingDirection;
     public bool IsGrounded => _isGrounded;
@@ -31,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
         _dash = GetComponent<PlayerDash>();
         _statusEffects = GetComponent<PlayerStatusEffects>();
         _gravityController = GetComponent<PlayerGravityController>();
+        _stateMachine = GetComponent<PlayerStateMachine>();
         
         if (config == null)
         {
@@ -54,17 +59,17 @@ public class PlayerMovement : MonoBehaviour
         
         UpdateGroundDetection();
         
-        if (_dash != null && _dash.IsDashing)
+        if (_stateMachine != null && !_stateMachine.CanMove)
         {
             return;
         }
         
         UpdateMovement();
+        UpdateMovementEvents();
     }
 
     private void OnMove(Vector2 direction)
     {
-        // Áp dụng status effects multiplier vào tốc độ
         float multiplier = _statusEffects != null ? _statusEffects.MoveSpeedMultiplier : 1f;
         _targetSpeed = direction.x * config.MoveSpeed * multiplier;
         
@@ -171,7 +176,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (_facingDirection == direction) return;
 
+        _previousDirection = _facingDirection;
         _facingDirection = direction;
+        
+        EventBus.Emit(PlayerActionEventType.OnDirectionChanged, _facingDirection);
+        Debug.Log($"[Movement] [Emit Event]Direction Changed: {_facingDirection}");
         
         if (visualTransform != null)
         {
@@ -185,6 +194,45 @@ public class PlayerMovement : MonoBehaviour
             scale.x = Mathf.Abs(scale.x) * _facingDirection;
             transform.localScale = scale;
         }
+    }
+
+    private void UpdateMovementEvents()
+    {
+        bool isMoving = Mathf.Abs(_currentSpeed) > 0.1f;
+        
+        if (!_wasMoving && isMoving)
+        {
+            EventBus.Emit(PlayerActionEventType.OnMoveStarted, 
+                new MovementEventData
+                {
+                    Velocity = _rb.velocity,
+                    Direction = _facingDirection,
+                    IsGrounded = _isGrounded,
+                    Speed = _currentSpeed
+                });
+            Debug.Log($"[Movement] [Emit Event] Move Started: Speed={_currentSpeed:F1}");
+        }
+        else if (_wasMoving && !isMoving)
+        {
+            EventBus.Emit(PlayerActionEventType.OnMoveStopped, 
+                new MovementEventData
+                {
+                    Velocity = _rb.velocity,
+                    Direction = _facingDirection,
+                    IsGrounded = _isGrounded,
+                    Speed = 0f
+                });
+            Debug.Log("[Movement] [Emit Event] Move Stopped");
+        }
+        
+        if (isMoving && Mathf.Abs(_currentSpeed - _previousSpeed) > 2f)
+        {
+            EventBus.Emit(PlayerActionEventType.OnSpeedChanged, _currentSpeed);
+            Debug.Log($"[Movement] [Emit Event] Speed Changed: {_currentSpeed:F1}");
+        }
+        
+        _wasMoving = isMoving;
+        _previousSpeed = _currentSpeed;
     }
 
     private void OnDrawGizmosSelected()

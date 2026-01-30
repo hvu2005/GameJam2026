@@ -26,4 +26,12 @@ public abstract class PlayerFormBase : IPlayerForm
     public virtual void OnExit() { }
 
     public virtual void OnSkillPressed() { }
+    
+    // State machine integration - default implementations
+    public virtual void OnPlayerStateChanged(PlayerState oldState, PlayerState newState) { }
+    
+    // Behavior modifiers - default no modification
+    public virtual float GetMoveSpeedMultiplier() => 1f;
+    public virtual float GetJumpForceMultiplier() => 1f;
+    public virtual float GetDashSpeedMultiplier() => 1f;
 }
