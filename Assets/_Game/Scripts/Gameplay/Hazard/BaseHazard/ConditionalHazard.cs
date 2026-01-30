@@ -1,90 +1,86 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ConditionalHazard : Hazard
 {
-    [Header("Condition Config")]
-    [SerializeField] private TriggerType triggerType;
-    [SerializeField] private ActionType actionType;
-    [SerializeField] private float triggerDelay = 0.5f; // Thời gian rung lắc trước khi rơi
+    [Header("Conditional Settings")]
+    [Tooltip("Thời gian chờ từ lúc phát hiện Player đến lúc bẫy hoạt động")]
+    [SerializeField] protected float triggerDelay = 0.5f;
 
-    [Header("Detection (Proximity)")]
-    [SerializeField] private Vector2 detectionBoxSize = new Vector2(1, 10); // Cho nhũ băng (quét dọc xuống)
-    [SerializeField] private Vector2 detectionOffset = new Vector2(0, -5);
-    [SerializeField] private LayerMask playerLayer;
+    [Tooltip("Nếu True: Bẫy chỉ kích hoạt 1 lần rồi vô hiệu hóa (VD: Nhũ băng rơi)")]
+    [SerializeField] protected bool oneTimeUse = true;
 
-    [Header("Physics (Falling)")]
-    [SerializeField] private Rigidbody2D rb;
+    [Tooltip("Layer của Player để trigger nhận diện")]
+    [SerializeField] protected LayerMask playerLayer;
 
-    private bool isTriggered = false;
+    [Header("Events")]
+    [Tooltip("Gọi khi bắt đầu đếm ngược (VD: Rung lắc cảnh báo)")]
+    public UnityEvent OnWarning;
+    
+    [Tooltip("Gọi khi kết thúc đếm ngược (VD: Phát âm thanh tách/gãy)")]
+    public UnityEvent OnActionExecuted;
+    public UnityEvent OnReset;
 
-    private void Update()
+    protected bool isTriggered = false;
+    protected Coroutine triggerCoroutine;
+
+    protected override void OnTriggerEnter2D(Collider2D other)
     {
-        if (isTriggered || triggerType != TriggerType.Proximity) return;
+        if (isTriggered && oneTimeUse) return;
 
-        // Quét vùng phát hiện (Dùng cho Nhũ băng hoặc Cóc)
-        if (Physics2D.OverlapBox((Vector2)transform.position + detectionOffset, detectionBoxSize, 0, playerLayer))
+        if (IsInLayerMask(other.gameObject, playerLayer))
         {
-            StartCoroutine(ExecuteAction());
+            if (!isTriggered)
+            {
+                TriggerHazard();
+            }
+            else
+            {
+                base.OnTriggerEnter2D(other); 
+            }
         }
     }
 
-    // Dùng cho Cầu gỗ (TriggerType = Contact)
-    // Cần attach script này vào object cầu và set Collider là Trigger hoặc dùng OnCollisionEnter2D
-    private void OnCollisionEnter2D(Collision2D other)
+    // Hàm tiện ích check Layer
+    private bool IsInLayerMask(GameObject obj, LayerMask mask)
     {
-        if (!isTriggered && triggerType == TriggerType.Contact && other.gameObject.CompareTag("Player"))
-        {
-            StartCoroutine(ExecuteAction());
-        }
+        return (mask.value & (1 << obj.layer)) > 0;
     }
 
-    private IEnumerator ExecuteAction()
+
+    public void TriggerHazard()
+    {
+        if (triggerCoroutine != null) StopCoroutine(triggerCoroutine);
+        triggerCoroutine = StartCoroutine(RoutineExecute());
+    }
+
+    private IEnumerator RoutineExecute()
     {
         isTriggered = true;
 
-        // 1. Giai đoạn Warning (Rung lắc)
-        float timer = 0;
-        Vector3 startPos = transform.position;
-        while (timer < triggerDelay)
-        {
-            transform.position = startPos + (Vector3)(Random.insideUnitCircle * 0.1f); // Rung nhẹ
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        transform.position = startPos;
+        // Giai đoạn 1: Cảnh báo (Warning)
+        OnWarning?.Invoke();
+        yield return new WaitForSeconds(triggerDelay);
 
-        // 2. Giai đoạn Action
-        switch (actionType)
-        {
-            case ActionType.Fall: // Nhũ băng
-                if (rb)
-                {
-                    rb.bodyType = RigidbodyType2D.Dynamic;
-                    rb.gravityScale = 3f;
-                }
-                break;
-
-            case ActionType.AppearAttack: // Cóc / Cây đuôi cáo
-                // Bật collider sát thương
-                // damageCollider.enabled = true;
-                // Chạy animation trồi lên
-                // Animator.SetTrigger("Attack"); 
-                break;
-
-            case ActionType.Break: // Cầu gỗ gãy
-                // Disable visual và collider đứng
-                GetComponent<Collider2D>().enabled = false; // Player rơi xuống
-                // Play break VFX
-                Destroy(gameObject, 2f);
-                break;
-        }
+        // Giai đoạn 2: Hành động (Action)
+        OnActionExecuted?.Invoke();
+        PerformHazardAction();
     }
 
-    private void OnDrawGizmosSelected()
+    /// <summary>
+    /// Hành động cụ thể của từng loại bẫy (Rơi, Trồi lên, Sập cầu...)
+    /// </summary>
+    protected virtual void PerformHazardAction()
     {
-        Gizmos.color = Color.red;
-        if (triggerType == TriggerType.Proximity)
-            Gizmos.DrawWireCube((Vector2)transform.position + detectionOffset, detectionBoxSize);
+        // Ghi đè trong các lớp con
+    }
+
+    // Reset lại bẫy nếu cần
+    public virtual void ResetHazard()
+    {
+        isTriggered = false;
+        OnReset?.Invoke();
+        if (triggerCoroutine != null) StopCoroutine(triggerCoroutine);
     }
 }

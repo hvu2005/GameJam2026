@@ -24,13 +24,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2243542199000644269}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.36, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1153042531610264714}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2992017187054173646
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,8 +125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1153042531610264714}
   - component: {fileID: 3124499167807215074}
-  - component: {fileID: 4991274587800430012}
-  - component: {fileID: 2794568195882538441}
+  - component: {fileID: 6707478013888642383}
   m_Layer: 0
   m_Name: FireTrap
   m_TagString: Untagged
@@ -180,7 +179,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -196,7 +195,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &4991274587800430012
+--- !u!114 &6707478013888642383
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -205,24 +204,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 8287316374060963084}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe69dbdb4f26d4e4e934e7f9bab3ab4b, type: 3}
+  m_Script: {fileID: 11500000, guid: e8ee9f062f0709b4797a0af31d9a7727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInstantDeath: 1
-  damageCollider: {fileID: 0}
   activeTime: 0.1
-  warningTime: 1
-  cooldownTime: 3
+  warningTime: 0
+  cooldownTime: 5
   startDelay: 0
   OnWarning:
     m_PersistentCalls:
       m_Calls: []
-  OnActivate:
+  OnActivateTrigger:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2794568195882538441}
-        m_TargetAssemblyTypeName: PoolSpawner, Assembly-CSharp
-        m_MethodName: Spawn
+      - m_Target: {fileID: 6707478013888642383}
+        m_TargetAssemblyTypeName: Turret, Assembly-CSharp
+        m_MethodName: ShootBullet
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -235,18 +232,9 @@ MonoBehaviour:
   OnDeactivate:
     m_PersistentCalls:
       m_Calls: []
-  hitVFX: {fileID: 0}
---- !u!114 &2794568195882538441
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8287316374060963084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00ef994a4c8253d4a9268bfe8af3a5ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  poolName: FireBall
-  spawnPoint: {fileID: 8826018576805514475}
+  damageCollider: {fileID: 3124499167807215074}
+  bulletPrefab: {fileID: 3840443800968221460, guid: 57f83d28867a7e1449d813950d574714, type: 3}
+  firePoint: {fileID: 8826018576805514475}
+  bulletSpeed: 10
+  fireDirection: {x: 0, y: -1}
+  bulletPoolName: FireBall

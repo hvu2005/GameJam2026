@@ -9,6 +9,8 @@ public class PlayerInput : EventTarget
     private Input _inputActions;
     private Vector2 _moveInput;
 
+    public Vector2 MoveInput => _moveInput;
+
     private void Awake()
     {
         _inputActions = new Input();

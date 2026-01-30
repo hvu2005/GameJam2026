@@ -1,17 +1,12 @@
 using System;
 using UnityEngine;
 
-public class StaticHazard : Hazard {
-    // Không cần logic thêm vì Hazard base class đã xử lý va chạm và instant death
-    [Header("VFX")]
-    [SerializeField] protected ParticleSystem hitVFX;
-    protected virtual void Reset() {
-        // isInstantDeath = true; 
+public class StaticHazard : Hazard
+{
+    protected override void OnActivate(PlayerEntity target)
+    {
+        base.OnActivate(target);
+        //Player die ngay khi chạm vào hazard tĩnh
+        target.Die();
     }
-    // protected override void ApplyEffect(IAffectable target)
-    // {
-    //     base.ApplyEffect(target);
-    //     hitVFX?.Play();
-    //     //TODO: Sound effect
-    // }
 }

@@ -1,77 +1,96 @@
 using UnityEngine;
 
-public class ChasingHazard : Hazard {
-    [Header("AI Config")]
-    [SerializeField] private EnemyType enemyType;
+/// <summary>
+/// ChasingHazard - Hazard truy đuổi player
+/// Player chết khi va chạm với hazard này
+/// </summary>
+public class ChasingHazard : Hazard 
+{
+    [Header("Chase Config")]
+    [Tooltip("Phạm vi phát hiện player")]
     [SerializeField] private float detectRange = 8f;
-    [SerializeField] private float moveSpeed = 4f;
-    [SerializeField] private float chargeSpeed = 10f; // Tốc độ khi dơi lao vào
-    [SerializeField] private LayerMask playerLayer;
+    
+    [Tooltip("Tốc độ di chuyển")]
+    [SerializeField] protected float moveSpeed = 4f;
+    
+    [Tooltip("Layer của player để detect")]
+    [SerializeField] protected LayerMask playerLayer;
+    
+    [Tooltip("Xoay theo hướng di chuyển")]
+    [SerializeField] private bool rotateTowardsPlayer = true;
 
-    private Transform playerTransform;
-    private AIState currentState = AIState.Idle;
-    private Vector3 chargeDirection;
+    protected Transform playerTransform;
 
-    private void Update() {
-        switch (enemyType) {
-            case EnemyType.HomingProjectile:
-                HandleHoming();
-                break;
-            case EnemyType.Bat:
-                HandleBatBehavior();
-                break;
+    protected virtual void Update() 
+    {
+        // Tìm player nếu chưa có
+        if (playerTransform == null)
+        {
+            FindPlayer();
+            return;
+        }
+
+        // Di chuyển về phía player
+        ChasePlayer();
+    }
+
+    /// <summary>
+    /// Tìm player trong phạm vi detect
+    /// </summary>
+    protected void FindPlayer() 
+    {
+        Collider2D hit = Physics2D.OverlapCircle(transform.position, detectRange, playerLayer);
+        if (hit != null && hit.TryGetComponent<PlayerEntity>(out _))
+        {
+            playerTransform = hit.transform;
         }
     }
 
-    // --- Logic Đạn Đuổi (Boss Skill) ---
-    private void HandleHoming() {
-        if (playerTransform == null) FindPlayer();
-        else {
-            // Di chuyển mượt về phía player
-            transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, moveSpeed * Time.deltaTime);
-            
-            // Xoay đầu về hướng di chuyển
-            Vector3 dir = playerTransform.position - transform.position;
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+    /// <summary>
+    /// Truy đuổi player
+    /// </summary>
+    protected virtual void ChasePlayer()
+    {
+        if (playerTransform == null) return;
+
+        // Di chuyển mượt về phía player
+        transform.position = Vector2.MoveTowards(
+            transform.position, 
+            playerTransform.position, 
+            moveSpeed * Time.deltaTime
+        );
+
+        // Xoay theo hướng player (optional)
+        if (rotateTowardsPlayer)
+        {
+            Vector3 direction = playerTransform.position - transform.position;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
     }
 
-    // --- Logic Dơi (Game Jam specific) ---
-    private void HandleBatBehavior() {
-        switch (currentState) {
-            case AIState.Idle:
-                FindPlayer();
-                if (playerTransform != null) currentState = AIState.Chasing;
-                break;
-
-            case AIState.Chasing:
-                // Dơi bay ngang về phía player (giữ nguyên độ cao Y hoặc thay đổi chậm)
-                float step = moveSpeed * Time.deltaTime;
-                Vector3 targetPos = new Vector3(playerTransform.position.x, transform.position.y, 0); // Chỉ đuổi theo X
-                transform.position = Vector2.MoveTowards(transform.position, targetPos, step);
-
-                // Kiểm tra khoảng cách để lao vào (Charge)
-                if (Vector2.Distance(transform.position, playerTransform.position) < 3f) {
-                    chargeDirection = (playerTransform.position - transform.position).normalized;
-                    currentState = AIState.Charging;
-                }
-                break;
-
-            case AIState.Charging:
-                // Lao thẳng theo hướng đã định, không đổi hướng nữa
-                transform.position += chargeDirection * chargeSpeed * Time.deltaTime;
-                break;
-        }
+    /// <summary>
+    /// Player chết khi chạm hazard
+    /// </summary>
+    protected override void OnActivate(PlayerEntity target)
+    {
+        base.OnActivate(target);
+        target.Die();
     }
 
-    private void FindPlayer() {
-        Collider2D hit = Physics2D.OverlapCircle(transform.position, detectRange, playerLayer);
-        if (hit) playerTransform = hit.transform;
-    }
-    
-    private void OnDrawGizmosSelected() {
+    /// <summary>
+    /// Visualize detect range trong Scene view
+    /// </summary>
+    private void OnDrawGizmosSelected() 
+    {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectRange);
+
+        // Vẽ line đến player nếu đang chase
+        if (Application.isPlaying && playerTransform != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, playerTransform.position);
+        }
     }
 }
