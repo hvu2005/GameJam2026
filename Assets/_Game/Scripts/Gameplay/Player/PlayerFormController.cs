@@ -24,7 +24,7 @@ public class PlayerFormController : MonoBehaviour
         _player = GetComponent<Player>();
         _input = GetComponent<PlayerInput>();
         
-        FormUnlockManager.UnlockAll();
+        // FormUnlockManager.UnlockAll();
         
         InitializeForms();
         InitializeUnlockStates();

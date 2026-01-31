@@ -64,7 +64,10 @@ public class Player : PlayerEntity
 
         if (SceneTransition.Instance != null)
             StartCoroutine(SceneTransition.Instance.TransitionResetScene(this));
-
+        else
+        {   
+            Debug.LogError("SceneTransition instance not found!");
+        }
 
         // EventBus.Clear();
         // SceneManager.LoadScene(this.gameObject.scene.name);
