@@ -57472,6 +57472,8 @@ Tilemap:
     m_Data: {fileID: -1380584609, guid: f7d927184b3c5ac42a35f48fddc44f02, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 822159336, guid: f7d927184b3c5ac42a35f48fddc44f02, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   m_TileMatrixArray:
   - m_RefCount: 5730
     m_Data:
@@ -62197,6 +62199,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6329434894486946164}
     m_Modifications:
+    - target: {fileID: 1920593399561862518, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3007421125842637843, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
       propertyPath: m_LocalPosition.x
       value: 73.24
@@ -62583,9 +62589,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6329434894486946164}
     m_Modifications:
+    - target: {fileID: 1920593399561862518, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2e561005525ba4042ab4cd9113a9a7cb, type: 3}
     - target: {fileID: 3007421125842637843, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 203.14
+      value: 202.86
       objectReference: {fileID: 0}
     - target: {fileID: 3007421125842637843, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
       propertyPath: m_LocalPosition.y
@@ -62623,6 +62633,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5107267787891493193, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5155848534663741314, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
+      propertyPath: objectToDestroy
+      value: 
+      objectReference: {fileID: 3457176190486656215}
     - target: {fileID: 6211424719551900262, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
       propertyPath: m_Name
       value: TriggerDialog2.1
@@ -62635,6 +62653,11 @@ PrefabInstance:
 --- !u!4 &792567109710473363 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3007421125842637843, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
+  m_PrefabInstance: {fileID: 2540947192150523008}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3457176190486656215 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 916791966275815511, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
   m_PrefabInstance: {fileID: 2540947192150523008}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2648513131049405347
@@ -62883,6 +62906,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6329434894486946164}
     m_Modifications:
+    - target: {fileID: 1920593399561862518, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: eb0c2befb1fa20a4586f29f2feeb5636, type: 3}
     - target: {fileID: 3007421125842637843, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
       propertyPath: m_LocalPosition.x
       value: 248.32
@@ -62927,6 +62954,10 @@ PrefabInstance:
       propertyPath: dialogueData
       value: 
       objectReference: {fileID: 11400000, guid: 93e4cdb73d906e541b4ea01e9b60a451, type: 2}
+    - target: {fileID: 5155848534663741314, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
+      propertyPath: objectToDestroy
+      value: 
+      objectReference: {fileID: 2967094837207409123}
     - target: {fileID: 6211424719551900262, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
       propertyPath: m_Name
       value: TriggerDialog3
@@ -62939,6 +62970,11 @@ PrefabInstance:
 --- !u!4 &876132592090545575 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3007421125842637843, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
+  m_PrefabInstance: {fileID: 2707829301300554164}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2967094837207409123 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 916791966275815511, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
   m_PrefabInstance: {fileID: 2707829301300554164}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3341092511582336403
@@ -63503,7 +63539,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3007421125842637843, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 68.83
+      value: 67.76
       objectReference: {fileID: 0}
     - target: {fileID: 3007421125842637843, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
       propertyPath: m_LocalPosition.y
@@ -63541,10 +63577,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5155848534663741314, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
-      propertyPath: dialogueData
-      value: 
-      objectReference: {fileID: 11400000, guid: c038e105f442bfb41ae639b416490005, type: 2}
+    - target: {fileID: 5107267787891493193, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.74
+      objectReference: {fileID: 0}
     - target: {fileID: 6211424719551900262, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
       propertyPath: m_Name
       value: TriggerDialog1.1
@@ -63727,6 +63763,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6329434894486946164}
     m_Modifications:
+    - target: {fileID: 1920593399561862518, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3007421125842637843, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
       propertyPath: m_LocalPosition.x
       value: 252.7
@@ -63766,6 +63806,14 @@ PrefabInstance:
     - target: {fileID: 3007421125842637843, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5107267787891493193, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.78
+      objectReference: {fileID: 0}
+    - target: {fileID: 5107267787891493193, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: 5155848534663741314, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
       propertyPath: dialogueData

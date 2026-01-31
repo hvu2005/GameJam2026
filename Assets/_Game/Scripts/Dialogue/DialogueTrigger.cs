@@ -10,6 +10,8 @@ public class DialogueTrigger : DialogueBase
     [Header("Trigger Settings")]
     [SerializeField] private bool triggerOnce = true;
     [SerializeField] private bool disablePlayerMovement = true;
+    [Tooltip("Optional: Object to destroy when dialogue ends")]
+    [SerializeField] private GameObject objectToDestroy;
     
     private bool hasTriggered = false;
     
@@ -52,7 +54,7 @@ public class DialogueTrigger : DialogueBase
         
         if (dialogueData != null)
         {
-            ShowDialogue(dialogueData);
+            ShowDialogue(dialogueData, objectToDestroy);
         }
         else
         {

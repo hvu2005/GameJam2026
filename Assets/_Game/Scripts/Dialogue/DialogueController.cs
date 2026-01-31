@@ -40,6 +40,7 @@ public class DialogueController : MonoBehaviour
 
     private DialogueData currentDialogueData;
     private GameObject dialoguePanel;
+    private GameObject objectToDestroy; // Reference to the object to destroy after conversation
 
     void Awake()
     {
@@ -88,11 +89,12 @@ public class DialogueController : MonoBehaviour
         }
     }
 
-    public void StartDialogue(DialogueData dialogueData)
+    public void StartDialogue(DialogueData dialogueData, GameObject objToDestroy = null)
     {
         if (dialogueData == null || dialogueData.lines.Length == 0) return;
 
         currentDialogueData = dialogueData;
+        objectToDestroy = objToDestroy;
         dialogueLines.Clear();
         conversationEnded = false;
         isClosing = false; // Reset closing flag
@@ -277,6 +279,13 @@ public class DialogueController : MonoBehaviour
         if (playerInteraction != null)
         {
             playerInteraction.OnDialogueEnd();
+        }
+
+        // Destroy optional object if set
+        if (objectToDestroy != null)
+        {
+            Destroy(objectToDestroy);
+            objectToDestroy = null;
         }
 
         // Deactivate panel LAST
