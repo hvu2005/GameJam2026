@@ -26,6 +26,8 @@ public class Player : PlayerEntity
     public bool IsGrounded => _movement != null && _movement.IsGrounded;
     public int FacingDirection => _movement != null ? _movement.FacingDirection : 1;
 
+    public bool IsDead { get; set; } = false;
+
     void Awake()
     {
         InitializeComponents();
@@ -52,12 +54,24 @@ public class Player : PlayerEntity
 
     public override void Die()
     {
+        if(IsDead) return;
+        IsDead = true;
+        // Debug.Log("Player has died.");
+
+        Time.timeScale = 0f;
         Debug.Log("Player has died.");
-        
+
         ResetPlayerState();
-        
-        EventBus.Clear();
-        SceneManager.LoadScene(this.gameObject.scene.name);
+
+        if (SceneTransition.Instance != null)
+            StartCoroutine(SceneTransition.Instance.TransitionResetScene(this));
+        else
+        {   
+            Debug.LogError("SceneTransition instance not found!");
+        }
+
+        // EventBus.Clear();
+        // SceneManager.LoadScene(this.gameObject.scene.name);
     }
 
     private void ResetPlayerState()
