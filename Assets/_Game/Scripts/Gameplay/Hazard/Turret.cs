@@ -11,6 +11,10 @@ public class Turret : TimingHazard
     [SerializeField] private float bulletSpeed = 10f;
     [SerializeField] private Vector2 fireDirection = Vector2.right;
 
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private string shootTrigger = "Shoot";
+
     [Header("Pool Settings")]
     [SerializeField] private string bulletPoolName = "Bullet";
 
@@ -50,6 +54,13 @@ public class Turret : TimingHazard
     public void ShootBullet()
     {
         Debug.Log("Turret: Shooting bullet");
+        
+        // Trigger animation
+        if (animator != null && !string.IsNullOrEmpty(shootTrigger))
+        {
+            animator.SetTrigger(shootTrigger);
+        }
+        
         if (bulletPool == null)
         {
             Debug.LogError("⚠️ Bullet pool chưa được khởi tạo!");
@@ -57,6 +68,17 @@ public class Turret : TimingHazard
         }
 
         GameObject bulletObj = bulletPool.Get();
+        
+        // Đảm bảo bullet được active
+        if (bulletObj != null)
+        {
+            bulletObj.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError("⚠️ Bullet pool không trả về object (có thể pool rỗng)!");
+            return;
+        }
 
         // Set position và rotation
         bulletObj.transform.position = firePoint.position;
