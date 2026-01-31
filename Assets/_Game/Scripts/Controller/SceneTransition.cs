@@ -3,6 +3,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+public enum SceneTransitionType
+{
+    OnPlayerDied,
+}
+
 /// <summary>
 /// Quản lý scene transition với overlay màu đen có hiệu ứng di chuyển
 /// Đặt trên Canvas của mỗi scene, không dùng DontDestroyOnLoad
@@ -119,6 +124,24 @@ public class SceneTransition : MonoBehaviour
         EventBus.Clear();
 
         yield return StartCoroutine(SlideOut());
+
+    }
+
+    public IEnumerator TransitionResetScene(Player player)
+    {
+        _isTransitioning = true;
+        
+        // Phase 1: Slide overlay vào
+        yield return StartCoroutine(SlideIn());
+        Time.timeScale = 1f;
+
+        
+        EventBus.Emit(SceneTransitionType.OnPlayerDied, player);
+
+        yield return new WaitForSeconds(0.5f);
+        yield return StartCoroutine(SlideOut());
+
+        player.IsDead = false;
 
     }
     
