@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccd20d71d9b8f8143a8b853e4aff3db6, type: 3}
+  m_Name: TriggerDialog1.1
+  m_EditorClassIdentifier: 
+  lines:
+  - speakerName: "M\u1EB7t n\u1EA1 Vui V\u1EBB"
+    portrait: {fileID: 0}
+    position: 0
+    text: "\u201CC\u1EADu kh\xF4ng th\u1EC3 r\u1EDDi kh\u1ECFi nh\xE0 h\xE1t n\xE0y\u2026\u201D\r\n
+      \u201Cn\u1EBFu ch\u01B0a ho\xE0n th\xE0nh c\xE1c vai di\u1EC5n.\u201D\r\n"
+  - speakerName: "M\u1EB7t n\u1EA1 Vui V\u1EBB"
+    portrait: {fileID: 0}
+    position: 0
+    text: "\u201CBa chi\u1EBFc m\u1EB7t n\u1EA1. Ba vai di\u1EC5n.\u201D\r\n \u201CCh\u1EC9
+      khi di\u1EC5n tr\u1ECDn v\u1EB9n ch\xFAng\u2026 c\u1EADu m\u1EDBi \u0111\u01B0\u1EE3c
+      b\u01B0\u1EDBc ra ngo\xE0i.\u201D\r\n"
+  - speakerName: "Ph\xFA"
+    portrait: {fileID: 0}
+    position: 1
+    text: "\u201C\u2026Vai di\u1EC5n?\u201D\r\n"
+  - speakerName: "M\u1EB7t n\u1EA1 Vui V\u1EBB"
+    portrait: {fileID: 0}
+    position: 0
+    text: "\u201C\u0110\xFAng v\u1EADy.\u201D"
+  - speakerName: "M\u1EB7t n\u1EA1 Vui V\u1EBB"
+    portrait: {fileID: 0}
+    position: 0
+    text: "\u201CNh\xE0 h\xE1t n\xE0y t\u1ED3n t\u1EA1i nh\u1EDD m\u1ED9t ch\u1EA5p
+      ni\u1EC7m ch\u01B0a kh\xE9p l\u1EA1i.\u201D"
+  - speakerName: "M\u1EB7t n\u1EA1 Vui V\u1EBB"
+    portrait: {fileID: 0}
+    position: 0
+    text: "\u201CV\xE0 gi\u1EDD\u2026\u201D  \u201Cc\u1EADu \u0111ang b\u1ECB giam
+      gi\u1EEF trong ch\u1EA5p ni\u1EC7m \u0111\xF3.\u201D"
+  - speakerName: "M\u1EB7t n\u1EA1 Vui V\u1EBB"
+    portrait: {fileID: 0}
+    position: 0
+    text: "\u201CV\xE0 \u0111\xE2y\u2026 l\xE0 vai di\u1EC5n \u0111\u1EA7u ti\xEAn.\u201D "
+  - speakerName: "M\u1EB7t n\u1EA1 Vui V\u1EBB"
+    portrait: {fileID: 0}
+    position: 0
+    text: "\u201CKhi c\u1EADu tin r\u1EB1ng m\xECnh c\xF3 th\u1EC3 bay cao\u2026\u201D 
+      \u201C\u2026c\u1EADu s\u1EBD nh\u1EA3y th\xEAm \u0111\u01B0\u1EE3c m\u1ED9t
+      l\u1EA7n n\u1EEFa.\u201D"
+  autoClose: 1
+  autoCloseDelay: 0.5
