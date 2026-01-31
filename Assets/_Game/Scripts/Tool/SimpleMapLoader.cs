@@ -10,6 +10,9 @@ namespace _Game.Scripts.Tool
         [Header("Map Database")]
         [SerializeField] private MapDatabase mapDatabase;
         
+        [Header("UI References")]
+        [SerializeField] private UnityEngine.UI.Image uiBackgroundImage;
+
         [Header("Player Settings")]
         [Tooltip("Tự động telemetry player đến Spawn Point khi load map")]
         [SerializeField] private bool teleportPlayerOnLoad = true;
@@ -22,7 +25,6 @@ namespace _Game.Scripts.Tool
         private const string PLAYER_PREFS_LEVEL_KEY = "CurrentLevelIndex";
         
         private GameObject _currentMapInstance;
-        private GameObject _currentBackgroundInstance;
         private GameObject _currentPlayerInstance;
         private int _currentLevelIndex = 0;
         
@@ -86,10 +88,23 @@ namespace _Game.Scripts.Tool
                 Debug.LogError($"[SimpleMapLoader] Map Prefab missing for level {index}");
             }
 
-            if (data.backgroundPrefab != null)
+            // Set UI Background
+            if (uiBackgroundImage != null)
             {
-                _currentBackgroundInstance = Instantiate(data.backgroundPrefab, Vector3.zero, Quaternion.identity);
-                _currentBackgroundInstance.name = $"BG_{data.levelName}";
+                if (data.backgroundSprite != null)
+                {
+                    uiBackgroundImage.sprite = data.backgroundSprite;
+                    uiBackgroundImage.gameObject.SetActive(true);
+                }
+                else
+                {
+                    uiBackgroundImage.gameObject.SetActive(false); // Hide if no BG
+                }
+            }
+            else
+            {
+                if (data.backgroundSprite != null)
+                    Debug.LogWarning("[SimpleMapLoader] Background Sprite found but 'Ui Background Image' is not assigned!");
             }
 
             if (teleportPlayerOnLoad)
@@ -195,11 +210,6 @@ namespace _Game.Scripts.Tool
                 _currentMapInstance = null;
             }
             
-            if (_currentBackgroundInstance != null)
-            {
-                Destroy(_currentBackgroundInstance);
-                _currentBackgroundInstance = null;
-            }
         }
         
         private void OnGUI()
