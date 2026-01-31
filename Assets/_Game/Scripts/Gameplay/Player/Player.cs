@@ -9,22 +9,24 @@ public class Player : PlayerEntity
 {
     [Header("Player Configuration")]
     [SerializeField] private PlayerConfig config;
-
+    
     private PlayerMovement _movement;
     private PlayerJump _jump;
     private PlayerDash _dash;
     private PlayerFormController _formController;
     private PlayerStateMachine _stateMachine;
-
+    
     public PlayerMovement Movement => _movement;
     public PlayerJump Jump => _jump;
     public PlayerDash Dash => _dash;
     public PlayerFormController FormController => _formController;
     public PlayerStateMachine StateMachine => _stateMachine;
     public PlayerConfig Config => config;
-
+    
     public bool IsGrounded => _movement != null && _movement.IsGrounded;
     public int FacingDirection => _movement != null ? _movement.FacingDirection : 1;
+
+    public bool IsDead { get; set; } = false;
 
     void Awake()
     {
@@ -35,7 +37,7 @@ public class Player : PlayerEntity
     {
         FormUnlockManager.UnlockAll();
     }
-
+    
     private void InitializeComponents()
     {
         _movement = GetComponent<PlayerMovement>();
@@ -43,14 +45,12 @@ public class Player : PlayerEntity
         _dash = GetComponent<PlayerDash>();
         _formController = GetComponent<PlayerFormController>();
         _stateMachine = GetComponent<PlayerStateMachine>();
-
+        
         if (config == null)
         {
             Debug.LogError("PlayerConfig is not assigned to Player!", this);
         }
     }
-
-    public bool IsDead = false;
 
     public override void Die()
     {
@@ -59,7 +59,8 @@ public class Player : PlayerEntity
         // Debug.Log("Player has died.");
 
         Time.timeScale = 0f;
-        
+        Debug.Log("Player has died.");
+
         ResetPlayerState();
 
         if (SceneTransition.Instance != null)
@@ -77,8 +78,9 @@ public class Player : PlayerEntity
     {
         if (_jump != null) _jump.CancelJump();
         if (_dash != null) _dash.CancelDash();
-
+        
         if (_dash != null) _dash.ResetCooldown();
+        this.GetComponent<PlayerGravityController>().ToggleGravity();
     }
 
     public void SetConfig(PlayerConfig newConfig)
