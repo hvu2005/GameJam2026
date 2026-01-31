@@ -112,7 +112,7 @@ public class SceneTransition : MonoBehaviour
         yield return StartCoroutine(SlideIn());
         
         SceneManager.LoadScene(sceneName);
-        // EventBus.Clear(); // Uncomment nếu project có EventBus
+        EventBus.Clear();
 
         yield return StartCoroutine(SlideOut());
     }
@@ -123,7 +123,7 @@ public class SceneTransition : MonoBehaviour
         yield return StartCoroutine(SlideIn());
         
         SceneManager.LoadScene(sceneIndex);
-        // EventBus.Clear();
+        EventBus.Clear();
 
         yield return StartCoroutine(SlideOut());
     }
