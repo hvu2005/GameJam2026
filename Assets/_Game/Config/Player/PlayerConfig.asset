@@ -33,7 +33,7 @@ MonoBehaviour:
   markerMaxSpeed: 20
   teleportWindowTime: 3
   markerLifetime: 6
-  teleportCooldown: 9
+  teleportCooldown: 0
   markerPickupRadius: 0.5
   teleportOffsetY: 0.5
   teleportMaxAttempts: 5

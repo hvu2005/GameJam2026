@@ -15,16 +15,16 @@ MonoBehaviour:
   formID: 2
   formName: Tele
   icon: {fileID: 21300000, guid: 2e561005525ba4042ab4cd9113a9a7cb, type: 3}
-  formSwitchCooldown: 2
+  formSwitchCooldown: 1
   markerThrowSpeed: 12
   markerThrowAngle: 0
   markerFlightForce: -1
-  markerMaxDistance: 10
+  markerMaxDistance: 5
   markerAcceleration: 8
-  markerMaxSpeed: 20
+  markerMaxSpeed: 50
   teleportWindowTime: 3
   markerLifetime: 6
-  teleportCooldown: 9
+  teleportCooldown: 0
   markerPickupRadius: 0.5
   teleportOffsetY: 0.5
   teleportMaxAttempts: 15

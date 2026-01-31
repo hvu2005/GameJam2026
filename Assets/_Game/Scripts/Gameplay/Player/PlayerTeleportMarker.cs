@@ -137,6 +137,8 @@ public class PlayerTeleportMarker : MonoBehaviour
         if (_activeMarker == null || _config == null) return;
         
         Vector2 targetPos = _activeMarker.Position;
+
+        targetPos.y += 1f;
         Vector2 validPos = FindValidTeleportPosition(targetPos);
         
         _rb.velocity = Vector2.zero;
@@ -172,71 +174,73 @@ public class PlayerTeleportMarker : MonoBehaviour
     
     private Vector2 FindValidTeleportPosition(Vector2 targetPos)
     {
-        Collider2D playerCollider = GetComponent<Collider2D>();
-        if (playerCollider == null)
-        {
-            return targetPos;
-        }
+        // Collider2D playerCollider = GetComponent<Collider2D>();
+        // if (playerCollider == null)
+        // {
+        //     return targetPos;
+        // }
         
-        Vector2 currentPos = transform.position;
-        Vector2 direction = (targetPos - currentPos).normalized;
-        float distance = Vector2.Distance(currentPos, targetPos);
+        // Vector2 currentPos = transform.position;
+        // Vector2 direction = (targetPos - currentPos).normalized;
+        // float distance = Vector2.Distance(currentPos, targetPos);
         
-        float playerRadius = Mathf.Max(
-            playerCollider.bounds.extents.x,
-            playerCollider.bounds.extents.y
-        );
+        // float playerRadius = Mathf.Max(
+        //     playerCollider.bounds.extents.x,
+        //     playerCollider.bounds.extents.y
+        // );
         
-        RaycastHit2D hit = Physics2D.CircleCast(
-            currentPos,
-            playerRadius * 0.9f,
-            direction,
-            distance,
-            _config.groundLayer
-        );
+        // RaycastHit2D hit = Physics2D.CircleCast(
+        //     currentPos,
+        //     playerRadius * 0.9f,
+        //     direction,
+        //     distance,
+        //     _config.groundLayer
+        // );
         
-        if (hit.collider != null)
-        {
-            Vector2 positionBeforeWall = hit.point - direction * (playerRadius + 0.1f);
+        // if (hit.collider != null)
+        // {
+        //     Vector2 positionBeforeWall = hit.point - direction * (playerRadius + 0.1f);
             
-            if (!IsPositionBlocked(positionBeforeWall, playerCollider))
-            {
-                return positionBeforeWall;
-            }
-        }
+        //     if (!IsPositionBlocked(positionBeforeWall, playerCollider))
+        //     {
+        //         return positionBeforeWall;
+        //     }
+        // }
         
-        if (!IsPositionBlocked(targetPos, playerCollider))
-        {
-            return targetPos;
-        }
+        // if (!IsPositionBlocked(targetPos, playerCollider))
+        // {
+        //     return targetPos;
+        // }
         
-        Vector2[] offsets = new Vector2[]
-        {
-            Vector2.up * _config.teleportOffsetY,
-            Vector2.right * _config.teleportOffsetY,
-            Vector2.left * _config.teleportOffsetY,
-            Vector2.down * _config.teleportOffsetY * 0.5f,
-            new Vector2(1, 1).normalized * _config.teleportOffsetY,
-            new Vector2(-1, 1).normalized * _config.teleportOffsetY,
-            new Vector2(1, -1).normalized * _config.teleportOffsetY,
-            new Vector2(-1, -1).normalized * _config.teleportOffsetY
-        };
+        // Vector2[] offsets = new Vector2[]
+        // {
+        //     Vector2.up * _config.teleportOffsetY,
+        //     Vector2.right * _config.teleportOffsetY,
+        //     Vector2.left * _config.teleportOffsetY,
+        //     Vector2.down * _config.teleportOffsetY * 0.5f,
+        //     new Vector2(1, 1).normalized * _config.teleportOffsetY,
+        //     new Vector2(-1, 1).normalized * _config.teleportOffsetY,
+        //     new Vector2(1, -1).normalized * _config.teleportOffsetY,
+        //     new Vector2(-1, -1).normalized * _config.teleportOffsetY
+        // };
         
-        for (int mult = 1; mult <= _config.teleportMaxAttempts; mult++)
-        {
-            foreach (Vector2 offset in offsets)
-            {
-                Vector2 testPos = targetPos + offset * mult;
+        // for (int mult = 1; mult <= _config.teleportMaxAttempts; mult++)
+        // {
+        //     foreach (Vector2 offset in offsets)
+        //     {
+        //         Vector2 testPos = targetPos + offset * mult;
                 
-                if (!IsPositionBlocked(testPos, playerCollider))
-                {
-                    return testPos;
-                }
-            }
-        }
+        //         if (!IsPositionBlocked(testPos, playerCollider))
+        //         {
+        //             return testPos;
+        //         }
+        //     }
+        // }
         
-        Debug.LogWarning("Cannot find valid teleport position, staying in place!");
-        return currentPos;
+        // Debug.LogWarning("Cannot find valid teleport position, staying in place!");
+        // return currentPos;
+
+        return targetPos;
     }
     
     private bool IsPositionBlocked(Vector2 pos, Collider2D playerCollider)
