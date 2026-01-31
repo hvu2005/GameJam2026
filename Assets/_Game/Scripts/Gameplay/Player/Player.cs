@@ -9,20 +9,20 @@ public class Player : PlayerEntity
 {
     [Header("Player Configuration")]
     [SerializeField] private PlayerConfig config;
-    
+
     private PlayerMovement _movement;
     private PlayerJump _jump;
     private PlayerDash _dash;
     private PlayerFormController _formController;
     private PlayerStateMachine _stateMachine;
-    
+
     public PlayerMovement Movement => _movement;
     public PlayerJump Jump => _jump;
     public PlayerDash Dash => _dash;
     public PlayerFormController FormController => _formController;
     public PlayerStateMachine StateMachine => _stateMachine;
     public PlayerConfig Config => config;
-    
+
     public bool IsGrounded => _movement != null && _movement.IsGrounded;
     public int FacingDirection => _movement != null ? _movement.FacingDirection : 1;
 
@@ -35,7 +35,7 @@ public class Player : PlayerEntity
     {
         FormUnlockManager.UnlockAll();
     }
-    
+
     private void InitializeComponents()
     {
         _movement = GetComponent<PlayerMovement>();
@@ -43,28 +43,38 @@ public class Player : PlayerEntity
         _dash = GetComponent<PlayerDash>();
         _formController = GetComponent<PlayerFormController>();
         _stateMachine = GetComponent<PlayerStateMachine>();
-        
+
         if (config == null)
         {
             Debug.LogError("PlayerConfig is not assigned to Player!", this);
         }
     }
 
+    public bool IsDead = false;
+
     public override void Die()
     {
-        Debug.Log("Player has died.");
+        if(IsDead) return;
+        IsDead = true;
+        // Debug.Log("Player has died.");
+
+        Time.timeScale = 0f;
         
         ResetPlayerState();
-        
-        EventBus.Clear();
-        SceneManager.LoadScene(this.gameObject.scene.name);
+
+        if (SceneTransition.Instance != null)
+            StartCoroutine(SceneTransition.Instance.TransitionResetScene(this));
+
+
+        // EventBus.Clear();
+        // SceneManager.LoadScene(this.gameObject.scene.name);
     }
 
     private void ResetPlayerState()
     {
         if (_jump != null) _jump.CancelJump();
         if (_dash != null) _dash.CancelDash();
-        
+
         if (_dash != null) _dash.ResetCooldown();
     }
 

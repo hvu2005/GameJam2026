@@ -666,7 +666,6 @@ MonoBehaviour:
   settingsButton: {fileID: 1712688626}
   exitGameButton: {fileID: 1071963937}
   settingsPanel: {fileID: 1202984313}
-  sceneTransition: {fileID: 0}
   useSceneTransition: 1
 --- !u!1 &622641348
 GameObject:

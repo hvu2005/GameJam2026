@@ -1,6 +1,7 @@
 
 public enum PlayerActionEventType
 {
+    OnDie,
     // Movement Events
     OnMoveStarted,
     OnMoveStopped,
