@@ -414,6 +414,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   config: {fileID: 11400000, guid: 8f24c3bbea9523243af0c10761255e45, type: 2}
+  IsDead: 0
 --- !u!114 &6323945295947372545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5668,7 +5669,7 @@ Transform:
   m_GameObject: {fileID: 7092113054799477759}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.185, y: 0.375, z: 0}
+  m_LocalPosition: {x: 0.33, y: 0.36, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
