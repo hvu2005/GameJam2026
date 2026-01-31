@@ -10,6 +10,9 @@ namespace _Game.Scripts.Tool
         [Header("Map Database")]
         [SerializeField] private MapDatabase mapDatabase;
         
+        [Header("UI References")]
+        [SerializeField] private UnityEngine.UI.Image uiBackgroundImage;
+
         [Header("Player Settings")]
         [Tooltip("Tự động telemetry player đến Spawn Point khi load map")]
         [SerializeField] private bool teleportPlayerOnLoad = true;
@@ -22,7 +25,6 @@ namespace _Game.Scripts.Tool
         private const string PLAYER_PREFS_LEVEL_KEY = "CurrentLevelIndex";
         
         private GameObject _currentMapInstance;
-        private GameObject _currentBackgroundInstance;
         private GameObject _currentPlayerInstance;
         private int _currentLevelIndex = 0;
         
@@ -86,10 +88,23 @@ namespace _Game.Scripts.Tool
                 Debug.LogError($"[SimpleMapLoader] Map Prefab missing for level {index}");
             }
 
-            if (data.backgroundPrefab != null)
+            // Set UI Background
+            if (uiBackgroundImage != null)
             {
-                _currentBackgroundInstance = Instantiate(data.backgroundPrefab, Vector3.zero, Quaternion.identity);
-                _currentBackgroundInstance.name = $"BG_{data.levelName}";
+                if (data.backgroundSprite != null)
+                {
+                    uiBackgroundImage.sprite = data.backgroundSprite;
+                    uiBackgroundImage.gameObject.SetActive(true);
+                }
+                else
+                {
+                    uiBackgroundImage.gameObject.SetActive(false); // Hide if no BG
+                }
+            }
+            else
+            {
+                if (data.backgroundSprite != null)
+                    Debug.LogWarning("[SimpleMapLoader] Background Sprite found but 'Ui Background Image' is not assigned!");
             }
 
             if (teleportPlayerOnLoad)
@@ -138,15 +153,33 @@ namespace _Game.Scripts.Tool
 
         private void TeleportPlayerToSpawnPoint()
         {
-            GameObject spawnPointObj = GameObject.FindGameObjectWithTag("PlayerSpawn");
+            Transform spawnTransform = null;
+
+            if (_currentMapInstance != null)
+            {
+                foreach (Transform t in _currentMapInstance.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t.CompareTag("PlayerSpawn"))
+                    {
+                        spawnTransform = t;
+                        break;
+                    }
+                }
+            }
+
+            if (spawnTransform == null)
+            {
+                 GameObject spawnPointObj = GameObject.FindGameObjectWithTag("PlayerSpawn");
+                 if (spawnPointObj != null) spawnTransform = spawnPointObj.transform;
+            }
             
             Vector3 targetPosition = Vector3.zero;
             int facingDirection = 1;
 
-            if (spawnPointObj != null)
+            if (spawnTransform != null)
             {
-                targetPosition = spawnPointObj.transform.position;
-                facingDirection = spawnPointObj.transform.localScale.x >= 0 ? 1 : -1;
+                targetPosition = spawnTransform.position;
+                facingDirection = spawnTransform.localScale.x >= 0 ? 1 : -1;
             }
             else
             {
@@ -191,15 +224,11 @@ namespace _Game.Scripts.Tool
         {
             if (_currentMapInstance != null)
             {
+                _currentMapInstance.SetActive(false); // Important: Hide immediately to prevent FindGameObjectWithTag from finding it
                 Destroy(_currentMapInstance);
                 _currentMapInstance = null;
             }
             
-            if (_currentBackgroundInstance != null)
-            {
-                Destroy(_currentBackgroundInstance);
-                _currentBackgroundInstance = null;
-            }
         }
         
         private void OnGUI()

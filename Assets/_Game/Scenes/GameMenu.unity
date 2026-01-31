@@ -832,7 +832,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 009d07e380d4f8c49a7c32839be90730, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameSceneName: Test_DL
+  gameSceneName: GamePlayScene
   startGameButton: {fileID: 1461676559}
   settingsButton: {fileID: 1712688626}
   exitGameButton: {fileID: 1071963937}
