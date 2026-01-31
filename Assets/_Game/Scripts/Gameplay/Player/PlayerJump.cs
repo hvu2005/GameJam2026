@@ -61,6 +61,23 @@ public class PlayerJump : MonoBehaviour
         UpdateJumpTimers();
         ApplyGravityModifiers();
         CheckJumpPeak();
+
+        if(_rb.velocity.y < -0.1f && !_movement.IsGrounded)
+        {
+            // if (_stateMachine != null && _stateMachine.CurrentState != PlayerState.Falling)
+            // {
+            //     _stateMachine.ChangeState(PlayerState.Falling);
+            // }
+            EventBus.Emit(PlayerActionEventType.OnFalling,
+                new JumpEventData
+                {
+                    JumpCount = _jumpCount,
+                    IsDoubleJump = _jumpCount > 1,
+                    JumpForce = 0f,
+                    UsedCoyoteTime = false,
+                    Position = transform.position
+                });
+        }
     }
 
     private void OnJumpInput(bool pressed)
