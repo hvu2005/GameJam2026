@@ -35,6 +35,7 @@ public class PlayerFormController : MonoBehaviour
         _input.On<int>(PlayerInputType.FormSelect, OnFormSelectInput);
         _input.On<bool>(PlayerInputType.Skill, OnSkillInput);
         EventBus.On<StateChangeEventData>(PlayerActionEventType.OnStateChanged, OnPlayerStateChanged);
+        EventBus.On<int>(FormEventType.OnFormUnlocked, OnFormUnlocked);
     }
 
     void OnDisable()
@@ -42,6 +43,7 @@ public class PlayerFormController : MonoBehaviour
         _input.Off<int>(PlayerInputType.FormSelect, OnFormSelectInput);
         _input.Off<bool>(PlayerInputType.Skill, OnSkillInput);
         EventBus.Off<StateChangeEventData>(PlayerActionEventType.OnStateChanged, OnPlayerStateChanged);
+        EventBus.Off<int>(FormEventType.OnFormUnlocked, OnFormUnlocked);
     }
 
     void Update()
@@ -100,6 +102,15 @@ public class PlayerFormController : MonoBehaviour
     private void OnPlayerStateChanged(StateChangeEventData data)
     {
         _currentForm?.OnPlayerStateChanged(data.FromState, data.ToState);
+    }
+
+    private void OnFormUnlocked(int formID)
+    {
+        if (_unlockedForms.ContainsKey(formID))
+        {
+            _unlockedForms[formID] = true;
+            Debug.Log($"[FormController] Updated unlock state for form {formID}");
+        }
     }
 
     public void TryChangeForm(int targetFormID)
