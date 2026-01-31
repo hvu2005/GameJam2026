@@ -49,3 +49,12 @@ TagManager:
   - name: UI
     uniqueID: 602664931
     locked: 0
+  - name: Far
+    uniqueID: 1792234503
+    locked: 0
+  - name: Mid
+    uniqueID: 2252125687
+    locked: 0
+  - name: Near
+    uniqueID: 251864899
+    locked: 0

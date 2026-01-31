@@ -31,15 +31,25 @@ public class FallingHazard : Hazard
     [SerializeField] private int shakeVibrato = 20;
     [Tooltip("Độ ngẫu nhiên (0-90)")]
     [SerializeField] private float shakeRandomness = 90f;
+    [SerializeField] private bool isUsedShake = true;
+
+    [Header("Animation")]
+    [SerializeField] private string breakTriggerName = "Destroy";
+    [SerializeField] private string idleStateName = "Idle"; // Tên state idle trong Animator
+    [SerializeField] private string breakStateName = "CeilingHazard"; // Tên state trong Animator
+    [SerializeField] private float breakAnimationDuration = 0.5f; // Thời gian animation vỡ (fallback nếu không tìm được)
+    private Animator animator;
 
     private Rigidbody2D rb;
     private Vector3 initialPos;
     private bool isFalling = false;
+    private bool isBreaking = false; // Đang trong quá trình vỡ
     private Renderer[] renderers;
     private Collider2D col;
 
     protected void Awake()
     {
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         renderers = GetComponentsInChildren<Renderer>();
@@ -83,7 +93,8 @@ public class FallingHazard : Hazard
         isFalling = true;
 
         // 1. Rung lắc cảnh báo (Game Feel)
-        yield return transform.DOShakePosition(shakeDuration, shakeStrength, shakeVibrato, shakeRandomness, false, true)
+        if (isUsedShake)
+            yield return transform.DOShakePosition(shakeDuration, shakeStrength, shakeVibrato, shakeRandomness)
                               .WaitForCompletion();
 
         transform.position = initialPos; // Đảm bảo vị trí trở lại chính xác
@@ -98,10 +109,12 @@ public class FallingHazard : Hazard
     // Khi chạm vào Player -> Base class gọi hàm này
     protected override void OnActivate(PlayerEntity target)
     {
+        if (isBreaking) return; // Tránh trigger nhiều lần
+        
         // Giết Player
         target.Die();
 
-        // Nhũ băng vỡ ngay lập tức
+        // Nhũ băng vỡ
         BreakAndRespawn();
     }
 
@@ -111,7 +124,7 @@ public class FallingHazard : Hazard
         base.OnTriggerEnter2D(collision); // Giữ logic check Player của cha
 
         // Nếu chạm đất -> Cũng vỡ
-        if (((1 << collision.gameObject.layer) & groundLayer) != 0)
+        if (!isBreaking && ((1 << collision.gameObject.layer) & groundLayer) != 0)
         {
             BreakAndRespawn();
         }
@@ -121,11 +134,19 @@ public class FallingHazard : Hazard
 
     private void BreakAndRespawn()
     {
-        // Ẩn visual & Tắt va chạm (Player tưởng đã hủy)
-        ToggleObject(false);
-
+        isBreaking = true;
+        
         // Dừng vật lý ngay lập tức
         SetStaticState();
+        
+        // Tắt collider để không va chạm nữa
+        if (col) col.enabled = false;
+
+        // Trigger animation vỡ
+        if (animator != null && !string.IsNullOrEmpty(breakTriggerName))
+        {
+            animator.SetTrigger(breakTriggerName);
+        }
 
         // Chờ và hồi phục
         StartCoroutine(RespawnRoutine());
@@ -133,12 +154,79 @@ public class FallingHazard : Hazard
 
     private IEnumerator RespawnRoutine()
     {
+        // Đợi animation vỡ chạy xong
+        yield return new WaitForSeconds(GetBreakAnimationDuration());
+        
+        // Ẩn visual SAU KHI animation chạy xong
+        foreach (var r in renderers) r.enabled = false;
+        
+        // Đợi thời gian respawn
         yield return new WaitForSeconds(respawnTime);
 
-        // Reset vị trí & Hiện lại
+        // Reset vị trí & trạng thái
         transform.position = initialPos;
+        transform.rotation = Quaternion.identity; // Reset rotation nếu bị xoay
         isFalling = false;
+        isBreaking = false;
+        
+        // Reset animator về trạng thái idle
+        ResetAnimator();
+        
+        // Hiện lại visual và collider
         ToggleObject(true);
+        
+        // Reset physics state
+        SetStaticState();
+    }
+    
+    /// <summary>
+    /// Reset animator về trạng thái ban đầu
+    /// </summary>
+    private void ResetAnimator()
+    {
+        if (animator == null) return;
+        
+        // Reset tất cả triggers để tránh trigger cũ còn active
+        if (!string.IsNullOrEmpty(breakTriggerName))
+        {
+            animator.ResetTrigger(breakTriggerName);
+        }
+        
+        // Force play state idle nếu có
+        if (!string.IsNullOrEmpty(idleStateName))
+        {
+            animator.Play(idleStateName, 0, 0f); // Layer 0, normalized time 0
+        }
+        
+        // Update animator để apply changes ngay
+        animator.Update(0f);
+    }
+    
+    /// <summary>
+    /// Lấy độ dài animation vỡ từ Animator
+    /// </summary>
+    private float GetBreakAnimationDuration()
+    {
+        // Nếu không có animator hoặc không config state name → dùng fallback
+        if (animator == null || string.IsNullOrEmpty(breakStateName))
+            return breakAnimationDuration;
+        
+        // Tìm AnimationClip trong state
+        RuntimeAnimatorController ac = animator.runtimeAnimatorController;
+        if (ac == null || ac.animationClips == null || ac.animationClips.Length == 0)
+            return breakAnimationDuration;
+        
+        foreach (AnimationClip clip in ac.animationClips)
+        {
+            // Tìm clip có tên khớp với state (hoặc trigger)
+            if (clip.name.Contains(breakStateName) || clip.name.Contains(breakTriggerName))
+            {
+                return clip.length;
+            }
+        }
+        
+        // Fallback về giá trị config nếu không tìm thấy clip
+        return breakAnimationDuration;
     }
 
     private void SetStaticState()

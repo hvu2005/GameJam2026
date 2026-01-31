@@ -106,13 +106,13 @@ TextureImporter:
         height: 36
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 23, y: 0, z: 23, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c5befad357e4265409d72823c6e44573
-      internalID: -504120067
+      spriteID: b96cb1316d31b314c8e32faaa7337c9d
+      internalID: 543242847
       vertices: []
       indices: 
       edges: []
@@ -128,7 +128,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      dialog_panel_0: -504120067
+      dialog_panel_0: 543242847
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
