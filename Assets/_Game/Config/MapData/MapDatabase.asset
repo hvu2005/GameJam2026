@@ -16,18 +16,12 @@ MonoBehaviour:
   - levelName: tut
     mapPrefab: {fileID: 2999308956871290996, guid: a6a3cc6c770325f429e84735e231107f, type: 3}
     backgroundSprite: {fileID: -895773872, guid: 83e9019fda8b9534d832dde1b0b66f1c, type: 3}
-  - levelName: 2
-    mapPrefab: {fileID: 7750515961151451561, guid: ae50dc20280281848b037240893146ac, type: 3}
-    backgroundSprite: {fileID: 0}
-  - levelName: Map3
-    mapPrefab: {fileID: 2999308956871290996, guid: b57081b826f8379418dc9d01a839a87d, type: 3}
-    backgroundSprite: {fileID: 0}
   - levelName: 1
-    mapPrefab: {fileID: 2999308956871290996, guid: a47fa91eefa59b842ae2072b7464877f, type: 3}
+    mapPrefab: {fileID: 7750515961151451561, guid: ae50dc20280281848b037240893146ac, type: 3}
     backgroundSprite: {fileID: 0}
   - levelName: 2
     mapPrefab: {fileID: 1757279071041666299, guid: e15ba3ed3ca47454489eea793acca7ba, type: 3}
-    backgroundSprite: {fileID: 0}
+    backgroundSprite: {fileID: 21300000, guid: 0cc1b5e85d353b1498f0ec7500cf959b, type: 3}
   - levelName: 3
-    mapPrefab: {fileID: 2999308956871290996, guid: 6e378bce375b79d4d823a821eb771c59, type: 3}
-    backgroundSprite: {fileID: 0}
+    mapPrefab: {fileID: 2999308956871290996, guid: b57081b826f8379418dc9d01a839a87d, type: 3}
+    backgroundSprite: {fileID: 21300000, guid: 98619d6b3162a4141b9110129263ff0e, type: 3}
