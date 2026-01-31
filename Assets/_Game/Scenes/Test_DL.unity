@@ -1259,6 +1259,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1762528684866158606, guid: 87f0c45c51caac04580200ea620d7524, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 519420031}
+    - target: {fileID: 1762528684866158606, guid: 87f0c45c51caac04580200ea620d7524, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2713215808567599529, guid: 87f0c45c51caac04580200ea620d7524, type: 3}
       propertyPath: m_Name
       value: Canvas
