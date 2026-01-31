@@ -18,7 +18,7 @@ MonoBehaviour:
     backgroundSprite: {fileID: -895773872, guid: 83e9019fda8b9534d832dde1b0b66f1c, type: 3}
   - levelName: 1
     mapPrefab: {fileID: 7750515961151451561, guid: ae50dc20280281848b037240893146ac, type: 3}
-    backgroundSprite: {fileID: 0}
+    backgroundSprite: {fileID: 142771959, guid: fafce1d56b714674db41fed8dfac8ea5, type: 3}
   - levelName: 2
     mapPrefab: {fileID: 1757279071041666299, guid: e15ba3ed3ca47454489eea793acca7ba, type: 3}
     backgroundSprite: {fileID: 21300000, guid: 0cc1b5e85d353b1498f0ec7500cf959b, type: 3}
