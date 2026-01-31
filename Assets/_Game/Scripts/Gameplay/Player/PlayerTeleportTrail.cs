@@ -117,33 +117,33 @@ public class PlayerTeleportTrail : MonoBehaviour
     }
 
     /// <summary>
-    /// Update fade effect - fade dần từ điểm đầu đến điểm cuối
+    /// Update fade effect - thu dần về điểm đích (end position)
     /// </summary>
     private void UpdateLineFade(float fadeProgress)
     {
-        // Tính toán điểm fade hiện tại (từ 0 đến 1)
-        // fadeProgress = 0: chưa fade
-        // fadeProgress = 1: fade hết
+        // fadeProgress = 0: line đầy đủ từ start → end
+        // fadeProgress = 1: line thu hết về điểm end
         
-        Gradient gradient = new Gradient();
-        GradientColorKey[] colorKeys = new GradientColorKey[3];
-        GradientAlphaKey[] alphaKeys = new GradientAlphaKey[3];
+        // Tính điểm bắt đầu mới (di chuyển dần từ start về end)
+        Vector3 currentStart = Vector3.Lerp(_startPosition, _endPosition, fadeProgress);
         
-        // Điểm đã fade (trong suốt)
-        colorKeys[0] = new GradientColorKey(trailColor, 0f);
-        alphaKeys[0] = new GradientAlphaKey(0f, 0f);
+        // Update tất cả điểm trên line để tạo hiệu ứng "rút ngắn"
+        for (int i = 0; i < lineSegments; i++)
+        {
+            float t = i / (float)(lineSegments - 1);
+            Vector3 point = Vector3.Lerp(currentStart, _endPosition, t);
+            _lineRenderer.SetPosition(i, point);
+        }
         
-        // Điểm đang fade (transition)
-        float fadePoint = fadeProgress;
-        colorKeys[1] = new GradientColorKey(trailColor, fadePoint);
-        alphaKeys[1] = new GradientAlphaKey(0.5f, fadePoint);
+        // Fade alpha nhẹ để mượt hơn
+        Color startColor = trailColor;
+        startColor.a = 1f - fadeProgress * 0.5f; // Giữ một phần alpha
         
-        // Điểm chưa fade (hiển thị đầy đủ)
-        colorKeys[2] = new GradientColorKey(trailColor, 1f);
-        alphaKeys[2] = new GradientAlphaKey(1f, 1f);
+        Color endColor = trailColor;
+        endColor.a = 1f;
         
-        gradient.SetKeys(colorKeys, alphaKeys);
-        _lineRenderer.colorGradient = gradient;
+        _lineRenderer.startColor = startColor;
+        _lineRenderer.endColor = endColor;
     }
 
     /// <summary>
