@@ -11,28 +11,36 @@ public static class PlayerMovementController
         // CRITICAL ORDER: Disable components FIRST, then stop physics
         // This prevents FixedUpdate from running and re-applying velocity
 
-        // 1. Change state to Idle to stop all state-based movement
+        // 1. Force Animator to Idle state (prevents moving animation)
+        var animator = player.GetComponentInChildren<Animator>();
+        if (animator != null)
+        {
+            animator.SetBool("isMoving", false);
+            animator.SetBool("isJumping", false);
+        }
+
+        // 2. Change state to Idle to stop all state-based movement
         var stateMachine = player.GetComponent<PlayerStateMachine>();
         if (stateMachine != null)
         {
             stateMachine.ChangeState(PlayerState.Idle);
         }
 
-        // 2. Disable input (no new input accepted)
+        // 3. Disable input (no new input accepted)
         var playerInput = player.GetComponent<PlayerInput>();
         if (playerInput != null)
         {
             playerInput.enabled = false;
         }
 
-        // 3. Disable movement component (no FixedUpdate execution)
+        // 4. Disable movement component (no FixedUpdate execution)
         var playerMovement = player.GetComponent<PlayerMovement>();
         if (playerMovement != null)
         {
             playerMovement.enabled = false;
         }
 
-        // 4. Freeze horizontal movement but ALLOW vertical (gravity/fall)
+        // 5. Freeze horizontal movement but ALLOW vertical (gravity/fall)
         var rb = player.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
@@ -52,21 +60,50 @@ public static class PlayerMovementController
     {
         if (player == null) return;
 
-        // 1. Restore Rigidbody constraints FIRST
+        // 1. Force stop ALL physics completely
         var rb = player.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
+            // CRITICAL: Zero out velocity BEFORE restoring constraints
+            rb.velocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+
+            // Then restore constraints
             rb.constraints = _originalConstraints;
         }
 
-        // 2. Re-enable input
+        // 2. Force State Machine back to Idle
+        var stateMachine = player.GetComponent<PlayerStateMachine>();
+        if (stateMachine != null)
+        {
+            stateMachine.ChangeState(PlayerState.Idle);
+        }
+
+        // 3. Clear input buffer and re-enable
         var playerInput = player.GetComponent<PlayerInput>();
         if (playerInput != null)
         {
+            playerInput.ClearInput(); // Clear cached input BEFORE enabling
             playerInput.enabled = true;
+
+            // Force emit OnMoveStopped event to trigger animation
+            EventBus.Emit(PlayerActionEventType.OnMoveStopped,
+                new MovementEventData
+                {
+                    Velocity = Vector2.zero,
+                    Direction = 0, // int, not Vector2
+                    IsGrounded = true,
+                    Speed = 0f
+                });
+        }        // 4. Force reset animator to Idle
+        var animator = player.GetComponentInChildren<Animator>();
+        if (animator != null)
+        {
+            animator.SetBool("isMoving", false);
+            animator.SetBool("isJumping", false);
         }
 
-        // 3. Re-enable movement
+        // 5. Re-enable movement LAST (after everything is clean)
         var playerMovement = player.GetComponent<PlayerMovement>();
         if (playerMovement != null)
         {

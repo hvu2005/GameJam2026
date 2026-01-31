@@ -33,6 +33,7 @@ public class DialogueController : MonoBehaviour
     private DialogueLine currentLine;
     private bool isTyping;
     private Coroutine typingCoroutine;
+    private bool isClosing; // Flag to prevent input during closing
 
     private const string HTML_ALPHA = "<color=#00000000>";
     private const float MAX_TYPE_SPEED = 0.1f;
@@ -76,9 +77,11 @@ public class DialogueController : MonoBehaviour
     void Update()
     {
         if (dialoguePanel == null || !dialoguePanel.activeSelf) return;
+        if (isClosing) return; // Block input during closing
 
-        // Accept ANY key to advance dialogue
-        if (UnityEngine.Input.anyKeyDown)
+        // Press Enter to advance dialogue
+        if (UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Return) ||
+            UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.KeypadEnter))
         {
             DisplayNextLine();
         }
@@ -91,6 +94,7 @@ public class DialogueController : MonoBehaviour
         currentDialogueData = dialogueData;
         dialogueLines.Clear();
         conversationEnded = false;
+        isClosing = false; // Reset closing flag
 
         foreach (var line in dialogueData.lines)
         {
@@ -257,28 +261,44 @@ public class DialogueController : MonoBehaviour
 
     private void EndConversation()
     {
+        isClosing = true; // Block all input immediately
+
         dialogueLines.Clear();
         conversationEnded = false;
         currentDialogueData = null;
 
         DeactivateAllPanels();
 
-        if (dialoguePanel != null)
-        {
-            dialoguePanel.SetActive(false);
-        }
-
+        // Re-enable player BEFORE deactivating panel (to avoid disabling this MonoBehaviour)
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            PlayerMovementController.Enable(player);
-        }
 
         PlayerInteraction playerInteraction = FindObjectOfType<PlayerInteraction>();
         if (playerInteraction != null)
         {
             playerInteraction.OnDialogueEnd();
         }
+
+        // Deactivate panel LAST
+        if (dialoguePanel != null)
+        {
+            dialoguePanel.SetActive(false);
+        }
+
+        // Wait 3 frames before re-enabling to ensure Enter is fully released
+        if (player != null)
+        {
+            Invoke(nameof(ReEnablePlayer), 0.05f); // 50ms delay (~3 frames at 60fps)
+        }
+    }
+
+    private void ReEnablePlayer()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            PlayerMovementController.Enable(player);
+        }
+        isClosing = false; // Reset flag after re-enable
     }
 
     // Backwards compatibility - convert old DialogueText to new DialogueData
