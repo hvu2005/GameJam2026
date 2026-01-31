@@ -9,6 +9,8 @@ using UnityEngine.UI;
 /// </summary>
 public class SceneTransition : MonoBehaviour
 {
+    public static SceneTransition Instance { get; private set; }
+    public GameObject parentCanvas;
     [Header("Transition Settings")]
     [SerializeField] private RectTransform overlayPanel; // Panel màu đen overlay
     [SerializeField] private float transitionDuration = 0.5f; // Thời gian hiệu ứng
@@ -18,6 +20,7 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private AnimationCurve slideCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
     
     private Vector2 _hiddenPosition;
+    private Vector2 _hiddenPositionOpposite; // Vị trí ẩn đối diện (cho slide out)
     private Vector2 _visiblePosition;
     private bool _isTransitioning = false;
     
@@ -31,6 +34,7 @@ public class SceneTransition : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         CalculatePositions();
         
         // Ẩn overlay ban đầu
@@ -38,6 +42,8 @@ public class SceneTransition : MonoBehaviour
         {
             overlayPanel.anchoredPosition = _hiddenPosition;
         }
+        DontDestroyOnLoad(parentCanvas);
+        DontDestroyOnLoad(this.gameObject);
     }
     
     private void CalculatePositions()
@@ -59,15 +65,19 @@ public class SceneTransition : MonoBehaviour
         {
             case TransitionDirection.FromLeft:
                 _hiddenPosition = new Vector2(-screenWidth, 0);
+                _hiddenPositionOpposite = new Vector2(screenWidth, 0); // Slide out sang phải
                 break;
             case TransitionDirection.FromRight:
                 _hiddenPosition = new Vector2(screenWidth, 0);
+                _hiddenPositionOpposite = new Vector2(-screenWidth, 0); // Slide out sang trái
                 break;
             case TransitionDirection.FromTop:
                 _hiddenPosition = new Vector2(0, screenHeight);
+                _hiddenPositionOpposite = new Vector2(0, -screenHeight); // Slide out xuống dưới
                 break;
             case TransitionDirection.FromBottom:
                 _hiddenPosition = new Vector2(0, -screenHeight);
+                _hiddenPositionOpposite = new Vector2(0, screenHeight); // Slide out lên trên
                 break;
         }
     }
@@ -107,6 +117,9 @@ public class SceneTransition : MonoBehaviour
         // Phase 2: Load scene
         SceneManager.LoadScene(sceneName);
         EventBus.Clear();
+
+        yield return StartCoroutine(SlideOut());
+
     }
     
     /// <summary>
@@ -130,6 +143,7 @@ public class SceneTransition : MonoBehaviour
     private IEnumerator SlideIn()
     {
         if (overlayPanel == null) yield break;
+        overlayPanel.gameObject.SetActive(true);
         
         float elapsed = 0f;
         
@@ -170,11 +184,15 @@ public class SceneTransition : MonoBehaviour
             float t = elapsed / transitionDuration;
             float curveValue = slideCurve.Evaluate(t);
             
-            overlayPanel.anchoredPosition = Vector2.Lerp(_visiblePosition, _hiddenPosition, curveValue);
+            // Slide ra phía đối diện (cùng hướng với slide in)
+            overlayPanel.anchoredPosition = Vector2.Lerp(_visiblePosition, _hiddenPositionOpposite, curveValue);
             
             yield return null;
         }
         
+        overlayPanel.anchoredPosition = _hiddenPositionOpposite;
+        
+        // Reset về vị trí ban đầu để sẵn sàng cho lần slide tiếp theo
         overlayPanel.anchoredPosition = _hiddenPosition;
         _isTransitioning = false;
     }
