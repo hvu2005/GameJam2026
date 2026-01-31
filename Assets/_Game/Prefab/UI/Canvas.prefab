@@ -687,6 +687,7 @@ MonoBehaviour:
   musicSlider: {fileID: 4820662386046915520}
   backButton: {fileID: 7286942759478245043}
   returnToMenuButton: {fileID: 8129824609186478368}
+  isUseSceneTransition: 0
 --- !u!1 &1835281031137970586
 GameObject:
   m_ObjectHideFlags: 0
