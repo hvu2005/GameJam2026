@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using _Game.Scripts._Config.Data;
+using Cinemachine;
 
 namespace _Game.Scripts.Tool
 {
@@ -12,12 +13,19 @@ namespace _Game.Scripts.Tool
         [Header("Map ID to Load")]
         [SerializeField] private string mapID = "1";
         
+        [Header("Player Settings")]
+        [Tooltip("Player prefab để spawn khi load map")]
+        [SerializeField] private GameObject playerPrefab;
+        [Tooltip("Tự động spawn player khi load map")]
+        [SerializeField] private bool spawnPlayerOnLoad = true;
+        
         [Header("Settings")]
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private bool autoLoadOnStart = true;
         [SerializeField] private bool showDebugInfo = true;
         
         private GameObject currentMapInstance;
+        private GameObject currentPlayerInstance;
         private string currentLoadedMapID = "";
         
         private void Start()
@@ -77,6 +85,70 @@ namespace _Game.Scripts.Tool
             if (showDebugInfo)
             {
                 Debug.Log($"✓ Loaded Map ID: {mapID}");
+            }
+            
+            if (spawnPlayerOnLoad)
+            {
+                SpawnPlayerAtSpawnPoint();
+            }
+        }
+        
+        private void SpawnPlayerAtSpawnPoint()
+        {
+            GameObject spawnPointObj = GameObject.FindGameObjectWithTag("PlayerSpawn");
+            
+            if (spawnPointObj == null)
+            {
+                if (showDebugInfo)
+                    Debug.LogWarning("Không tìm thấy GameObject với tag 'PlayerSpawn' trong map!");
+                return;
+            }
+            
+            Vector3 spawnPosition = spawnPointObj.transform.position;
+            
+            Player player = FindObjectOfType<Player>();
+            
+            if (player == null)
+            {
+                if (playerPrefab == null)
+                {
+                    if (showDebugInfo)
+                        Debug.LogWarning("Player prefab chưa được gán! Không spawn player.");
+                    return;
+                }
+                
+                currentPlayerInstance = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+                currentPlayerInstance.name = "Player";
+                player = currentPlayerInstance.GetComponent<Player>();
+                
+                if (showDebugInfo)
+                    Debug.Log($"✓ Created new Player at {spawnPosition}");
+            }
+            else
+            {
+                player.transform.position = spawnPosition;
+                currentPlayerInstance = player.gameObject;
+                
+                if (showDebugInfo)
+                    Debug.Log($"✓ Teleported Player to {spawnPosition}");
+            }
+            
+            int facingDirection = spawnPointObj.transform.localScale.x >= 0 ? 1 : -1;
+            if (player != null && player.Movement != null)
+            {
+                player.Movement.SetFacingDirection(facingDirection);
+            }
+            
+            AssignPlayerToCinemachine();
+        }
+        
+        private void AssignPlayerToCinemachine()
+        {
+            var virtualCamera = FindObjectOfType<Cinemachine.CinemachineVirtualCamera>();
+            
+            if (virtualCamera != null && currentPlayerInstance != null)
+            {
+                virtualCamera.Follow = currentPlayerInstance.transform;
             }
         }
         
