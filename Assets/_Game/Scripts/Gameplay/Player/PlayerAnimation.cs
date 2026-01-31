@@ -91,6 +91,7 @@ public class PlayerAnimation : MonoBehaviour
 
         EventBus.On<DashEventData>(PlayerActionEventType.OnDashStarted, data =>
         {
+            AudioController.Instance.Play("DASH");
             animator.SetBool("isDashing", true);
         });
         EventBus.On<DashEventData>(PlayerActionEventType.OnDashEnded, data =>

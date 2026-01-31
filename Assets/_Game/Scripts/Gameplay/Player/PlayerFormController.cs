@@ -156,6 +156,8 @@ public class PlayerFormController : MonoBehaviour
 
         var changeData = new FormChangeData(fromID, formID, fromName, _currentForm.FormName);
         EventBus.Emit(FormEventType.OnFormChanged, changeData);
+
+        AudioController.Instance.Play("CHANGE_FORM");
     }
 
     private BaseFormConfigSO GetConfigByFormID(int formID)

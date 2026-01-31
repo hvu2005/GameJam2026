@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public struct AudioItem
 {
-    public AudioType name;
+    public string name;
 
     public AudioClip clip;
     [Range(0f, 128f)]
@@ -15,13 +15,25 @@ public struct AudioItem
 
 public sealed class AudioController : EventTarget
 {
+
+    public static AudioController Instance { get; private set; }
     [SerializeField] private List<AudioItem> audioItems = new();
 
-
-    private Dictionary<AudioType, AudioSource> _audioItemsDict = new();
+    private int currentBgIndex = 0;
+    private Dictionary<string, AudioSource> _audioItemsDict = new();
 
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
         foreach (var item in audioItems)
         {
             var audioSource = Instantiate(new GameObject("sfx"), transform).AddComponent<AudioSource>();
@@ -31,7 +43,12 @@ public sealed class AudioController : EventTarget
         }
     }
 
-    public void Play(AudioType name, bool loop = false)
+    void Start()
+    {
+        // Play("BG_Music_" + currentBgIndex, true);
+    }
+
+    public void Play(string name, bool loop = false)
     {
         if (_audioItemsDict.TryGetValue(name, out AudioSource audioSource))
         {
@@ -40,7 +57,7 @@ public sealed class AudioController : EventTarget
         }
     }
 
-    public void Stop(AudioType name)
+    public void Stop(string name)
     {
         if (_audioItemsDict.TryGetValue(name, out AudioSource audioSource))
         {
