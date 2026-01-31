@@ -20,11 +20,14 @@ public class ActiveSkillUI : MonoBehaviour
     [SerializeField] private float fillSpeed = 5f;
     
     private Input _inputActions;
-    private float _cooldownTimer = 0f;
+    private float _cooldownEndTime = 0f;
     private float _cooldownDuration = 0f;
     private bool _isOnCooldown = false;
     private bool _isInFillPhase = false;
     private int _currentFormID = -1;
+    
+    private PlayerTeleportMarker _teleportMarker;
+    private PlayerGravityController _gravityController;
     
     void OnEnable()
     {
@@ -54,6 +57,13 @@ public class ActiveSkillUI : MonoBehaviour
     
     void Start()
     {
+        var player = FindObjectOfType<Player>();
+        if (player != null)
+        {
+            _teleportMarker = player.GetComponent<PlayerTeleportMarker>();
+            _gravityController = player.GetComponent<PlayerGravityController>();
+        }
+        
         // Update skill key text từ Input System
         UpdateSkillKeyText();
         
@@ -78,16 +88,24 @@ public class ActiveSkillUI : MonoBehaviour
         }
         else if (_isOnCooldown)
         {
-            _cooldownTimer -= Time.deltaTime;
+            float remaining = _cooldownEndTime - Time.time;
             
-            if (_cooldownTimer <= 0f)
+            if (remaining <= 0f)
             {
-                _cooldownTimer = 0f;
+                remaining = 0f;
                 _isOnCooldown = false;
                 StartFillPhase();
             }
+            else
+            {
+                // Update fill amount based on remaining time
+                if (cooldownFill != null && _cooldownDuration > 0)
+                {
+                    cooldownFill.fillAmount = remaining / _cooldownDuration;
+                }
+            }
             
-            UpdateCooldownText();
+            UpdateCooldownText(remaining);
         }
     }
     
@@ -109,8 +127,36 @@ public class ActiveSkillUI : MonoBehaviour
             lockedOverlay.SetActive(!hasActiveSkill);
         }
         
-        // Chỉ reset cooldown nếu đang hiển thị
+        // Update cooldown state
         if (hasActiveSkill)
+        {
+            if (data.ToFormID == 2 && _teleportMarker != null) // Void Form
+            {
+                SyncVoidCooldown();
+            }
+            else
+            {
+                ResetCooldown();
+            }
+        }
+    }
+    
+    private void SyncVoidCooldown()
+    {
+        float remaining = _teleportMarker.CooldownRemaining;
+        float total = _teleportMarker.TotalCooldownDuration;
+        
+        if (remaining > 0 && total > 0)
+        {
+            // Resume cooldown
+            _cooldownDuration = total;
+            _cooldownEndTime = Time.time + remaining;
+            _isOnCooldown = true;
+            _isInFillPhase = false;
+            
+            EnableCooldownUI();
+        }
+        else
         {
             ResetCooldown();
         }
@@ -124,19 +170,28 @@ public class ActiveSkillUI : MonoBehaviour
     private void StartCooldown(float duration)
     {
         _cooldownDuration = duration;
-        _cooldownTimer = duration;
+        _cooldownEndTime = Time.time + duration;
         _isOnCooldown = true;
         _isInFillPhase = false;
         
+        EnableCooldownUI();
+    }
+    
+    private void EnableCooldownUI()
+    {
         if (cooldownFill != null)
         {
-            cooldownFill.fillAmount = 1f;
             cooldownFill.enabled = true;
         }
         
         if (cooldownText != null)
         {
             cooldownText.enabled = true;
+        }
+        
+        if (skillText != null)
+        {
+            skillText.enabled = false;
         }
     }
     
@@ -153,6 +208,11 @@ public class ActiveSkillUI : MonoBehaviour
         {
             cooldownFill.fillAmount = 1f;
         }
+        
+        if (skillText != null)
+        {
+            skillText.enabled = true;
+        }
     }
     
     private void UpdateFillAnimation()
@@ -166,14 +226,19 @@ public class ActiveSkillUI : MonoBehaviour
             cooldownFill.fillAmount = 0f;
             cooldownFill.enabled = false;
             _isInFillPhase = false;
+            
+            if (skillText != null)
+            {
+                skillText.enabled = true;
+            }
         }
     }
     
-    private void UpdateCooldownText()
+    private void UpdateCooldownText(float remainingTime)
     {
         if (cooldownText == null) return;
         
-        int secondsLeft = Mathf.CeilToInt(_cooldownTimer);
+        int secondsLeft = Mathf.CeilToInt(remainingTime);
         cooldownText.text = secondsLeft.ToString();
     }
     
@@ -241,7 +306,7 @@ public class ActiveSkillUI : MonoBehaviour
     {
         _isOnCooldown = false;
         _isInFillPhase = false;
-        _cooldownTimer = 0f;
+        _cooldownEndTime = 0f;
         
         if (cooldownFill != null)
         {
@@ -252,6 +317,11 @@ public class ActiveSkillUI : MonoBehaviour
         if (cooldownText != null)
         {
             cooldownText.enabled = false;
+        }
+        
+        if (skillText != null)
+        {
+            skillText.enabled = true;
         }
     }
 }
