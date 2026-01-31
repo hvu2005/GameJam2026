@@ -11,6 +11,18 @@ public class PlayerInput : EventTarget
 
     public Vector2 MoveInput => _moveInput;
 
+    public void ClearInput()
+    {
+        _moveInput = Vector2.zero;
+
+        // Flush Input System buffer by disabling/re-enabling
+        if (_inputActions != null && _inputActions.GamePlay.enabled)
+        {
+            _inputActions.GamePlay.Disable();
+            _inputActions.GamePlay.Enable();
+        }
+    }
+
     private void Awake()
     {
         _inputActions = new Input();
@@ -18,8 +30,11 @@ public class PlayerInput : EventTarget
 
     private void OnEnable()
     {
+        // Clear any cached input when re-enabling
+        _moveInput = Vector2.zero;
+
         _inputActions.GamePlay.Enable();
-        
+
         _inputActions.GamePlay.Move.performed += OnMovePerformed;
         _inputActions.GamePlay.Move.canceled += OnMoveCanceled;
         _inputActions.GamePlay.Jump.performed += OnJumpPerformed;
@@ -32,6 +47,11 @@ public class PlayerInput : EventTarget
 
     private void OnDisable()
     {
+        if (_inputActions == null) return;
+
+        // Clear input buffer when disabling
+        _moveInput = Vector2.zero;
+
         _inputActions.GamePlay.Move.performed -= OnMovePerformed;
         _inputActions.GamePlay.Move.canceled -= OnMoveCanceled;
         _inputActions.GamePlay.Jump.performed -= OnJumpPerformed;
@@ -40,7 +60,7 @@ public class PlayerInput : EventTarget
         _inputActions.GamePlay.Form1.performed -= OnForm1Performed;
         _inputActions.GamePlay.Form2.performed -= OnForm2Performed;
         _inputActions.GamePlay.Form3.performed -= OnForm3Performed;
-        
+
         _inputActions.GamePlay.Disable();
     }
 

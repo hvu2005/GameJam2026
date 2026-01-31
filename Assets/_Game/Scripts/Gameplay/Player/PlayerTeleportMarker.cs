@@ -146,7 +146,22 @@ public class PlayerTeleportMarker : MonoBehaviour
             _dash.CancelDash();
         }
         
+        // Lưu vị trí cũ để tạo trail
+        Vector3 oldPosition = transform.position;
+        
+        // Dịch chuyển đến vị trí mới
         transform.position = validPos;
+        
+        // Kích hoạt trail effect
+        PlayerTeleportTrail trail = GetComponent<PlayerTeleportTrail>();
+        if (trail != null)
+        {
+            trail.ActivateTrail(oldPosition, validPos);
+        }
+        
+        // Emit event để UI hiển thị cooldown
+        EventBus.Emit(FormEventType.OnFormSkillCooldownStart, _config.teleportCooldown);
+        Debug.Log($"[PlayerTeleportMarker] [Emit Event] Skill Cooldown Started: {_config.teleportCooldown}s");
         
         Destroy(_activeMarker.gameObject);
         _activeMarker = null;
