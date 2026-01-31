@@ -80,7 +80,11 @@ public class Player : PlayerEntity
         if (_dash != null) _dash.CancelDash();
         
         if (_dash != null) _dash.ResetCooldown();
-        this.GetComponent<PlayerGravityController>().ToggleGravity();
+        var gc = this.GetComponent<PlayerGravityController>();
+        if (gc != null && gc.IsGravityFlipped)
+        {
+            gc.ToggleGravity();
+        }
     }
 
     public void SetConfig(PlayerConfig newConfig)
