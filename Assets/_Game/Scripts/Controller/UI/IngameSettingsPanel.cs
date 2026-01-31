@@ -1,18 +1,36 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Quản lý Settings Panel với sound và music sliders
+/// Quản lý Settings Panel trong game với sound, music sliders và nút về Main Menu
 /// </summary>
-public class SettingsPanel : MonoBehaviour
+public class IngameSettingsPanel : EventTarget
 {
+    [Header("Scene Settings")]
+    [SerializeField] private string returnSceneName = "GameMenu"; // Scene sẽ load khi nhấn Return to Menu
+    
     [Header("UI References")]
     [SerializeField] private Slider soundSlider;
     [SerializeField] private Slider musicSlider;
     [SerializeField] private Button backButton;
+    [SerializeField] private Button returnToMenuButton;
+    
+    private PlayerInput _input;
     
     void Start()
     {
+        // Get PlayerInput reference
+        _input = FindObjectOfType<PlayerInput>();
+        Debug.Log($"[IngameSettingsPanel] PlayerInput found: {_input != null}");
+        
+        // Subscribe to Pause input BEFORE hiding panel
+        if (_input != null)
+        {
+            _input.On<bool>(PlayerInputType.Pause, OnPauseInput);
+            Debug.Log("[IngameSettingsPanel] Subscribed to Pause input in Start()");
+        }
+        
         // Setup sliders
         if (soundSlider != null)
         {
@@ -32,8 +50,30 @@ public class SettingsPanel : MonoBehaviour
             backButton.onClick.AddListener(ClosePanel);
         }
         
-        // Note: Panel should be disabled in Unity Inspector initially
-        // Don't call SetActive(false) here as it interrupts Start()
+        // Setup return to menu button
+        if (returnToMenuButton != null)
+        {
+            returnToMenuButton.onClick.AddListener(OnReturnToMenu);
+        }
+        
+        // Ẩn panel ban đầu
+        gameObject.SetActive(false);
+    }
+    
+    /// <summary>
+    /// Xử lý input Pause để toggle panel
+    /// </summary>
+    private void OnPauseInput(bool value)
+    {
+        Debug.Log($"[IngameSettingsPanel] OnPauseInput called! Panel active: {gameObject.activeSelf}");
+        if (gameObject.activeSelf)
+        {
+            ClosePanel();
+        }
+        else
+        {
+            OpenPanel();
+        }
     }
     
     /// <summary>
@@ -41,7 +81,9 @@ public class SettingsPanel : MonoBehaviour
     /// </summary>
     public void OpenPanel()
     {
+        Debug.Log("[IngameSettingsPanel] Opening panel - pausing game");
         gameObject.SetActive(true);
+        Time.timeScale = 0f; // Pause game khi mở settings
     }
     
     /// <summary>
@@ -49,7 +91,19 @@ public class SettingsPanel : MonoBehaviour
     /// </summary>
     public void ClosePanel()
     {
+        Debug.Log("[IngameSettingsPanel] Closing panel - resuming game");
         gameObject.SetActive(false);
+        Time.timeScale = 1f; // Resume game khi đóng settings
+    }
+    
+    /// <summary>
+    /// Xử lý khi nhấn Return to Menu
+    /// </summary>
+    private void OnReturnToMenu()
+    {
+        Debug.Log("Return to Menu clicked");
+        Time.timeScale = 1f; // Reset timescale trước khi load scene
+        SceneManager.LoadScene(returnSceneName);
     }
     
     /// <summary>
@@ -92,6 +146,11 @@ public class SettingsPanel : MonoBehaviour
         if (backButton != null)
         {
             backButton.onClick.RemoveListener(ClosePanel);
+        }
+        
+        if (returnToMenuButton != null)
+        {
+            returnToMenuButton.onClick.RemoveListener(OnReturnToMenu);
         }
     }
 }
