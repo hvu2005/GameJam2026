@@ -32,8 +32,8 @@ public class SettingsPanel : MonoBehaviour
             backButton.onClick.AddListener(ClosePanel);
         }
         
-        // Ẩn panel ban đầu
-        gameObject.SetActive(false);
+        // Note: Panel should be disabled in Unity Inspector initially
+        // Don't call SetActive(false) here as it interrupts Start()
     }
     
     /// <summary>

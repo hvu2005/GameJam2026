@@ -15,5 +15,5 @@ MonoBehaviour:
   formID: 1
   formName: Jump
   icon: {fileID: 21300000, guid: 37b93301e07ca5a4fac3de2ae214d653, type: 3}
-  formSwitchCooldown: 2
+  formSwitchCooldown: 1
   extraJumpCount: 1

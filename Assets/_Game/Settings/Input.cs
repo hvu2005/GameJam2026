@@ -154,6 +154,15 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""3705aaa0-6ef2-49c2-84cd-49cfbba9d3b7"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -237,7 +246,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""758fe5fc-592b-4cf6-9a54-73c514cde474"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -277,6 +286,17 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""action"": ""Form3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c3a41367-4638-489b-84f7-21447586869b"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -292,6 +312,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
         m_GamePlay_Form1 = m_GamePlay.FindAction("Form1", throwIfNotFound: true);
         m_GamePlay_Form2 = m_GamePlay.FindAction("Form2", throwIfNotFound: true);
         m_GamePlay_Form3 = m_GamePlay.FindAction("Form3", throwIfNotFound: true);
+        m_GamePlay_Pause = m_GamePlay.FindAction("Pause", throwIfNotFound: true);
     }
 
     ~@Input()
@@ -379,6 +400,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
     private readonly InputAction m_GamePlay_Form1;
     private readonly InputAction m_GamePlay_Form2;
     private readonly InputAction m_GamePlay_Form3;
+    private readonly InputAction m_GamePlay_Pause;
     /// <summary>
     /// Provides access to input actions defined in input action map "GamePlay".
     /// </summary>
@@ -418,6 +440,10 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "GamePlay/Form3".
         /// </summary>
         public InputAction @Form3 => m_Wrapper.m_GamePlay_Form3;
+        /// <summary>
+        /// Provides access to the underlying input action "GamePlay/Pause".
+        /// </summary>
+        public InputAction @Pause => m_Wrapper.m_GamePlay_Pause;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -465,6 +491,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
             @Form3.started += instance.OnForm3;
             @Form3.performed += instance.OnForm3;
             @Form3.canceled += instance.OnForm3;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
         }
 
         /// <summary>
@@ -497,6 +526,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
             @Form3.started -= instance.OnForm3;
             @Form3.performed -= instance.OnForm3;
             @Form3.canceled -= instance.OnForm3;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
         }
 
         /// <summary>
@@ -586,5 +618,12 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnForm3(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Pause" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPause(InputAction.CallbackContext context);
     }
 }

@@ -14,6 +14,8 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button exitGameButton;
     [SerializeField] private SettingsPanel settingsPanel;
+    [SerializeField] private SceneTransition sceneTransition;
+    [SerializeField] private bool useSceneTransition = false;
 
     void Awake()
     {
@@ -44,8 +46,14 @@ public class MainMenuController : MonoBehaviour
     private void OnStartGame()
     {
         Debug.Log("Start Game clicked");
-
-        UnityEngine.SceneManagement.SceneManager.LoadScene(gameSceneName);
+        if (sceneTransition != null)
+        {
+            sceneTransition.LoadScene(gameSceneName);
+        }
+        else
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(gameSceneName);
+        }
     }
 
     /// <summary>

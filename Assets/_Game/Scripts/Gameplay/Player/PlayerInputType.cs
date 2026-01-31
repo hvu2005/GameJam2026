@@ -5,5 +5,6 @@ public enum PlayerInputType
     Jump,
     Dash,
     Skill,
-    FormSelect
+    FormSelect,
+    Pause
 }

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccd20d71d9b8f8143a8b853e4aff3db6, type: 3}
+  m_Name: TriggerDialog1.2 1
+  m_EditorClassIdentifier: 
+  lines:
+  - speakerName: "H\xE0o Ph\xFA"
+    portrait: {fileID: 0}
+    position: 0
+    text: "\u201C\u2026C\u1EA3m gi\xE1c n\xE0y\u2026 quen l\u1EAFm.\u201D"
+  autoClose: 1
+  autoCloseDelay: 0.5
