@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccd20d71d9b8f8143a8b853e4aff3db6, type: 3}
+  m_Name: TriggerDialogEnd
+  m_EditorClassIdentifier: 
+  lines:
+  - speakerName: "M\u1EB7t n\u1EA1 vui"
+    portrait: {fileID: 0}
+    position: 1
+    text: "\u201CTr\xEAn ch\u1EB7ng \u0111\u01B0\u1EDDng t\xECm l\u1ED1i ra\u2026\u201D\r\n
+      \u201C\u2026c\u1EADu s\u1EBD ph\u1EA3i kh\xF4ng ng\u1EEBng ho\xE0n thi\u1EC7n
+      k\u1EF9 n\u0103ng di\u1EC5n xu\u1EA5t c\u1EE7a m\xECnh.\u201D"
+  - speakerName: "M\u1EB7t n\u1EA1 bu\u1ED3n"
+    portrait: {fileID: 0}
+    position: 1
+    text: "\u201CM\u1ED7i vai di\u1EC5n l\xE0 m\u1ED9t c\xE1ch t\u1ED3n t\u1EA1i.\u201D\r\n
+      \u201CM\u1ED7i b\u01B0\u1EDBc ti\u1EBFn l\xE0 m\u1ED9t m\u1EA3nh k\xFD \u1EE9c
+      \u0111\u01B0\u1EE3c h\xE9 l\u1ED9.\u201D"
+  - speakerName: "M\u1EB7t n\u1EA1 t\u1EE9c gi\u1EADn"
+    portrait: {fileID: 0}
+    position: 1
+    text: " \u201CNh\u1EEFng t\u1EA7ng k\xFD \u1EE9c c\u1EE7a ng\u01B0\u1EDDi ngh\u1EC7
+      s\u0129\u2026\u201D\r\n \u201C\u2026k\u1EBB \u0111\xE3 giam gi\u1EEF c\u1EADu
+      trong nh\xE0 h\xE1t n\xE0y.\u201D\r\n"
+  - speakerName: "H\xE0o Ph\xFA"
+    portrait: {fileID: 0}
+    position: 0
+    text: "\u201CV\u1EDF di\u1EC5n\u2026 v\u1EABn ch\u01B0a k\u1EBFt th\xFAc.\u201D"
+  autoClose: 1
+  autoCloseDelay: 0.5

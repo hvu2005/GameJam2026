@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Unity.VisualScripting;
+using Cinemachine;
 
 /// <summary>
 /// Quản lý load scene với loading screen và animation
@@ -20,7 +22,10 @@ public class SceneLoader : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float minimumLoadingTime = 2f; // Thời gian tối thiểu hiện loading
     [SerializeField] private string loadingTrigger = "Show"; // Trigger animation
-    
+
+    [Header("Scene Transition")]
+    [SerializeField] private SceneTransition sceneTransition;
+    [SerializeField] private bool useSceneTransition = false;
     void Awake()
     {
         // Ẩn loading container ban đầu nếu không auto load
@@ -127,26 +132,16 @@ public class SceneLoader : MonoBehaviour
     
     private IEnumerator LoadSceneCoroutineInternal(string sceneName)
     {
-        // Đợi một khoảng thời gian để animation chạy
-        float startTime = Time.time;
+        // Đợi minimum loading time
+        yield return new WaitForSeconds(minimumLoadingTime);
         
-        // Bắt đầu load scene async
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-        asyncLoad.allowSceneActivation = false; // Không kích hoạt scene ngay
-        
-        // Đợi loading hoàn tất HOẶC đạt minimum time
-        while (!asyncLoad.isDone)
+        if (sceneTransition != null && useSceneTransition)
         {
-            float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
-            float elapsedTime = Time.time - startTime;
-            
-            // Khi progress đạt 90% và đã qua minimum time
-            if (asyncLoad.progress >= 0.9f && elapsedTime >= minimumLoadingTime)
-            {
-                asyncLoad.allowSceneActivation = true;
-            }
-            
-            yield return null;
+            sceneTransition.LoadScene(sceneName);
+        }
+        else
+        {
+            SceneManager.LoadScene(sceneName);
         }
         
         // Ẩn loading container sau khi load xong
@@ -170,26 +165,17 @@ public class SceneLoader : MonoBehaviour
             loadingAnimator.SetTrigger(loadingTrigger);
         }
         
-        // Đợi một khoảng thời gian để animation chạy
-        float startTime = Time.time;
+        // Đợi minimum loading time
+        yield return new WaitForSeconds(minimumLoadingTime);
         
-        // Bắt đầu load scene async
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneIndex);
-        asyncLoad.allowSceneActivation = false; // Không kích hoạt scene ngay
-        
-        // Đợi loading hoàn tất HOẶC đạt minimum time
-        while (!asyncLoad.isDone)
+        // Load scene với SceneTransition nếu có
+        if (sceneTransition != null && useSceneTransition)
         {
-            float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
-            float elapsedTime = Time.time - startTime;
-            
-            // Khi progress đạt 90% và đã qua minimum time
-            if (asyncLoad.progress >= 0.9f && elapsedTime >= minimumLoadingTime)
-            {
-                asyncLoad.allowSceneActivation = true;
-            }
-            
-            yield return null;
+            sceneTransition.LoadScene(sceneIndex);
+        }
+        else
+        {
+            SceneManager.LoadScene(sceneIndex);
         }
         
         // Ẩn loading container sau khi load xong
@@ -201,6 +187,7 @@ public class SceneLoader : MonoBehaviour
     
     /// <summary>
     /// Load scene đơn giản không có minimum time (chỉ đợi animation)
+    /// Sử dụng SceneTransition nếu có, fallback về SceneManager
     /// </summary>
     public void LoadSceneSimple(string sceneName, float animationDuration = 1f)
     {
@@ -224,7 +211,15 @@ public class SceneLoader : MonoBehaviour
         // Đợi animation chạy
         yield return new WaitForSeconds(animationDuration);
         
-        // Load scene
-        SceneManager.LoadScene(sceneName);
+        // Load scene với SceneTransition nếu có
+        SceneTransition transition = FindObjectOfType<SceneTransition>();
+        if (transition != null)
+        {
+            transition.LoadScene(sceneName);
+        }
+        else
+        {
+            SceneManager.LoadScene(sceneName);
+        }
     }
 }
