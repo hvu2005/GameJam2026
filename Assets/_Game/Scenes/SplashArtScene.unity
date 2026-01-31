@@ -587,7 +587,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4063348236355544970, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
   m_PrefabInstance: {fileID: 1438566797867392973}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1438566797867392974}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 047a1981b88425c49be54470aea5cd86, type: 3}
@@ -842,6 +842,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1757064891984238604, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
+      propertyPath: m_RenderMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1757064891984238604, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
       propertyPath: m_PixelPerfect
       value: 1
       objectReference: {fileID: 0}
@@ -861,6 +865,10 @@ PrefabInstance:
       propertyPath: m_OverridePixelPerfect
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1765085810245246337, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2025426273102571097, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
       propertyPath: m_Name
       value: SceneTransition
@@ -869,6 +877,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2378017821493448794, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4063348236355544970, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
+      propertyPath: parentCanvas
+      value: 
+      objectReference: {fileID: 1438566797867392974}
     - target: {fileID: 4063348236355544970, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
       propertyPath: sortingOrder
       value: 2
@@ -883,7 +899,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4063348236355544970, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
       propertyPath: transitionDuration
-      value: 0.5
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4063348236355544970, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
+      propertyPath: slideCurve.m_Curve.Array.data[0].time
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4063348236355544970, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
+      propertyPath: slideCurve.m_Curve.Array.data[0].value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4063348236355544970, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
+      propertyPath: slideCurve.m_Curve.Array.data[0].inSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4063348236355544970, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
+      propertyPath: slideCurve.m_Curve.Array.data[1].inSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4063348236355544970, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
+      propertyPath: slideCurve.m_Curve.Array.data[0].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4063348236355544970, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
+      propertyPath: slideCurve.m_Curve.Array.data[1].outSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4063348236355544970, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
+      propertyPath: slideCurve.m_Curve.Array.data[0].outWeight
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7826195593585125591, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
       propertyPath: m_Camera
@@ -996,8 +1040,39 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2025426273102571097, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1438566797867392978}
   m_SourcePrefab: {fileID: 100100000, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
+--- !u!1 &1438566797867392974 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2025426273102571097, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
+  m_PrefabInstance: {fileID: 1438566797867392973}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1438566797867392978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438566797867392974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 1
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -3,9 +3,9 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Quản lý Settings Panel trong game với sound, music sliders và nút về Main Menu
+/// Script con quản lý các nút điều khiển trong pause menu (sound, music, return to menu)
 /// </summary>
-public class IngameSettingsPanel : EventTarget
+public class IngameSettingsPanel : MonoBehaviour
 {
     [Header("Scene Settings")]
     [SerializeField] private string returnSceneName = "GameMenu"; // Scene sẽ load khi nhấn Return to Menu
@@ -17,20 +17,13 @@ public class IngameSettingsPanel : EventTarget
     [SerializeField] private Button returnToMenuButton;
     [SerializeField] private bool isUseSceneTransition = false;
     
-    private PlayerInput _input;
+    private PauseMenuController _pauseController;
     
     void Start()
     {
-        // Get PlayerInput reference
-        _input = FindObjectOfType<PlayerInput>();
-        Debug.Log($"[IngameSettingsPanel] PlayerInput found: {_input != null}");
-        
-        // Subscribe to Pause input BEFORE hiding panel
-        if (_input != null)
-        {
-            _input.On<bool>(PlayerInputType.Pause, OnPauseInput);
-            Debug.Log("[IngameSettingsPanel] Subscribed to Pause input in Start()");
-        }
+        // Get parent PauseMenuController reference
+        _pauseController = GetComponentInParent<PauseMenuController>();
+        Debug.Log($"[IngameSettingsPanel] PauseMenuController found: {_pauseController != null}");
         
         // Setup sliders
         if (soundSlider != null)
@@ -45,10 +38,10 @@ public class IngameSettingsPanel : EventTarget
             musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
         }
         
-        // Setup back button
+        // Setup back button - gọi ClosePanel của parent controller
         if (backButton != null)
         {
-            backButton.onClick.AddListener(ClosePanel);
+            backButton.onClick.AddListener(OnBackButtonClicked);
         }
         
         // Setup return to menu button
@@ -56,45 +49,17 @@ public class IngameSettingsPanel : EventTarget
         {
             returnToMenuButton.onClick.AddListener(OnReturnToMenu);
         }
-        
-        // Ẩn panel ban đầu
-        this.gameObject.SetActive(false);
     }
     
     /// <summary>
-    /// Xử lý input Pause để toggle panel
+    /// Xử lý khi nhấn nút Back - đóng panel thông qua parent controller
     /// </summary>
-    private void OnPauseInput(bool value)
+    private void OnBackButtonClicked()
     {
-        Debug.Log($"[IngameSettingsPanel] OnPauseInput called! Panel active: {gameObject.activeSelf}");
-        if (gameObject.activeSelf)
+        if (_pauseController != null)
         {
-            ClosePanel();
+            _pauseController.ClosePanel();
         }
-        else
-        {
-            OpenPanel();
-        }
-    }
-    
-    /// <summary>
-    /// Mở settings panel
-    /// </summary>
-    public void OpenPanel()
-    {
-        Debug.Log("[IngameSettingsPanel] Opening panel - pausing game");
-        gameObject.SetActive(true);
-        Time.timeScale = 0f; // Pause game khi mở settings
-    }
-    
-    /// <summary>
-    /// Đóng settings panel
-    /// </summary>
-    public void ClosePanel()
-    {
-        Debug.Log("[IngameSettingsPanel] Closing panel - resuming game");
-        gameObject.SetActive(false);
-        Time.timeScale = 1f; // Resume game khi đóng settings
     }
     
     /// <summary>
@@ -102,13 +67,12 @@ public class IngameSettingsPanel : EventTarget
     /// </summary>
     private void OnReturnToMenu()
     {
-        Debug.Log("Return to Menu clicked");
+        Debug.Log("[IngameSettingsPanel] Return to Menu clicked");
         Time.timeScale = 1f; // Reset timescale trước khi load scene
         
-        SceneTransition transition = FindObjectOfType<SceneTransition>();
-        if (transition != null && isUseSceneTransition)
+        if (isUseSceneTransition && SceneTransition.Instance != null)
         {
-            transition.LoadScene(returnSceneName);
+            SceneTransition.Instance.LoadScene(returnSceneName);
         }
         else
         {
@@ -155,7 +119,7 @@ public class IngameSettingsPanel : EventTarget
         
         if (backButton != null)
         {
-            backButton.onClick.RemoveListener(ClosePanel);
+            backButton.onClick.RemoveListener(OnBackButtonClicked);
         }
         
         if (returnToMenuButton != null)
