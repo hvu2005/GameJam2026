@@ -139,8 +139,13 @@ public class PlayerTeleportMarker : MonoBehaviour
         if (_activeMarker == null || _config == null) return;
         
         Vector2 targetPos = _activeMarker.Position;
-        Vector2 validPos = FindValidTeleportPosition(targetPos);
+        Vector2? validPos = FindValidTeleportPosition(targetPos);
         
+        if (validPos == null)
+        {
+            return;
+        }
+
         _rb.velocity = Vector2.zero;
         
         if (_dash != null && _dash.IsDashing)
@@ -150,12 +155,12 @@ public class PlayerTeleportMarker : MonoBehaviour
         
         Vector3 oldPosition = transform.position;
         
-        transform.position = validPos;
+        transform.position = validPos.Value;
         
         PlayerTeleportTrail trail = GetComponent<PlayerTeleportTrail>();
         if (trail != null)
         {
-            trail.ActivateTrail(oldPosition, validPos);
+            trail.ActivateTrail(oldPosition, validPos.Value);
         }
         
         EventBus.Emit(FormEventType.OnFormSkillCooldownStart, _config.teleportCooldown);
@@ -168,73 +173,94 @@ public class PlayerTeleportMarker : MonoBehaviour
         _cooldownEndTime = Time.time + _config.teleportCooldown;
     }
     
-    private Vector2 FindValidTeleportPosition(Vector2 targetPos)
+    private Vector2? FindValidTeleportPosition(Vector2 targetPos)
     {
         Collider2D playerCollider = GetComponent<Collider2D>();
-        if (playerCollider == null)
+        if (playerCollider == null) return targetPos; 
+
+        Vector2 size = playerCollider.bounds.size;
+        Vector2 checkSize = size * 0.95f; 
+        
+        bool CheckOverlap(Vector2 pos)
         {
-            return targetPos;
+             Collider2D hit = Physics2D.OverlapBox(pos + playerCollider.offset, checkSize, 0f, _config.groundLayer);
+             return hit != null;
         }
-        
-        Vector2 currentPos = transform.position;
-        Vector2 direction = (targetPos - currentPos).normalized;
-        float distance = Vector2.Distance(currentPos, targetPos);
-        
-        float playerRadius = Mathf.Max(
-            playerCollider.bounds.extents.x,
-            playerCollider.bounds.extents.y
-        );
-        
-        RaycastHit2D hit = Physics2D.CircleCast(
-            currentPos,
-            playerRadius * 0.9f,
-            direction,
-            distance,
-            _config.groundLayer
-        );
-        
-        if (hit.collider != null)
+
+        if (!CheckOverlap(targetPos))
         {
-            Vector2 positionBeforeWall = hit.point - direction * (playerRadius + 0.1f);
+            return ApplyGroundSnap(targetPos, size);
+        }
+
+        Vector2 normal = _activeMarker != null ? _activeMarker.LandedNormal : Vector2.zero;
+        if (normal != Vector2.zero)
+        {
+            float nudgeDist = Mathf.Abs(Vector2.Dot(normal, Vector2.right)) * size.x * 0.5f 
+                            + Mathf.Abs(Vector2.Dot(normal, Vector2.up)) * size.y * 0.5f;
             
-            if (!IsPositionBlocked(positionBeforeWall, playerCollider))
+            Vector2 testPos = targetPos + normal * (nudgeDist + 0.1f);
+            if (!CheckOverlap(testPos))
             {
-                return positionBeforeWall;
+                return ApplyGroundSnap(testPos, size);
             }
         }
-        
-        if (!IsPositionBlocked(targetPos, playerCollider))
+
+        Vector2 testPosUp = targetPos + Vector2.up * size.y;
+        if (!CheckOverlap(testPosUp))
         {
-            return targetPos;
+            return ApplyGroundSnap(testPosUp, size);
         }
-        
-        Vector2[] offsets = new Vector2[]
+
+        Vector2 arrivalDir = _activeMarker != null ? _activeMarker.ArrivalDirection : Vector2.zero;
+        if (arrivalDir != Vector2.zero)
         {
-            Vector2.up * _config.teleportOffsetY,
-            Vector2.right * _config.teleportOffsetY,
-            Vector2.left * _config.teleportOffsetY,
-            Vector2.down * _config.teleportOffsetY * 0.5f,
-            new Vector2(1, 1).normalized * _config.teleportOffsetY,
-            new Vector2(-1, 1).normalized * _config.teleportOffsetY,
-            new Vector2(1, -1).normalized * _config.teleportOffsetY,
-            new Vector2(-1, -1).normalized * _config.teleportOffsetY
-        };
-        
-        for (int mult = 1; mult <= _config.teleportMaxAttempts; mult++)
-        {
-            foreach (Vector2 offset in offsets)
+            Vector2 backtrackDir = -arrivalDir.normalized;
+            for(int i=1; i<=20; i++)
             {
-                Vector2 testPos = targetPos + offset * mult;
+                float dist = 0.2f * i;
+                Vector2 testPos = targetPos + backtrackDir * dist;
                 
-                if (!IsPositionBlocked(testPos, playerCollider))
+                if (!CheckOverlap(testPos))
                 {
-                    return testPos;
+                    return ApplyGroundSnap(testPos, size);
                 }
             }
         }
         
-        Debug.LogWarning("Cannot find valid teleport position, staying in place!");
-        return currentPos;
+        Vector2[] offsets = new Vector2[]
+        {
+            Vector2.up * 0.5f,
+            Vector2.right * 0.5f,
+            Vector2.left * 0.5f,
+            new Vector2(1,1).normalized * 0.5f,
+            new Vector2(-1,1).normalized * 0.5f
+        };
+
+        foreach (var offset in offsets)
+        {
+            Vector2 testPos = targetPos + offset;
+            if (!CheckOverlap(testPos))
+            {
+               return ApplyGroundSnap(testPos, size);
+            }
+        }
+
+        return null; 
+    }
+
+    private Vector2 ApplyGroundSnap(Vector2 pos, Vector2 playerSize)
+    {
+        float halfHeight = playerSize.y * 0.5f;
+        Vector2 bottomPos = pos - new Vector2(0, halfHeight);
+
+        float snapDist = 1.0f;
+        RaycastHit2D hit = Physics2D.Raycast(bottomPos, Vector2.down, snapDist, _config.groundLayer);
+
+        if (hit.collider != null)
+        {
+            return new Vector2(pos.x, hit.point.y + halfHeight + 0.01f);
+        }
+        return pos;
     }
     
     private bool IsPositionBlocked(Vector2 pos, Collider2D playerCollider)

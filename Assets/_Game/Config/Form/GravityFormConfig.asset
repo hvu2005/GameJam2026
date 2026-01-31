@@ -15,7 +15,7 @@ MonoBehaviour:
   formID: 3
   formName: Gravity
   icon: {fileID: 21300000, guid: eb0c2befb1fa20a4586f29f2feeb5636, type: 3}
-  formSwitchCooldown: 2
+  formSwitchCooldown: 1
   gravityFlipDuration: 2
   flippedGravityScale: -1
   reverseGravityMultiplier: 2
