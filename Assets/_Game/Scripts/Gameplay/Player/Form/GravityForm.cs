@@ -39,7 +39,7 @@ public class GravityForm : PlayerFormBase
     {
         if (gravityController != null && gravityController.IsGravityFlipped)
         {
-            gravityController.ToggleGravity();
+            // gravityController.ToggleGravity();
             Debug.Log("[GravityForm] Exited - Gravity reset");
         }
     }

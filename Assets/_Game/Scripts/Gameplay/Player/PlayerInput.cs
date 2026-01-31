@@ -43,6 +43,7 @@ public class PlayerInput : EventTarget
         _inputActions.GamePlay.Form1.performed += OnForm1Performed;
         _inputActions.GamePlay.Form2.performed += OnForm2Performed;
         _inputActions.GamePlay.Form3.performed += OnForm3Performed;
+        _inputActions.GamePlay.Pause.performed += OnPausePerformed;
     }
 
     private void OnDisable()
@@ -60,6 +61,7 @@ public class PlayerInput : EventTarget
         _inputActions.GamePlay.Form1.performed -= OnForm1Performed;
         _inputActions.GamePlay.Form2.performed -= OnForm2Performed;
         _inputActions.GamePlay.Form3.performed -= OnForm3Performed;
+        _inputActions.GamePlay.Pause.performed -= OnPausePerformed;
 
         _inputActions.GamePlay.Disable();
     }
@@ -117,5 +119,11 @@ public class PlayerInput : EventTarget
     private void OnForm3Performed(InputAction.CallbackContext context)
     {
         this.Emit<int>(PlayerInputType.FormSelect, 3);
+    }
+
+    private void OnPausePerformed(InputAction.CallbackContext context)
+    {
+        Debug.Log("[PlayerInput] Pause key pressed! Emitting Pause event");
+        this.Emit<bool>(PlayerInputType.Pause, true);
     }
 }
