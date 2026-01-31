@@ -5055,8 +5055,9 @@ GameObject:
   - component: {fileID: 1780614487688958829}
   - component: {fileID: 6847774304638465994}
   - component: {fileID: 5603132357427455020}
-  - component: {fileID: 6981157900180292171}
   - component: {fileID: 4024378889113912884}
+  - component: {fileID: 7050347359599953368}
+  - component: {fileID: 2071738217997115547}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -5385,8 +5386,24 @@ MonoBehaviour:
   ps:
   - {fileID: 9073032669846883968}
   - {fileID: 6344463228349670406}
-  - {fileID: 1189363127531001065}
---- !u!120 &6981157900180292171
+  - {fileID: 0}
+--- !u!114 &4024378889113912884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4117575920740194630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb28ef7d9b2451429177c19adc90418, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeDuration: 0.5
+  trailWidth: 0.1
+  trailColor: {r: 0, g: 1, b: 1, a: 1}
+  lineSegments: 30
+--- !u!120 &7050347359599953368
 LineRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
@@ -5480,7 +5497,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 5
-    numCapVertices: 3
+    numCapVertices: 5
     alignment: 0
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -5490,19 +5507,19 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &4024378889113912884
+--- !u!114 &2071738217997115547
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4117575920740194630}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4fb28ef7d9b2451429177c19adc90418, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeDuration: 0.5
+  fadeDuration: 0.7
   trailWidth: 0.1
   trailColor: {r: 0, g: 1, b: 1, a: 1}
   lineSegments: 30

@@ -170,5 +170,5 @@ MonoBehaviour:
   waypoints:
   - {x: 0, y: 0, z: 0}
   - {x: -5.09309, y: 0, z: 0}
-  rotateWhileMoving: 0
-  rotateSpeed: 45
+  rotateWhileMoving: 1
+  rotateSpeed: 180
