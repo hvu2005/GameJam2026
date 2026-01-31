@@ -182,7 +182,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void SetFacingDirection(int direction)
+    public void SetFacingDirection(int direction)
     {
         if (_facingDirection == direction) return;
 
