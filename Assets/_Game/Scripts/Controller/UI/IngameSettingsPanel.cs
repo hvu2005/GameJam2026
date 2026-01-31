@@ -15,6 +15,7 @@ public class IngameSettingsPanel : EventTarget
     [SerializeField] private Slider musicSlider;
     [SerializeField] private Button backButton;
     [SerializeField] private Button returnToMenuButton;
+    [SerializeField] private bool isUseSceneTransition = false;
     
     private PlayerInput _input;
     
@@ -105,7 +106,7 @@ public class IngameSettingsPanel : EventTarget
         Time.timeScale = 1f; // Reset timescale trước khi load scene
         
         SceneTransition transition = FindObjectOfType<SceneTransition>();
-        if (transition != null)
+        if (transition != null && isUseSceneTransition)
         {
             transition.LoadScene(returnSceneName);
         }
