@@ -22,7 +22,7 @@ MonoBehaviour:
   - speakerName: "M\u1EB7t n\u1EA1 Bu\u1ED3n b\xE3"
     portrait: {fileID: 21300000, guid: 2e561005525ba4042ab4cd9113a9a7cb, type: 3}
     position: 0
-    text: "M\u1ED7i vai di\u1EC5n l\xE0 m\u1ED9t c\xE1ch t\u1ED3n t\u1EA1i.\r\n M\u1ED7i
+    text: "M\u1ECDi vai di\u1EC5n l\xE0 m\u1ED9t c\xE1ch t\u1ED3n t\u1EA1i.\r\n M\u1ECDi
       b\u01B0\u1EDBc ti\u1EBFn l\xE0 m\u1ED9t m\u1EA3nh k\xFD \u1EE9c \u0111\u01B0\u1EE3c
       h\xE9 l\u1ED9."
   - speakerName: "M\u1EB7t n\u1EA1 T\u1EE9c Gi\u1EADn"
