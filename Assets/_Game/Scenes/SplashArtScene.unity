@@ -276,7 +276,7 @@ MonoBehaviour:
   loadingAnimator: {fileID: 479817643}
   minimumLoadingTime: 0.1
   loadingTrigger: Show
-  sceneTransition: {fileID: 1566718507}
+  sceneTransition: {fileID: 0}
   useSceneTransition: 1
 --- !u!114 &922938953
 MonoBehaviour:
@@ -582,17 +582,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1566291233}
   m_CullTransparentMesh: 1
---- !u!114 &1566718507 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4063348236355544970, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
-  m_PrefabInstance: {fileID: 1438566797867392973}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1438566797867392974}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 047a1981b88425c49be54470aea5cd86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2071274718
 GameObject:
   m_ObjectHideFlags: 0
@@ -1023,7 +1012,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8989315313313496466, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 35.4952
       objectReference: {fileID: 0}
     - target: {fileID: 8989315313313496466, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1035,7 +1024,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8989315313313496466, guid: c1406639cd13bb64fa7c3848c018aab9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 0.7099
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
