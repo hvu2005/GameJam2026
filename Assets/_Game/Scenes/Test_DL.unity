@@ -597,11 +597,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &636075511 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1189363127531001065, guid: 108ef3e7da47f0846a46db1040467720, type: 3}
-  m_PrefabInstance: {fileID: 4457444180320661953}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &652180763
 GameObject:
   m_ObjectHideFlags: 0
@@ -1288,6 +1283,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapDatabase: {fileID: 11400000, guid: bcad80cb9da6d004dbfddd5263e7876d, type: 2}
   mapID: MapTutorial
+  playerPrefab: {fileID: 0}
+  spawnPlayerOnLoad: 1
   spawnPoint: {fileID: 1775732951}
   autoLoadOnStart: 1
   showDebugInfo: 1
@@ -1403,6 +1400,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1749416106 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8607390736144159035, guid: 108ef3e7da47f0846a46db1040467720, type: 3}
+  m_PrefabInstance: {fileID: 4457444180320661953}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1775732950
 GameObject:
   m_ObjectHideFlags: 0
@@ -1522,7 +1524,7 @@ PrefabInstance:
     - target: {fileID: 5603132357427455020, guid: 108ef3e7da47f0846a46db1040467720, type: 3}
       propertyPath: ps.Array.data[2]
       value: 
-      objectReference: {fileID: 636075511}
+      objectReference: {fileID: 1749416106}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
