@@ -56,6 +56,7 @@ public class Player : PlayerEntity
         
         ResetPlayerState();
         
+        EventBus.Clear();
         SceneManager.LoadScene(this.gameObject.scene.name);
     }
 

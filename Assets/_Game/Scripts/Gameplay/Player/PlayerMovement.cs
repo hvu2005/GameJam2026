@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("References")]
     [SerializeField] private PlayerConfig config;
     [SerializeField] private Transform visualTransform;
-    
+
     private PlayerInput _input;
     private Rigidbody2D _rb;
     private PlayerDash _dash;
@@ -24,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     private bool _wasGrounded;
     private bool _wasOnIce;
     private bool _wasMoving;
+    private float _enableTime; // Track when component was enabled
 
     public int FacingDirection => _facingDirection;
     public bool IsGrounded => _isGrounded;
@@ -36,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
         _statusEffects = GetComponent<PlayerStatusEffects>();
         _gravityController = GetComponent<PlayerGravityController>();
         _stateMachine = GetComponent<PlayerStateMachine>();
-        
+
         if (config == null)
         {
             Debug.LogError("PlayerConfig is not assigned to PlayerMovement2D!", this);
@@ -46,6 +47,8 @@ public class PlayerMovement : MonoBehaviour
     void OnEnable()
     {
         _input.On<Vector2>(PlayerInputType.Move, OnMove);
+        _enableTime = Time.time; // Record when enabled
+        _targetSpeed = 0; // Reset target speed
     }
 
     void OnDisable()
@@ -56,23 +59,30 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         _wasGrounded = _isGrounded;
-        
+
         UpdateGroundDetection();
-        
+
         if (_stateMachine != null && !_stateMachine.CanMove)
         {
             return;
         }
-        
+
         UpdateMovement();
         UpdateMovementEvents();
     }
 
     private void OnMove(Vector2 direction)
     {
+        // Ignore input for 0.1 seconds after enabling (prevent dialogue input bleed)
+        if (Time.time - _enableTime < 0.1f)
+        {
+            _targetSpeed = 0;
+            return;
+        }
+
         float multiplier = _statusEffects != null ? _statusEffects.MoveSpeedMultiplier : 1f;
         _targetSpeed = direction.x * config.MoveSpeed * multiplier;
-        
+
         if (direction.x > 0.1f)
         {
             SetFacingDirection(1);
@@ -88,18 +98,18 @@ public class PlayerMovement : MonoBehaviour
         if (config == null) return;
 
         float accelerationRate;
-        
+
         if (Mathf.Abs(_targetSpeed) > 0.01f)
         {
-            float accelMultiplier = _statusEffects != null 
-                ? _statusEffects.GetCurrentAccelerationMultiplier() 
+            float accelMultiplier = _statusEffects != null
+                ? _statusEffects.GetCurrentAccelerationMultiplier()
                 : 1f;
             accelerationRate = config.Acceleration * accelMultiplier;
         }
         else
         {
-            float decelMultiplier = _statusEffects != null 
-                ? _statusEffects.GetCurrentDecelerationMultiplier(_currentSpeed, config.MoveSpeed) 
+            float decelMultiplier = _statusEffects != null
+                ? _statusEffects.GetCurrentDecelerationMultiplier(_currentSpeed, config.MoveSpeed)
                 : 1f;
             accelerationRate = config.Deceleration * decelMultiplier;
         }
@@ -107,12 +117,12 @@ public class PlayerMovement : MonoBehaviour
         if (!_isGrounded)
         {
             float airControlMult = config.AirControlMultiplier;
-            
+
             if (_wasOnIce)
             {
                 airControlMult *= config.IceAirControlPenalty;
             }
-            
+
             accelerationRate *= airControlMult;
         }
 
@@ -127,20 +137,20 @@ public class PlayerMovement : MonoBehaviour
 
         Vector2 boxOrigin = transform.position;
         Vector2 boxSize = new Vector2(0.8f, 0.8f);
-        
+
         Vector2 castDirection = _gravityController != null && _gravityController.IsGravityFlipped
             ? Vector2.up
             : Vector2.down;
-        
+
         RaycastHit2D hit = Physics2D.BoxCast(
-            boxOrigin, 
-            boxSize, 
-            0f, 
-            castDirection, 
-            config.GroundCheckDistance, 
+            boxOrigin,
+            boxSize,
+            0f,
+            castDirection,
+            config.GroundCheckDistance,
             config.GroundLayer
         );
-        
+
         _isGrounded = hit.collider != null;
 
         if (_statusEffects != null)
@@ -161,7 +171,7 @@ public class PlayerMovement : MonoBehaviour
                 _statusEffects.IsOnIce = false;
             }
         }
-        
+
         if (!_wasGrounded && _isGrounded)
         {
             _wasOnIce = false;
@@ -178,10 +188,10 @@ public class PlayerMovement : MonoBehaviour
 
         _previousDirection = _facingDirection;
         _facingDirection = direction;
-        
+
         EventBus.Emit(PlayerActionEventType.OnDirectionChanged, _facingDirection);
         Debug.Log($"[Movement] [Emit Event]Direction Changed: {_facingDirection}");
-        
+
         if (visualTransform != null)
         {
             Vector3 scale = visualTransform.localScale;
@@ -199,10 +209,10 @@ public class PlayerMovement : MonoBehaviour
     private void UpdateMovementEvents()
     {
         bool isMoving = Mathf.Abs(_currentSpeed) > 0.1f;
-        
+
         if (!_wasMoving && isMoving)
         {
-            EventBus.Emit(PlayerActionEventType.OnMoveStarted, 
+            EventBus.Emit(PlayerActionEventType.OnMoveStarted,
                 new MovementEventData
                 {
                     Velocity = _rb.velocity,
@@ -214,7 +224,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (_wasMoving && !isMoving)
         {
-            EventBus.Emit(PlayerActionEventType.OnMoveStopped, 
+            EventBus.Emit(PlayerActionEventType.OnMoveStopped,
                 new MovementEventData
                 {
                     Velocity = _rb.velocity,
@@ -224,13 +234,13 @@ public class PlayerMovement : MonoBehaviour
                 });
             Debug.Log("[Movement] [Emit Event] Move Stopped");
         }
-        
+
         if (isMoving && Mathf.Abs(_currentSpeed - _previousSpeed) > 2f)
         {
             EventBus.Emit(PlayerActionEventType.OnSpeedChanged, _currentSpeed);
             Debug.Log($"[Movement] [Emit Event] Speed Changed: {_currentSpeed:F1}");
         }
-        
+
         _wasMoving = isMoving;
         _previousSpeed = _currentSpeed;
     }
