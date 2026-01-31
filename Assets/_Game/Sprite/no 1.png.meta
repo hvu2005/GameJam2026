@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b939243d8498ce34a9db7844f29e9cfd
+guid: b7798c1369ac11a4aafbfe0b66cbc166
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,7 +123,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: no_0
+      name: no 1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -137,14 +137,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6362984ae6935d44cb33822bb4c108fe
-      internalID: 201786743
+      spriteID: e8c228c40172f794fa0caeee4230ff54
+      internalID: -1110823191
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: no_1
+      name: no 1_1
       rect:
         serializedVersion: 2
         x: 32
@@ -158,14 +158,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cfbab9fca6781194c9d481180979cdb5
-      internalID: -1253698854
+      spriteID: f2940da37b932c540ba104ee8372c683
+      internalID: 1758679388
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: no_2
+      name: no 1_2
       rect:
         serializedVersion: 2
         x: 64
@@ -179,14 +179,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7c1f0af7e85df534f8ea7fa7cf335314
-      internalID: -882904198
+      spriteID: de057f9feb96bce4ea6bf3e5270bc3e1
+      internalID: 1187796051
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: no_3
+      name: no 1_3
       rect:
         serializedVersion: 2
         x: 96
@@ -200,8 +200,92 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 89e20842f378c954882f9703b7165446
-      internalID: 666399052
+      spriteID: a8a742028acbf1146924613458368ce6
+      internalID: -1144633823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: no 1_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03dfc6d150fb20c4e95250473a1839ab
+      internalID: 157886208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: no 1_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c5980e741ef1894b824ccaffe37de2c
+      internalID: 1949769155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: no 1_6
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 23f39bba299041d44aa3d04d4980a1fb
+      internalID: -1304389256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: no 1_7
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b3d569af751d5a4d9da13efcf311388
+      internalID: -409380864
       vertices: []
       indices: 
       edges: []
@@ -217,10 +301,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      no_0: 201786743
-      no_1: -1253698854
-      no_2: -882904198
-      no_3: 666399052
+      no 1_0: -1110823191
+      no 1_1: 1758679388
+      no 1_2: 1187796051
+      no 1_3: -1144633823
+      no 1_4: 157886208
+      no 1_5: 1949769155
+      no 1_6: -1304389256
+      no 1_7: -409380864
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -32,13 +32,14 @@ public class Turret : TimingHazard
     protected override void Start()
     {
         base.Start();
-        poolController = SingleBehaviour.Of<PoolController>();
+        poolController = FindObjectOfType<PoolController>();
 
         if (poolController != null)
         {
             try
             {
                 bulletPool = poolController.GetPool(bulletPoolName);
+                Debug.Log($"Turret: Bullet pool '{bulletPool}' initialized.");
             }
             catch (System.Collections.Generic.KeyNotFoundException)
             {
@@ -69,18 +70,16 @@ public class Turret : TimingHazard
 
         GameObject bulletObj = bulletPool.Get();
         
-        // Đảm bảo bullet được active
-        if (bulletObj != null)
-        {
-            bulletObj.SetActive(true);
-        }
-        else
+        // Kiểm tra bullet object
+        if (bulletObj == null)
         {
             Debug.LogError("⚠️ Bullet pool không trả về object (có thể pool rỗng)!");
             return;
         }
 
-        // Set position và rotation
+        Debug.Log($"Turret: Bullet retrieved from pool, active state: {bulletObj.activeSelf}");
+
+        // Set position và rotation TRƯỚC khi initialize
         bulletObj.transform.position = firePoint.position;
         bulletObj.transform.rotation = firePoint.rotation;
 

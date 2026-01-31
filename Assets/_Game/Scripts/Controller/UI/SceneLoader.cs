@@ -10,6 +10,8 @@ public class SceneLoader : MonoBehaviour
 {
     [Header("Scene Settings")]
     [SerializeField] private string sceneToLoad = ""; // Tên scene cần load
+    [SerializeField] private bool loadOnStart = true; // Tự động load khi Start
+    [SerializeField] private float delayBeforeLoad = 2f; // Thời gian delay trước khi load (giây)
     
     [Header("Loading UI")]
     [SerializeField] private GameObject loadingContainer;
@@ -21,11 +23,50 @@ public class SceneLoader : MonoBehaviour
     
     void Awake()
     {
-        // Ẩn loading container ban đầu
-        if (loadingContainer != null)
+        // Ẩn loading container ban đầu nếu không auto load
+        if (loadingContainer != null && !loadOnStart)
         {
             loadingContainer.SetActive(false);
         }
+    }
+    
+    void Start()
+    {
+        // Tự động load scene khi Start
+        if (loadOnStart)
+        {
+            StartCoroutine(AutoLoadOnStart());
+        }
+    }
+    
+    /// <summary>
+    /// Tự động load scene khi Start với delay
+    /// </summary>
+    private IEnumerator AutoLoadOnStart()
+    {
+        // Hiện loading container ngay lập tức
+        if (loadingContainer != null)
+        {
+            loadingContainer.SetActive(true);
+        }
+        
+        // Trigger animation ngay
+        if (loadingAnimator != null && !string.IsNullOrEmpty(loadingTrigger))
+        {
+            loadingAnimator.SetTrigger(loadingTrigger);
+        }
+        
+        // Đợi delay trước khi load scene
+        yield return new WaitForSeconds(delayBeforeLoad);
+        
+        // Bắt đầu load scene
+        if (string.IsNullOrEmpty(sceneToLoad))
+        {
+            Debug.LogError("⚠️ Scene To Load chưa được thiết lập!");
+            yield break;
+        }
+        
+        yield return StartCoroutine(LoadSceneCoroutineInternal(sceneToLoad));
     }
     
     /// <summary>
@@ -81,6 +122,11 @@ public class SceneLoader : MonoBehaviour
             loadingAnimator.SetTrigger(loadingTrigger);
         }
         
+        yield return StartCoroutine(LoadSceneCoroutineInternal(sceneName));
+    }
+    
+    private IEnumerator LoadSceneCoroutineInternal(string sceneName)
+    {
         // Đợi một khoảng thời gian để animation chạy
         float startTime = Time.time;
         
