@@ -15,6 +15,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private Button exitGameButton;
     [SerializeField] private SettingsPanel settingsPanel;
     [SerializeField] private SceneTransition sceneTransition;
+    [SerializeField] private bool useSceneTransition = false;
 
     void Awake()
     {

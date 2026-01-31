@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: MapDatabase
   m_EditorClassIdentifier: 
   levels:
+  - levelName: Map3
+    mapPrefab: {fileID: 2999308956871290996, guid: b57081b826f8379418dc9d01a839a87d, type: 3}
+    backgroundPrefab: {fileID: 0}
   - levelName: tut
     mapPrefab: {fileID: 2999308956871290996, guid: a6a3cc6c770325f429e84735e231107f, type: 3}
     backgroundPrefab: {fileID: 0}
