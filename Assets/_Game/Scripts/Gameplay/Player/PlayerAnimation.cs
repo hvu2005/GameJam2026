@@ -16,17 +16,18 @@ public class PlayerAnimation : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+
+    }
+
+    void Start()
+    {
         playerFormController = GetComponent<PlayerFormController>();
         playerMovement = GetComponent<PlayerMovement>();
 
         mask1.SetActive(false);
         mask2.SetActive(false);
         mask3.SetActive(false);
-    }
 
-    void Start()
-    {
-        
         EventBus.On<MovementEventData>(PlayerActionEventType.OnMoveStarted, data =>
         {
             animator.SetBool("isMoving", true);
@@ -74,9 +75,11 @@ public class PlayerAnimation : MonoBehaviour
         });
     }
 
+    
+
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

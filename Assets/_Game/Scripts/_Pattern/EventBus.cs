@@ -41,4 +41,9 @@ public static class EventBus
 #endif
         }
     }
+
+    public static void Clear()
+    {
+        listeners.Clear();
+    }
 }
