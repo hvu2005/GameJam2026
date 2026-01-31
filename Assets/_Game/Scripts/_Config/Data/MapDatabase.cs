@@ -9,7 +9,7 @@ namespace _Game.Scripts._Config.Data
     {
         public string levelName;
         public GameObject mapPrefab;
-        public GameObject backgroundPrefab;
+        public Sprite backgroundSprite;
     }
 
     [CreateAssetMenu(fileName = "MapDatabase", menuName = "Game/Map Database", order = 0)]
@@ -35,14 +35,12 @@ namespace _Game.Scripts._Config.Data
             return data != null ? data.mapPrefab : null;
         }
 
-        public GameObject GetBackgroundPrefab(int index)
+        public Sprite GetBackgroundSprite(int index)
         {
             var data = GetLevelData(index);
-            return data != null ? data.backgroundPrefab : null;
+            return data != null ? data.backgroundSprite : null;
         }
         
-        // Keep name-based lookup for backward compatibility if needed, or remove it.
-        // For now, removing it to enforce linear index progression as requested.
         
         public int GetTotalMaps() => levels.Count;
     }
