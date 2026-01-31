@@ -42,10 +42,25 @@ public class PlayerAnimation : MonoBehaviour
             Debug.Log("Jump Started - Setting isJumping true");
             animator.SetBool("isJumping", true);
         });
+
+        EventBus.On<JumpEventData>(PlayerActionEventType.OnDoubleJump, data =>
+        {
+            Debug.Log("Double Jump Started - Setting isDoubleJumping true");
+            animator.SetBool("isJumping", true);
+        });
+
+        EventBus.On<JumpEventData>(PlayerActionEventType.OnFalling, data =>
+        {
+            animator.SetBool("isFalling", true);
+            animator.SetBool("isJumping", false);
+
+        });
         EventBus.On<JumpEventData>(PlayerActionEventType.OnLanded, data =>
         {
             animator.SetBool("isJumping", false);
-            animator.SetTrigger("isFalling");
+            animator.SetBool("isFalling", false);
+
+            animator.SetTrigger("isLanding");
         });
         EventBus.On<FormChangeData>(FormEventType.OnFormChanged, data =>
         {
@@ -75,7 +90,7 @@ public class PlayerAnimation : MonoBehaviour
         });
     }
 
-    
+
 
     // Update is called once per frame
     void Update()
