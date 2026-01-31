@@ -77,7 +77,8 @@ public class DialogueController : MonoBehaviour
     {
         if (dialoguePanel == null || !dialoguePanel.activeSelf) return;
 
-        if (UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space))
+        // Accept ANY key to advance dialogue
+        if (UnityEngine.Input.anyKeyDown)
         {
             DisplayNextLine();
         }
