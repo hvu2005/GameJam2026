@@ -21,7 +21,7 @@ public class TeleportMarker : MonoBehaviour
     private float _markerPickupRadius;
     
     private Rigidbody2D _rb;
-    private CircleCollider2D _physicsCollider;
+    private Collider2D _physicsCollider;
     private CircleCollider2D _pickupTrigger;
     
     private MarkerState _state = MarkerState.Throwing;
@@ -38,6 +38,8 @@ public class TeleportMarker : MonoBehaviour
     
     public MarkerState State => _state;
     public Vector2 Position => transform.position;
+    public Vector2 LandedNormal { get; private set; }
+    public Vector2 ArrivalDirection { get; private set; }
     
     public void Initialize(PlayerConfig cfg, Vector2 direction, Transform player)
     {
@@ -80,11 +82,12 @@ public class TeleportMarker : MonoBehaviour
             _rb.gravityScale = 0f;
         }
         
-        _physicsCollider = GetComponent<CircleCollider2D>();
+        _physicsCollider = GetComponent<Collider2D>();
         if (_physicsCollider == null)
         {
-            _physicsCollider = gameObject.AddComponent<CircleCollider2D>();
-            _physicsCollider.radius = 0.2f;
+            var circle = gameObject.AddComponent<CircleCollider2D>();
+            circle.radius = 0.2f;
+            _physicsCollider = circle;
         }
         
         _pickupTrigger = gameObject.AddComponent<CircleCollider2D>();
@@ -113,8 +116,15 @@ public class TeleportMarker : MonoBehaviour
         }
     }
     
+    private Vector2 _lastVelocity;
+
     void FixedUpdate()
     {
+        if (_state == MarkerState.Flying)
+        {
+            _lastVelocity = _rb.velocity;
+        }
+        
         if (_state == MarkerState.Landed)
         {
             return;
@@ -143,6 +153,14 @@ public class TeleportMarker : MonoBehaviour
     
     private void UpdateFlight()
     {
+        if (Time.time - _startTime > _markerLifetime)
+        {
+            _state = MarkerState.Expired;
+            OnExpired?.Invoke(this);
+            Destroy(gameObject);
+            return;
+        }
+
         if (_markerFlightForce == -1f)
         {
             _distanceTraveled += _rb.velocity.magnitude * Time.deltaTime;
@@ -204,8 +222,21 @@ public class TeleportMarker : MonoBehaviour
         
         _state = MarkerState.Landed;
         _lifetimeTimer = _markerLifetime;
-        
         _rb.gravityScale = 1f;
+        
+        if (collision.contacts.Length > 0)
+        {
+            LandedNormal = collision.contacts[0].normal;
+            
+            if (_lastVelocity.sqrMagnitude > 0.01f)
+            {
+                ArrivalDirection = _lastVelocity.normalized;
+            }
+            else
+            {
+                ArrivalDirection = collision.relativeVelocity.normalized * -1f;
+            }
+        }
         
         OnLanded?.Invoke(this);
     }
