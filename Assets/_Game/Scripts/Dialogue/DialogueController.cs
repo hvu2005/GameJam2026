@@ -79,9 +79,10 @@ public class DialogueController : MonoBehaviour
         if (dialoguePanel == null || !dialoguePanel.activeSelf) return;
         if (isClosing) return; // Block input during closing
 
-        // Press Enter to advance dialogue
+        // Press Enter OR Left Mouse Click to advance dialogue
         if (UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Return) ||
-            UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.KeypadEnter))
+            UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.KeypadEnter) ||
+            UnityEngine.Input.GetMouseButtonDown(0)) // 0 = Left Click
         {
             DisplayNextLine();
         }
