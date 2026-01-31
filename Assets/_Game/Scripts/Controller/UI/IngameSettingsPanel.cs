@@ -57,7 +57,7 @@ public class IngameSettingsPanel : EventTarget
         }
         
         // Ẩn panel ban đầu
-        gameObject.SetActive(false);
+        this.gameObject.SetActive(false);
     }
     
     /// <summary>
@@ -103,7 +103,16 @@ public class IngameSettingsPanel : EventTarget
     {
         Debug.Log("Return to Menu clicked");
         Time.timeScale = 1f; // Reset timescale trước khi load scene
-        SceneManager.LoadScene(returnSceneName);
+        
+        SceneTransition transition = FindObjectOfType<SceneTransition>();
+        if (transition != null)
+        {
+            transition.LoadScene(returnSceneName);
+        }
+        else
+        {
+            SceneManager.LoadScene(returnSceneName);
+        }
     }
     
     /// <summary>
