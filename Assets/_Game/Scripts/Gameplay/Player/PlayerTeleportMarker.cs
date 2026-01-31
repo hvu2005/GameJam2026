@@ -14,13 +14,15 @@ public class PlayerTeleportMarker : MonoBehaviour
     private Rigidbody2D _rb;
     
     private TeleportMarker _activeMarker;
-    private float _teleportWindowTimer;
-    private float _cooldownTimer;
+    private float _teleportWindowEndTime;
+    private float _cooldownEndTime;
     private bool _canTeleport;
     
-    public bool CanUseSkill => _config != null && _cooldownTimer <= 0f && _activeMarker == null;
-    public bool CanTeleport => _canTeleport && _activeMarker != null;
-    public float CooldownPercent => _config != null ? Mathf.Clamp01(1f - (_cooldownTimer / _config.teleportCooldown)) : 0f;
+    public bool CanUseSkill => _config != null && Time.time >= _cooldownEndTime && _activeMarker == null;
+    public bool CanTeleport => _canTeleport && _activeMarker != null && Time.time < _teleportWindowEndTime;
+    public float CooldownPercent => _config != null ? Mathf.Clamp01((Time.time - (_cooldownEndTime - _config.teleportCooldown)) / _config.teleportCooldown) : 1f;
+    public float CooldownRemaining => Mathf.Max(0f, _cooldownEndTime - Time.time);
+    public float TotalCooldownDuration => _config != null ? _config.teleportCooldown : 0f;
     
     void Awake()
     {
@@ -63,7 +65,7 @@ public class PlayerTeleportMarker : MonoBehaviour
             Debug.Log("[PlayerTeleportMarker] Throwing marker");
             ThrowMarker();
             _canTeleport = true;
-            _teleportWindowTimer = _config.teleportWindowTime;
+            _teleportWindowEndTime = Time.time + _config.teleportWindowTime;
         }
         else if (CanTeleport)
         {
@@ -101,27 +103,27 @@ public class PlayerTeleportMarker : MonoBehaviour
     {
         Vector2 inputDirection = _input.MoveInput;
         
-        if (inputDirection.sqrMagnitude > 0.01f)
+        // Only use horizontal input (left/right), ignore vertical
+        if (Mathf.Abs(inputDirection.x) > 0.01f)
         {
-            return inputDirection.normalized;
+            // Return pure horizontal direction based on X input
+            return new Vector2(Mathf.Sign(inputDirection.x), 0f);
         }
         
-        float facingAngle = _movement.FacingDirection > 0 ? 0f : 180f;
-        float totalAngle = facingAngle + _config.markerThrowAngle;
-        
-        float radians = totalAngle * Mathf.Deg2Rad;
-        return new Vector2(Mathf.Cos(radians), Mathf.Sin(radians)).normalized;
+        // Fallback to facing direction (pure horizontal)
+        float facingDirection = _movement.FacingDirection > 0 ? 1f : -1f;
+        return new Vector2(facingDirection, 0f);
     }
     
     private void OnMarkerLanded(TeleportMarker marker)
     {
         _canTeleport = true;
-        _teleportWindowTimer = _config.teleportWindowTime;
+        _teleportWindowEndTime = Time.time + _config.teleportWindowTime;
     }
     
     private void OnMarkerPickedUp(TeleportMarker marker)
     {
-        _cooldownTimer = 0f;
+        _cooldownEndTime = 0f;
         _activeMarker = null;
         _canTeleport = false;
     }
@@ -146,20 +148,16 @@ public class PlayerTeleportMarker : MonoBehaviour
             _dash.CancelDash();
         }
         
-        // Lưu vị trí cũ để tạo trail
         Vector3 oldPosition = transform.position;
         
-        // Dịch chuyển đến vị trí mới
         transform.position = validPos;
         
-        // Kích hoạt trail effect
         PlayerTeleportTrail trail = GetComponent<PlayerTeleportTrail>();
         if (trail != null)
         {
             trail.ActivateTrail(oldPosition, validPos);
         }
         
-        // Emit event để UI hiển thị cooldown
         EventBus.Emit(FormEventType.OnFormSkillCooldownStart, _config.teleportCooldown);
         Debug.Log($"[PlayerTeleportMarker] [Emit Event] Skill Cooldown Started: {_config.teleportCooldown}s");
         
@@ -167,7 +165,7 @@ public class PlayerTeleportMarker : MonoBehaviour
         _activeMarker = null;
         _canTeleport = false;
         
-        _cooldownTimer = _config.teleportCooldown;
+        _cooldownEndTime = Time.time + _config.teleportCooldown;
     }
     
     private Vector2 FindValidTeleportPosition(Vector2 targetPos)
@@ -263,9 +261,7 @@ public class PlayerTeleportMarker : MonoBehaviour
     {
         if (!_canTeleport) return;
         
-        _teleportWindowTimer -= Time.deltaTime;
-        
-        if (_teleportWindowTimer <= 0f)
+        if (Time.time >= _teleportWindowEndTime)
         {
             _canTeleport = false;
         }
@@ -273,10 +269,7 @@ public class PlayerTeleportMarker : MonoBehaviour
     
     private void UpdateCooldown()
     {
-        if (_cooldownTimer > 0f)
-        {
-            _cooldownTimer -= Time.deltaTime;
-        }
+        // No longer needed - cooldown is checked via Time.time comparison
     }
     
     void OnDrawGizmos()

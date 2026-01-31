@@ -109,6 +109,9 @@ public class PlayerConfig : ScriptableObject
     [Header("Physics Settings")]
     [Tooltip("Distance to check for ground below player")]
     [SerializeField] private float groundCheckDistance = 0.1f;
+
+    [Tooltip("Size of the box used for ground check")]
+    [SerializeField] private Vector2 groundCheckSize = new Vector2(0.8f, 0.1f);
     
     [Tooltip("Offset from player center for ground check raycast")]
     [SerializeField] private Vector2 groundCheckOffset = new Vector2(0f, -0.5f);
@@ -146,6 +149,7 @@ public class PlayerConfig : ScriptableObject
     public int TeleportMaxAttempts => teleportMaxAttempts;
     
     public float GroundCheckDistance => groundCheckDistance;
+    public Vector2 GroundCheckSize => groundCheckSize;
     public Vector2 GroundCheckOffset => groundCheckOffset;
     public LayerMask GroundLayer => groundLayer;
     

@@ -11,6 +11,10 @@ public class Turret : TimingHazard
     [SerializeField] private float bulletSpeed = 10f;
     [SerializeField] private Vector2 fireDirection = Vector2.right;
 
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private string shootTrigger = "Shoot";
+
     [Header("Pool Settings")]
     [SerializeField] private string bulletPoolName = "Bullet";
 
@@ -28,13 +32,14 @@ public class Turret : TimingHazard
     protected override void Start()
     {
         base.Start();
-        poolController = SingleBehaviour.Of<PoolController>();
+        poolController = FindObjectOfType<PoolController>();
 
         if (poolController != null)
         {
             try
             {
                 bulletPool = poolController.GetPool(bulletPoolName);
+                Debug.Log($"Turret: Bullet pool '{bulletPool}' initialized.");
             }
             catch (System.Collections.Generic.KeyNotFoundException)
             {
@@ -50,6 +55,13 @@ public class Turret : TimingHazard
     public void ShootBullet()
     {
         Debug.Log("Turret: Shooting bullet");
+        
+        // Trigger animation
+        if (animator != null && !string.IsNullOrEmpty(shootTrigger))
+        {
+            animator.SetTrigger(shootTrigger);
+        }
+        
         if (bulletPool == null)
         {
             Debug.LogError("⚠️ Bullet pool chưa được khởi tạo!");
@@ -57,8 +69,17 @@ public class Turret : TimingHazard
         }
 
         GameObject bulletObj = bulletPool.Get();
+        
+        // Kiểm tra bullet object
+        if (bulletObj == null)
+        {
+            Debug.LogError("⚠️ Bullet pool không trả về object (có thể pool rỗng)!");
+            return;
+        }
 
-        // Set position và rotation
+        Debug.Log($"Turret: Bullet retrieved from pool, active state: {bulletObj.activeSelf}");
+
+        // Set position và rotation TRƯỚC khi initialize
         bulletObj.transform.position = firePoint.position;
         bulletObj.transform.rotation = firePoint.rotation;
 

@@ -9,8 +9,22 @@ public struct PoolItem
     public int initialSize;
 }
 
-public sealed class PoolController : MonoBehaviour
+public class PoolController : MonoBehaviour
 {
+    private static PoolController _instance;
+    
+    public static PoolController Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<PoolController>();
+            }
+            return _instance;
+        }
+    }
+    
     // Dùng prefab (GameObject reference) làm key thay vì Type
     private Dictionary<string, ObjectPool> _pools = new();
 
@@ -18,10 +32,21 @@ public sealed class PoolController : MonoBehaviour
 
     void Awake()
     {
+        // Singleton pattern
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        
+        _instance = this;
+        
         foreach (var item in poolItems)
         {
             CreatePool(item);
         }
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
     public void CreatePool(PoolItem item)
