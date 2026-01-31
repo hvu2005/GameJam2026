@@ -23,7 +23,7 @@ MonoBehaviour:
     mapPrefab: {fileID: 2999308956871290996, guid: a47fa91eefa59b842ae2072b7464877f, type: 3}
     backgroundSprite: {fileID: 0}
   - levelName: 2
-    mapPrefab: {fileID: 2999308956871290996, guid: d0ade1c478761eb4cb15f36a9def96f2, type: 3}
+    mapPrefab: {fileID: 1757279071041666299, guid: e15ba3ed3ca47454489eea793acca7ba, type: 3}
     backgroundSprite: {fileID: 0}
   - levelName: 3
     mapPrefab: {fileID: 2999308956871290996, guid: 6e378bce375b79d4d823a821eb771c59, type: 3}

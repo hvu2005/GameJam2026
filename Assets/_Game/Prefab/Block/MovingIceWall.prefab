@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 443876732135803359}
   - component: {fileID: 4518676910231481310}
   - component: {fileID: 4057268050407973868}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MovingIceWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveType: 0
-  speed: 2
+  speed: 1
   waypoints:
   - {x: 0.019411087, y: -1.1535174, z: 0}
   - {x: -5.6379538, y: -1.1880085, z: 0}
