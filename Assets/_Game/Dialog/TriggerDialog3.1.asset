@@ -36,6 +36,7 @@ MonoBehaviour:
   - speakerName: "M\u1EB7t n\u1EA1 T\u1EE9c Gi\u1EADn"
     portrait: {fileID: 21300000, guid: eb0c2befb1fa20a4586f29f2feeb5636, type: 3}
     position: 0
-    text: "L\u1EACT NG\u01AF\u1EE2C N\xD3 \u0110I\r\nNGAY C\u1EA2 TR\u1ECCNG L\u1EF0C!!!!!"
+    text: "L\u1EADt ng\u01B0\u1EE3c n\xF3 \u0111i\r\nNgay c\u1EA3 s\u1EE9c n\u1EB7ng
+      c\u1EE7a Tr\xE1i \u0110\u1EA5t!!!!!"
   autoClose: 1
   autoCloseDelay: 0.5
