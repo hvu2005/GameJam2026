@@ -153,15 +153,33 @@ namespace _Game.Scripts.Tool
 
         private void TeleportPlayerToSpawnPoint()
         {
-            GameObject spawnPointObj = GameObject.FindGameObjectWithTag("PlayerSpawn");
+            Transform spawnTransform = null;
+
+            if (_currentMapInstance != null)
+            {
+                foreach (Transform t in _currentMapInstance.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t.CompareTag("PlayerSpawn"))
+                    {
+                        spawnTransform = t;
+                        break;
+                    }
+                }
+            }
+
+            if (spawnTransform == null)
+            {
+                 GameObject spawnPointObj = GameObject.FindGameObjectWithTag("PlayerSpawn");
+                 if (spawnPointObj != null) spawnTransform = spawnPointObj.transform;
+            }
             
             Vector3 targetPosition = Vector3.zero;
             int facingDirection = 1;
 
-            if (spawnPointObj != null)
+            if (spawnTransform != null)
             {
-                targetPosition = spawnPointObj.transform.position;
-                facingDirection = spawnPointObj.transform.localScale.x >= 0 ? 1 : -1;
+                targetPosition = spawnTransform.position;
+                facingDirection = spawnTransform.localScale.x >= 0 ? 1 : -1;
             }
             else
             {
@@ -206,6 +224,7 @@ namespace _Game.Scripts.Tool
         {
             if (_currentMapInstance != null)
             {
+                _currentMapInstance.SetActive(false); // Important: Hide immediately to prevent FindGameObjectWithTag from finding it
                 Destroy(_currentMapInstance);
                 _currentMapInstance = null;
             }
