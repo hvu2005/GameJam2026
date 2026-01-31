@@ -129,21 +129,19 @@ public class SceneTransition : MonoBehaviour
     }
 
     // Ví dụ hàm reset scene cho Player (giữ nguyên logic của bạn)
-    /*
     public IEnumerator TransitionResetScene(Player player)
     {
         _isTransitioning = true;
         yield return StartCoroutine(SlideIn());
         Time.timeScale = 1f;
 
-        // EventBus.Emit(SceneTransitionType.OnPlayerDied, player);
+        EventBus.Emit(SceneTransitionType.OnPlayerDied, player);
 
         yield return new WaitForSeconds(0.5f);
         yield return StartCoroutine(SlideOut());
 
         player.IsDead = false;
     }
-    */
 
     private IEnumerator SlideIn()
     {
