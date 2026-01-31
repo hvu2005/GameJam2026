@@ -37,13 +37,15 @@ namespace _Game.Scripts.Gameplay.Parallax
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
             if (spriteRenderer != null && (infiniteHorizontal || infiniteVertical))
             {
-                Texture2D texture = spriteRenderer.sprite.texture;
-                _textureUnitSizeX = texture.width / spriteRenderer.sprite.pixelsPerUnit;
-                _textureUnitSizeY = texture.height / spriteRenderer.sprite.pixelsPerUnit;
-                
-                // Adjust for scale
-                _textureUnitSizeX *= transform.lossyScale.x;
-                _textureUnitSizeY *= transform.lossyScale.y;
+                Sprite sprite = spriteRenderer.sprite;
+                if (sprite != null)
+                {
+                    _textureUnitSizeX = sprite.rect.width / sprite.pixelsPerUnit;
+                    _textureUnitSizeY = sprite.rect.height / sprite.pixelsPerUnit;
+                    
+                    _textureUnitSizeX *= transform.lossyScale.x;
+                    _textureUnitSizeY *= transform.lossyScale.y;
+                }
             }
         }
 
@@ -53,24 +55,10 @@ namespace _Game.Scripts.Gameplay.Parallax
 
             Vector3 deltaMovement = _cameraTransform.position - _lastCameraPosition;
             
-            // Calculate new position
-            // If factor is 1, it moves exactly with camera (appears static relative to camera).
-            // If factor is 0, it doesn't move (static relative to world).
-            // Usually for background we want factor < 1 (e.g. 0.5) to move slower than cam.
-            
-            // Standard Parallax Formula: 
-            // We want to move the object by (1 - factor) * delta
-            // Wait, let's re-verify:
-            // If Cam moves +10, and we want object to appear "far away", it should traverse LESS screen space.
-            // If object stays at 0, it moves -10 relative to Cam.
-            // If object moves +5, it moves -5 relative to Cam (0.5 factor).
-            // So we move the object by (factor * delta).
-            
             transform.position += new Vector3(deltaMovement.x * parallaxFactor.x, deltaMovement.y * parallaxFactor.y, 0f);
             
             _lastCameraPosition = _cameraTransform.position;
 
-            // Infinite Scrolling Check
             if (infiniteHorizontal)
             {
                 if (Mathf.Abs(_cameraTransform.position.x - transform.position.x) >= _textureUnitSizeX)

@@ -15,7 +15,7 @@ MonoBehaviour:
   levels:
   - levelName: tut
     mapPrefab: {fileID: 2999308956871290996, guid: a6a3cc6c770325f429e84735e231107f, type: 3}
-    backgroundPrefab: {fileID: 2328508607457930426, guid: be715cb43a1286446b8c612eada40964, type: 3}
+    backgroundPrefab: {fileID: 0}
   - levelName: 1
     mapPrefab: {fileID: 2999308956871290996, guid: a47fa91eefa59b842ae2072b7464877f, type: 3}
     backgroundPrefab: {fileID: 0}
