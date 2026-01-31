@@ -24,7 +24,8 @@ public class SceneLoader : MonoBehaviour
     [SerializeField] private string loadingTrigger = "Show"; // Trigger animation
 
     [Header("Scene Transition")]
-    [SerializeField] private SceneTransition sceneTransition;    
+    [SerializeField] private SceneTransition sceneTransition;
+    [SerializeField] private bool useSceneTransition = false;
     void Awake()
     {
         // Ẩn loading container ban đầu nếu không auto load
@@ -134,7 +135,7 @@ public class SceneLoader : MonoBehaviour
         // Đợi minimum loading time
         yield return new WaitForSeconds(minimumLoadingTime);
         
-        if (sceneTransition != null)
+        if (sceneTransition != null && useSceneTransition)
         {
             sceneTransition.LoadScene(sceneName);
         }
@@ -168,8 +169,10 @@ public class SceneLoader : MonoBehaviour
         yield return new WaitForSeconds(minimumLoadingTime);
         
         // Load scene với SceneTransition nếu có
-        if (sceneTransition != null)
-        sceneTransition.LoadScene(sceneIndex);
+        if (sceneTransition != null && useSceneTransition)
+        {
+            sceneTransition.LoadScene(sceneIndex);
+        }
         else
         {
             SceneManager.LoadScene(sceneIndex);

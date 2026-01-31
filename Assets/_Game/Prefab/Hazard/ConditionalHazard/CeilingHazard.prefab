@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5129413552867740548}
   - component: {fileID: 4632957467015461554}
   - component: {fileID: 4983139191579403656}
-  - component: {fileID: 2442391738450509805}
+  - component: {fileID: 6910749241969125222}
   m_Layer: 0
   m_Name: CeilingHazard
   m_TagString: Untagged
@@ -191,7 +191,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 6.1885567, y: 1.0180159}
   m_EdgeRadius: 0
---- !u!95 &2442391738450509805
+--- !u!95 &6910749241969125222
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
