@@ -135,8 +135,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if (config == null) return;
 
-        Vector2 boxOrigin = transform.position;
-        Vector2 boxSize = new Vector2(0.8f, 0.8f);
+        Vector2 offset = config.GroundCheckOffset;
+        if (_gravityController != null && _gravityController.IsGravityFlipped)
+        {
+            offset.y *= -1;
+        }
+
+        Vector2 boxOrigin = (Vector2)transform.position + offset;
+        Vector2 boxSize = config.GroundCheckSize;
 
         Vector2 castDirection = _gravityController != null && _gravityController.IsGravityFlipped
             ? Vector2.up
@@ -182,7 +188,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void SetFacingDirection(int direction)
+    public void SetFacingDirection(int direction)
     {
         if (_facingDirection == direction) return;
 
@@ -249,12 +255,40 @@ public class PlayerMovement : MonoBehaviour
     {
         if (config == null) return;
 
+        Gizmos.color = _isGrounded ? Color.green : Color.red;
+
+        Vector2 offset = config.GroundCheckOffset;
+        if (_gravityController != null && _gravityController.IsGravityFlipped)
+        {
+            offset.y *= -1;
+        }
+
+        Vector2 boxOrigin = (Vector2)transform.position + offset;
+        Vector2 boxSize = config.GroundCheckSize;
+        
         Vector2 castDirection = _gravityController != null && _gravityController.IsGravityFlipped
             ? Vector2.up
             : Vector2.down;
 
-        Gizmos.color = _isGrounded ? Color.green : Color.red;
-        Vector2 origin = transform.position;
-        Gizmos.DrawLine(origin, origin + castDirection * config.GroundCheckDistance);
+        // Draw the starting box
+        Gizmos.DrawWireCube(boxOrigin, boxSize);
+
+        // Draw the ending box
+        Vector2 endPosition = boxOrigin + castDirection * config.GroundCheckDistance;
+        Gizmos.DrawWireCube(endPosition, boxSize);
+
+        // Draw lines connecting the corners to visualize the cast
+        Vector2 cornerOffset = boxSize / 2f;
+        
+        // We only really need to draw the vertical lines connecting the start and end boxes
+        Vector2 topLeft = boxOrigin + new Vector2(-cornerOffset.x, cornerOffset.y);
+        Vector2 topRight = boxOrigin + new Vector2(cornerOffset.x, cornerOffset.y);
+        Vector2 bottomLeft = boxOrigin + new Vector2(-cornerOffset.x, -cornerOffset.y);
+        Vector2 bottomRight = boxOrigin + new Vector2(cornerOffset.x, -cornerOffset.y);
+
+        Gizmos.DrawLine(topLeft, topLeft + castDirection * config.GroundCheckDistance);
+        Gizmos.DrawLine(topRight, topRight + castDirection * config.GroundCheckDistance);
+        Gizmos.DrawLine(bottomLeft, bottomLeft + castDirection * config.GroundCheckDistance);
+        Gizmos.DrawLine(bottomRight, bottomRight + castDirection * config.GroundCheckDistance);
     }
 }

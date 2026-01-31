@@ -23,6 +23,17 @@ public class Bullet : Hazard
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0;
+        Debug.Log($"[Bullet] Awake called on {gameObject.name}");
+    }
+    
+    private void OnEnable()
+    {
+        Debug.Log($"[Bullet] OnEnable called on {gameObject.name}, active: {gameObject.activeSelf}, spawnTime: {spawnTime}, currentTime: {Time.time}");
+    }
+    
+    private void OnDisable()
+    {
+        Debug.Log($"[Bullet] OnDisable called on {gameObject.name}");
     }
 
     /// <summary>
@@ -31,16 +42,25 @@ public class Bullet : Hazard
     /// </summary>
     public void Initialize(Vector2 direction, float bulletSpeed)
     {
+        // Reset velocity
         rb.velocity = Vector2.zero;
         rb.angularVelocity = 0f;
+        
+        // Set direction và speed
         moveDirection = direction.normalized;
         speed = bulletSpeed;
+        
+        // QUAN TRỌNG: Reset spawn time mỗi lần initialize
         spawnTime = Time.time;
 
         // Set velocity
         rb.velocity = moveDirection * speed;
+        
+        // Set rotation theo hướng bay
         float angle = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
+        
+        Debug.Log($"Bullet initialized at {Time.time}, lifetime will end at {spawnTime + lifetime}");
     }
 
     private void Update()
@@ -80,10 +100,11 @@ public class Bullet : Hazard
     /// <summary>
     /// Xử lý va chạm với tường hoặc obstacle
     /// </summary>
-    private void OnCollisionEnter2D(Collision2D collision)
+    protected override void OnCollisionEnter2D(Collision2D collision)
     {
+        base.OnCollisionEnter2D(collision);
         // Nếu chạm vào tường, cũng hủy đạn
-        if (collision.gameObject.CompareTag("Wall") || collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             if (hitEffectPrefab != null)
             {
