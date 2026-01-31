@@ -14,43 +14,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - speakerName: "M\u1EB7t n\u1EA1 Vui V\u1EBB"
-    portrait: {fileID: 0}
+    portrait: {fileID: 21300000, guid: 37b93301e07ca5a4fac3de2ae214d653, type: 3}
     position: 0
-    text: "\u201CC\u1EADu kh\xF4ng th\u1EC3 r\u1EDDi kh\u1ECFi nh\xE0 h\xE1t n\xE0y\u2026\u201D\r\n
-      \u201Cn\u1EBFu ch\u01B0a ho\xE0n th\xE0nh c\xE1c vai di\u1EC5n.\u201D\r\n"
+    text: "C\u1EADu kh\xF4ng th\u1EC3 r\u1EDDi kh\u1ECFi nh\xE0 h\xE1t n\xE0y\u2026\r\n
+      n\u1EBFu ch\u01B0a ho\xE0n th\xE0nh c\xE1c vai di\u1EC5n.\r\n"
   - speakerName: "M\u1EB7t n\u1EA1 Vui V\u1EBB"
-    portrait: {fileID: 0}
+    portrait: {fileID: 21300000, guid: 37b93301e07ca5a4fac3de2ae214d653, type: 3}
     position: 0
-    text: "\u201CBa chi\u1EBFc m\u1EB7t n\u1EA1. Ba vai di\u1EC5n.\u201D\r\n \u201CCh\u1EC9
-      khi di\u1EC5n tr\u1ECDn v\u1EB9n ch\xFAng\u2026 c\u1EADu m\u1EDBi \u0111\u01B0\u1EE3c
-      b\u01B0\u1EDBc ra ngo\xE0i.\u201D\r\n"
-  - speakerName: "Ph\xFA"
-    portrait: {fileID: 0}
+    text: "Ba chi\u1EBFc m\u1EB7t n\u1EA1. Ba vai di\u1EC5n.\r\n Ch\u1EC9 khi di\u1EC5n
+      tr\u1ECDn v\u1EB9n ch\xFAng\u2026 c\u1EADu m\u1EDBi \u0111\u01B0\u1EE3c b\u01B0\u1EDBc
+      ra ngo\xE0i.\r\n"
+  - speakerName: Tony
+    portrait: {fileID: 21300000, guid: 417afdcfd193b104db80b309617330c8, type: 3}
     position: 1
-    text: "\u201C\u2026Vai di\u1EC5n?\u201D\r\n"
+    text: "\u2026Vai di\u1EC5n?\r\n"
   - speakerName: "M\u1EB7t n\u1EA1 Vui V\u1EBB"
-    portrait: {fileID: 0}
+    portrait: {fileID: 21300000, guid: 37b93301e07ca5a4fac3de2ae214d653, type: 3}
     position: 0
-    text: "\u201C\u0110\xFAng v\u1EADy.\u201D"
+    text: "\u0110\xFAng v\u1EADy."
   - speakerName: "M\u1EB7t n\u1EA1 Vui V\u1EBB"
-    portrait: {fileID: 0}
+    portrait: {fileID: 21300000, guid: 37b93301e07ca5a4fac3de2ae214d653, type: 3}
     position: 0
-    text: "\u201CNh\xE0 h\xE1t n\xE0y t\u1ED3n t\u1EA1i nh\u1EDD m\u1ED9t ch\u1EA5p
-      ni\u1EC7m ch\u01B0a kh\xE9p l\u1EA1i.\u201D"
+    text: "Nh\xE0 h\xE1t n\xE0y t\u1ED3n t\u1EA1i nh\u1EDD m\u1ED9t ch\u1EA5p ni\u1EC7m
+      ch\u01B0a kh\xE9p l\u1EA1i."
   - speakerName: "M\u1EB7t n\u1EA1 Vui V\u1EBB"
-    portrait: {fileID: 0}
+    portrait: {fileID: 21300000, guid: 37b93301e07ca5a4fac3de2ae214d653, type: 3}
     position: 0
-    text: "\u201CV\xE0 gi\u1EDD\u2026\u201D  \u201Cc\u1EADu \u0111ang b\u1ECB giam
-      gi\u1EEF trong ch\u1EA5p ni\u1EC7m \u0111\xF3.\u201D"
+    text: "V\xE0 gi\u1EDD\u2026  c\u1EADu \u0111ang b\u1ECB giam gi\u1EEF trong ch\u1EA5p
+      ni\u1EC7m \u0111\xF3."
   - speakerName: "M\u1EB7t n\u1EA1 Vui V\u1EBB"
-    portrait: {fileID: 0}
+    portrait: {fileID: 21300000, guid: 37b93301e07ca5a4fac3de2ae214d653, type: 3}
     position: 0
-    text: "\u201CV\xE0 \u0111\xE2y\u2026 l\xE0 vai di\u1EC5n \u0111\u1EA7u ti\xEAn.\u201D "
+    text: "V\xE0 \u0111\xE2y\u2026 l\xE0 vai di\u1EC5n \u0111\u1EA7u ti\xEAn."
   - speakerName: "M\u1EB7t n\u1EA1 Vui V\u1EBB"
-    portrait: {fileID: 0}
+    portrait: {fileID: 21300000, guid: 37b93301e07ca5a4fac3de2ae214d653, type: 3}
     position: 0
-    text: "\u201CKhi c\u1EADu tin r\u1EB1ng m\xECnh c\xF3 th\u1EC3 bay cao\u2026\u201D 
-      \u201C\u2026c\u1EADu s\u1EBD nh\u1EA3y th\xEAm \u0111\u01B0\u1EE3c m\u1ED9t
-      l\u1EA7n n\u1EEFa.\u201D"
+    text: "Khi c\u1EADu tin r\u1EB1ng m\xECnh c\xF3 th\u1EC3 bay cao\u2026 c\u1EADu
+      s\u1EBD nh\u1EA3y th\xEAm \u0111\u01B0\u1EE3c m\u1ED9t l\u1EA7n n\u1EEFa."
   autoClose: 1
   autoCloseDelay: 0.5

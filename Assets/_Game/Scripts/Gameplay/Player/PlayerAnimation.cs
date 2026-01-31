@@ -88,6 +88,15 @@ public class PlayerAnimation : MonoBehaviour
                 particle.transform.localScale = new Vector3(data * Mathf.Abs(particle.transform.localScale.x), particle.transform.localScale.y, particle.transform.localScale.z);
             }
         });
+
+        EventBus.On<DashEventData>(PlayerActionEventType.OnDashStarted, data =>
+        {
+            animator.SetBool("isDashing", true);
+        });
+        EventBus.On<DashEventData>(PlayerActionEventType.OnDashEnded, data =>
+        {
+            animator.SetBool("isDashing", false);
+        });
     }
 
 
