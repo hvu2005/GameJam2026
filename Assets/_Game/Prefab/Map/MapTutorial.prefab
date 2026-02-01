@@ -62916,6 +62916,10 @@ PrefabInstance:
       value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 5155848534663741314, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
+      propertyPath: dialogueData
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f4bb4c8d39f43543b96e58fe17f5c7c, type: 2}
+    - target: {fileID: 5155848534663741314, guid: bc5e63fd0dccf6041aee694940fb63da, type: 3}
       propertyPath: hasUnlockSkill
       value: 1
       objectReference: {fileID: 0}
