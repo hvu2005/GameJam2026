@@ -40,6 +40,10 @@ public class DialogueController : MonoBehaviour
 
     private DialogueData currentDialogueData;
     private GameObject dialoguePanel;
+    private GameObject objectToDestroy; // Reference to the object to destroy after conversation
+    private bool shouldUnlockSkill;
+    private int skillIdToUnlock;
+    private GameObject tutorialObject;
 
     void Awake()
     {
@@ -88,11 +92,16 @@ public class DialogueController : MonoBehaviour
         }
     }
 
-    public void StartDialogue(DialogueData dialogueData)
+    public void StartDialogue(DialogueData dialogueData, GameObject objToDestroy = null, bool unlockSkill = false, int skillId = 0, GameObject tutObject = null)
     {
         if (dialogueData == null || dialogueData.lines.Length == 0) return;
 
         currentDialogueData = dialogueData;
+        objectToDestroy = objToDestroy;
+        shouldUnlockSkill = unlockSkill;
+        skillIdToUnlock = skillId;
+        tutorialObject = tutObject;
+        
         dialogueLines.Clear();
         conversationEnded = false;
         isClosing = false; // Reset closing flag
@@ -277,6 +286,26 @@ public class DialogueController : MonoBehaviour
         if (playerInteraction != null)
         {
             playerInteraction.OnDialogueEnd();
+        }
+
+        // Destroy optional object if set
+        if (objectToDestroy != null)
+        {
+            Destroy(objectToDestroy);
+            objectToDestroy = null;
+        }
+
+        // Handle Skill Unlock
+        if (shouldUnlockSkill)
+        {
+            FormUnlockManager.Unlock(skillIdToUnlock);
+            EventBus.Emit(FormEventType.OnFormUnlocked, skillIdToUnlock);
+            
+            if (tutorialObject != null)
+            {
+                // Enable the existing tutorial object
+                tutorialObject.SetActive(true);
+            }
         }
 
         // Deactivate panel LAST

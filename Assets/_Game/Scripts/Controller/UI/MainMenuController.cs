@@ -44,6 +44,7 @@ public class MainMenuController : MonoBehaviour
     /// </summary>
     private void OnStartGame()
     {
+
         Debug.Log("Start Game clicked");
         if (SceneTransition.Instance != null)
         {
@@ -53,6 +54,9 @@ public class MainMenuController : MonoBehaviour
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(gameSceneName);
         }
+
+
+
     }
 
     /// <summary>
@@ -87,14 +91,14 @@ public class MainMenuController : MonoBehaviour
     private void OnExitGame()
     {
         Debug.Log("Exit Game clicked");
-        
+
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
 #endif
     }
-    
+
     void OnDestroy()
     {
         // Cleanup listeners
@@ -102,12 +106,12 @@ public class MainMenuController : MonoBehaviour
         {
             startGameButton.onClick.RemoveListener(OnStartGame);
         }
-        
+
         if (settingsButton != null)
         {
             settingsButton.onClick.RemoveListener(OnOpenSettings);
         }
-        
+
         if (exitGameButton != null)
         {
             exitGameButton.onClick.RemoveListener(OnExitGame);

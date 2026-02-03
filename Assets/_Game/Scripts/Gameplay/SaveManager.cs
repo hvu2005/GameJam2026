@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,9 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private Transform spawnPoint;
     public SavePoint currentSavePoint;
 
+    private Action<Player> _onPlayerDiedHandler;
+
+
     void Awake()
     {
         // SavePoint[] points = FindObjectsOfType<SavePoint>();
@@ -16,13 +20,24 @@ public class SaveManager : MonoBehaviour
     }
 
 
-    void Start()
+
+
+    void OnEnable()
     {
-        EventBus.On<Player>(SceneTransitionType.OnPlayerDied, data =>
+        _onPlayerDiedHandler = (data) =>
         {
-            if (currentSavePoint == null) data.transform.position = spawnPoint.position;
+            if (currentSavePoint == null)
+                data.transform.position = spawnPoint.position;
             else
                 data.transform.position = currentSavePoint.transform.position;
-        });
+        };
+
+        EventBus.On<Player>(SceneTransitionType.OnPlayerDied, _onPlayerDiedHandler);
     }
+
+    void OnDisable()
+    {
+        EventBus.Off<Player>(SceneTransitionType.OnPlayerDied, _onPlayerDiedHandler);
+    }
+
 }

@@ -10,6 +10,15 @@ public class DialogueTrigger : DialogueBase
     [Header("Trigger Settings")]
     [SerializeField] private bool triggerOnce = true;
     [SerializeField] private bool disablePlayerMovement = true;
+    [Tooltip("Optional: Object to destroy when dialogue ends")]
+    [SerializeField] private GameObject objectToDestroy;
+
+    [Header("Unlock Skill Settings")]
+    [SerializeField] private bool hasUnlockSkill;
+    [Tooltip("1: Agility, 2: Void, 3: Gravity")]
+    [SerializeField] private int skillIdToUnlock;
+    [Tooltip("Object to enable (SetActive true) after unlock")]
+    [SerializeField] private GameObject tutorialObject;
     
     private bool hasTriggered = false;
     
@@ -52,7 +61,7 @@ public class DialogueTrigger : DialogueBase
         
         if (dialogueData != null)
         {
-            ShowDialogue(dialogueData);
+            ShowDialogue(dialogueData, objectToDestroy, hasUnlockSkill, skillIdToUnlock, tutorialObject);
         }
         else
         {

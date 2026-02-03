@@ -13,27 +13,27 @@ MonoBehaviour:
   m_Name: TriggerDialog2
   m_EditorClassIdentifier: 
   lines:
-  - speakerName: "M\u1EB7t n\u1EA1 bu\u1ED3n"
+  - speakerName: "M\u1EB7t n\u1EA1 Bu\u1ED3n B\xE3"
     portrait: {fileID: 21300000, guid: 2e561005525ba4042ab4cd9113a9a7cb, type: 3}
     position: 0
     text: "\u0110\u1EEBng c\u1ED1 g\u1EAFng n\u1EEFa\u2026\r\nCh\u1EC9 c\u1EA7n tr\xE1nh
       \u0111i l\xE0 \u0111\u1EE7."
-  - speakerName: "M\u1EB7t n\u1EA1 bu\u1ED3n"
+  - speakerName: "M\u1EB7t n\u1EA1 Bu\u1ED3n B\xE3"
     portrait: {fileID: 21300000, guid: 2e561005525ba4042ab4cd9113a9a7cb, type: 3}
     position: 0
     text: "\u0110\xE2y\u2026 l\xE0 vai di\u1EC5n th\u1EE9 hai.\r\nVai di\u1EC5n c\u1EE7a
       k\u1EBB h\u1ECDc c\xE1ch s\u1ED1ng s\xF3t."
-  - speakerName: "M\u1EB7t n\u1EA1 bu\u1ED3n"
+  - speakerName: "M\u1EB7t n\u1EA1 Bu\u1ED3n B\xE3"
     portrait: {fileID: 21300000, guid: 2e561005525ba4042ab4cd9113a9a7cb, type: 3}
     position: 0
     text: "N\xE9m t\xF4i \u0111i.\r\nR\u1ED3i bi\u1EBFn m\u1EA5t kh\u1ECFi n\u01A1i
       c\u1EADu \u0111ang \u0111\u1EE9ng."
-  - speakerName: "H\xE0o Ph\xFA"
-    portrait: {fileID: 21300000, guid: 2e561005525ba4042ab4cd9113a9a7cb, type: 3}
+  - speakerName: Tony
+    portrait: {fileID: 21300000, guid: 417afdcfd193b104db80b309617330c8, type: 3}
     position: 1
     text: "\u2026Nh\u01B0ng c\u1EA3m gi\xE1c n\xE0y\u2026\nKh\xF4ng gi\u1ED1ng chi\u1EBFn
       th\u1EAFng."
-  - speakerName: "M\u1EB7t n\u1EA1 bu\u1ED3n"
+  - speakerName: "M\u1EB7t n\u1EA1 Bu\u1ED3n b\xE3"
     portrait: {fileID: 21300000, guid: 2e561005525ba4042ab4cd9113a9a7cb, type: 3}
     position: 0
     text: "Kh\xF4ng ph\u1EA3i l\xFAc n\xE0o c\u0169ng c\u1EA7n \u0111\u1ED1i m\u1EB7t\u2026\r\n\u2026\u0111\xF4i

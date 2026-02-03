@@ -13,29 +13,30 @@ MonoBehaviour:
   m_Name: TriggerDialog3.1
   m_EditorClassIdentifier: 
   lines:
-  - speakerName: "H\xE0o Ph\xFA"
-    portrait: {fileID: 0}
-    position: 0
-    text: "\u2026M\xECnh th\u1EA5y n\xF3.\u201D\r\n \u201CNh\u01B0ng\u2026 kh\xF4ng
-      l\xEAn \u0111\xF3 \u0111\u01B0\u1EE3c.\r\n"
-  - speakerName: "M\u1EB7t n\u1EA1 T\u1EE9c Gi\u1EADn"
-    portrait: {fileID: 0}
+  - speakerName: Tony
+    portrait: {fileID: 21300000, guid: 417afdcfd193b104db80b309617330c8, type: 3}
     position: 1
+    text: "\u2026M\xECnh th\u1EA5y n\xF3.\r\n Nh\u01B0ng\u2026 kh\xF4ng l\xEAn \u0111\xF3
+      \u0111\u01B0\u1EE3c.\r\n"
+  - speakerName: "M\u1EB7t n\u1EA1 T\u1EE9c Gi\u1EADn"
+    portrait: {fileID: 21300000, guid: eb0c2befb1fa20a4586f29f2feeb5636, type: 3}
+    position: 0
     text: " C\u1EADu \u0111\xE3 th\u1EED n\xE9 tr\xE1nh.\r\n \u0110\xE3 th\u1EED
       m\u01A1 m\u1ED9ng.\r\n"
   - speakerName: "M\u1EB7t n\u1EA1 T\u1EE9c Gi\u1EADn"
-    portrait: {fileID: 0}
-    position: 1
+    portrait: {fileID: 21300000, guid: eb0c2befb1fa20a4586f29f2feeb5636, type: 3}
+    position: 0
     text: "Nh\u01B0ng s\xE2n kh\u1EA5u n\xE0y\u2026\r\n Kh\xF4ng m\u1EDF \u0111\u01B0\u1EDDng
       cho k\u1EBB ch\u1EC9 bi\u1EBFt b\u01B0\u1EDBc theo.\r\n"
   - speakerName: "M\u1EB7t n\u1EA1 T\u1EE9c Gi\u1EADn"
-    portrait: {fileID: 0}
-    position: 1
+    portrait: {fileID: 21300000, guid: eb0c2befb1fa20a4586f29f2feeb5636, type: 3}
+    position: 0
     text: "\u0110\xE2y l\xE0 vai di\u1EC5n th\u1EE9 ba.\r\n Vai di\u1EC5n c\u1EE7a
       k\u1EBB ch\u1ED1ng l\u1EA1i nh\u1EEFng g\xEC \u0111\u01B0\u1EE3c s\u1EAFp \u0111\u1EB7t."
   - speakerName: "M\u1EB7t n\u1EA1 T\u1EE9c Gi\u1EADn"
-    portrait: {fileID: 0}
-    position: 1
-    text: "L\u1EACT NG\u01AF\u1EE2C N\xD3 \u0110I\r\nNGAY C\u1EA2 TR\u1ECCNG L\u1EF0C!!!!!"
+    portrait: {fileID: 21300000, guid: eb0c2befb1fa20a4586f29f2feeb5636, type: 3}
+    position: 0
+    text: "L\u1EADt ng\u01B0\u1EE3c n\xF3 \u0111i\r\nNgay c\u1EA3 s\u1EE9c n\u1EB7ng
+      c\u1EE7a Tr\xE1i \u0110\u1EA5t!!!!!"
   autoClose: 1
   autoCloseDelay: 0.5

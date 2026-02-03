@@ -13,12 +13,12 @@ public abstract class DialogueBase : MonoBehaviour
         return dialogueController;
     }
     
-    protected void ShowDialogue(DialogueData dialogueData)
+    protected void ShowDialogue(DialogueData dialogueData, GameObject objToDestroy = null, bool unlockSkill = false, int skillId = 0, GameObject tutObject = null)
     {
         var controller = GetDialogueController();
         if (controller != null && dialogueData != null)
         {
-            controller.StartDialogue(dialogueData);
+            controller.StartDialogue(dialogueData, objToDestroy, unlockSkill, skillId, tutObject);
         }
     }
     

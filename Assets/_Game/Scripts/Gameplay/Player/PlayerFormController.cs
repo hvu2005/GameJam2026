@@ -24,7 +24,7 @@ public class PlayerFormController : MonoBehaviour
         _player = GetComponent<Player>();
         _input = GetComponent<PlayerInput>();
         
-        FormUnlockManager.UnlockAll();
+        // FormUnlockManager.UnlockAll();
         
         InitializeForms();
         InitializeUnlockStates();
@@ -35,6 +35,7 @@ public class PlayerFormController : MonoBehaviour
         _input.On<int>(PlayerInputType.FormSelect, OnFormSelectInput);
         _input.On<bool>(PlayerInputType.Skill, OnSkillInput);
         EventBus.On<StateChangeEventData>(PlayerActionEventType.OnStateChanged, OnPlayerStateChanged);
+        EventBus.On<int>(FormEventType.OnFormUnlocked, OnFormUnlocked);
     }
 
     void OnDisable()
@@ -42,6 +43,7 @@ public class PlayerFormController : MonoBehaviour
         _input.Off<int>(PlayerInputType.FormSelect, OnFormSelectInput);
         _input.Off<bool>(PlayerInputType.Skill, OnSkillInput);
         EventBus.Off<StateChangeEventData>(PlayerActionEventType.OnStateChanged, OnPlayerStateChanged);
+        EventBus.Off<int>(FormEventType.OnFormUnlocked, OnFormUnlocked);
     }
 
     void Update()
@@ -102,6 +104,15 @@ public class PlayerFormController : MonoBehaviour
         _currentForm?.OnPlayerStateChanged(data.FromState, data.ToState);
     }
 
+    private void OnFormUnlocked(int formID)
+    {
+        if (_unlockedForms.ContainsKey(formID))
+        {
+            _unlockedForms[formID] = true;
+            Debug.Log($"[FormController] Updated unlock state for form {formID}");
+        }
+    }
+
     public void TryChangeForm(int targetFormID)
     {
         if (_switchCooldownTimer > 0f)
@@ -156,6 +167,8 @@ public class PlayerFormController : MonoBehaviour
 
         var changeData = new FormChangeData(fromID, formID, fromName, _currentForm.FormName);
         EventBus.Emit(FormEventType.OnFormChanged, changeData);
+
+        AudioController.Instance.Play("CHANGE_FORM");
     }
 
     private BaseFormConfigSO GetConfigByFormID(int formID)
