@@ -80,10 +80,17 @@ public class Player : PlayerEntity
         if (_dash != null) _dash.CancelDash();
         
         if (_dash != null) _dash.ResetCooldown();
+        
         var gc = this.GetComponent<PlayerGravityController>();
         if (gc != null && gc.IsGravityFlipped)
         {
             gc.ToggleGravity();
+        }
+        
+        var teleportMarker = this.GetComponent<PlayerTeleportMarker>();
+        if (teleportMarker != null)
+        {
+            teleportMarker.ResetMarker();
         }
     }
 

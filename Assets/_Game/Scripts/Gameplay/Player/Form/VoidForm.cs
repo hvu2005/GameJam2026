@@ -37,6 +37,7 @@ public class VoidForm : PlayerFormBase
     {
         if (teleportMarker != null)
         {
+            teleportMarker.ResetMarker();
             teleportMarker.enabled = false;
         }
         
@@ -46,7 +47,7 @@ public class VoidForm : PlayerFormBase
             teleportTrail.enabled = false;
         }
         
-        Debug.Log("[VoidForm] Exited - Teleport disabled");
+        Debug.Log("[VoidForm] Exited - Teleport disabled, marker reset");
     }
 
     public override void OnSkillPressed()

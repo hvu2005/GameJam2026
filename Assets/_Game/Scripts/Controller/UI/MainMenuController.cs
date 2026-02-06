@@ -11,9 +11,9 @@ public class MainMenuController : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] private Button startGameButton;
-    [SerializeField] private Button settingsButton;
+    [SerializeField] private Button mapSelectButton;
     [SerializeField] private Button exitGameButton;
-    [SerializeField] private SettingsPanel settingsPanel;
+    [SerializeField] private MapSelectionPanel mapSelectionPanel;
     [SerializeField] private bool useSceneTransition = false;
 
     void Awake()
@@ -28,9 +28,9 @@ public class MainMenuController : MonoBehaviour
             startGameButton.onClick.AddListener(OnStartGame);
         }
 
-        if (settingsButton != null)
+        if (mapSelectButton != null)
         {
-            settingsButton.onClick.AddListener(OnOpenSettings);
+            mapSelectButton.onClick.AddListener(OnOpenMapSelection);
         }
 
         if (exitGameButton != null)
@@ -60,31 +60,18 @@ public class MainMenuController : MonoBehaviour
     }
 
     /// <summary>
-    /// Xử lý khi nhấn Settings
+    /// Xử lý khi nhấn Map Selection
     /// </summary>
-    private void OnOpenSettings()
+    private void OnOpenMapSelection()
     {
-        Debug.Log("Settings clicked");
+        Debug.Log("Map Selection clicked");
 
-        if (settingsPanel != null)
+        if (mapSelectionPanel != null)
         {
-            settingsPanel.gameObject.SetActive(true);
+            mapSelectionPanel.OpenPanel();
         }
     }
-
-    /// <summary>
-    /// Xử lý khi nhấn Back trong Settings
-    /// </summary>
-    private void OnCloseSettings()
-    {
-        Debug.Log("Back clicked");
-
-        if (settingsPanel != null)
-        {
-            settingsPanel.gameObject.SetActive(false);
-        }
-    }
-
+    
     /// <summary>
     /// Xử lý khi nhấn Exit Game
     /// </summary>
@@ -107,9 +94,9 @@ public class MainMenuController : MonoBehaviour
             startGameButton.onClick.RemoveListener(OnStartGame);
         }
 
-        if (settingsButton != null)
+        if (mapSelectButton != null)
         {
-            settingsButton.onClick.RemoveListener(OnOpenSettings);
+            mapSelectButton.onClick.RemoveListener(OnOpenMapSelection);
         }
 
         if (exitGameButton != null)

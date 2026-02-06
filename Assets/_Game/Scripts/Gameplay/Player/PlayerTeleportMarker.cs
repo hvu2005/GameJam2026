@@ -298,6 +298,23 @@ public class PlayerTeleportMarker : MonoBehaviour
         // No longer needed - cooldown is checked via Time.time comparison
     }
     
+    /// <summary>
+    /// Reset and destroy active marker. Called when changing form or when player dies.
+    /// </summary>
+    public void ResetMarker()
+    {
+        if (_activeMarker != null)
+        {
+            Destroy(_activeMarker.gameObject);
+            _activeMarker = null;
+        }
+        
+        _canTeleport = false;
+        _teleportWindowEndTime = 0f;
+        
+        Debug.Log("[PlayerTeleportMarker] Marker reset");
+    }
+    
     void OnDrawGizmos()
     {
         if (firePoint != null && _config != null)
